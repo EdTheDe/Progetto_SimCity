@@ -33,9 +33,9 @@ public class BuilderValidator {
         }
 
         // 3. (Esempio di espansione futura) Verifica adiacenza strade
-        // if (entita.richiedeStrada() && !cella.haStradaAdiacente()) {
-        //     throw new CostruzioneException("L'edificio deve essere adiacente a una strada.");
-        // }
+         if (entita.richiedeStrada() && !cella.haStradaAdiacente()) {
+            throw new CostruzioneException("L'edificio deve essere adiacente a una strada.");
+        }
     }
 }
 
