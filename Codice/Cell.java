@@ -15,7 +15,7 @@ public class Cell {
 
     /**
      * Inizializza una cella vuota alle coordinate date.
-     * KAN-4: "Tutte le celle devono risultare inizialmente vuote".
+     * KAN-4 -> "Tutte le celle devono risultare inizialmente vuote".
      */
     public Cell(int x, int y) {
         this.x = x;

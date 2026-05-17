@@ -12,7 +12,7 @@ public abstract class UrbanEntity {
 
     public UrbanEntity(double placementCost) {
         this.placementCost = placementCost;
-        this.developmentLevel = 1; // Default starting level (KAN-21)
+        this.developmentLevel = 1; // KAN 21 -> ?
     }
 
     public double getPlacementCost() {
