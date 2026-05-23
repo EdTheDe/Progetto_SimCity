@@ -77,4 +77,4 @@ class PersistenceManagerTest {
         
         assertTrue(exception.getMessage().contains("File di salvataggio non trovato"));
     }
-}ù
+}

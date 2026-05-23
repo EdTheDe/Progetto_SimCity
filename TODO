@@ -1,1 +1,10 @@
-Secondo me dovremmo aggiungere l'entità "area verde" , sia nelle user stories che nel documento di design e in tutto il resto perchè altrimenti il livello di ecologia si abbassa tantissimo se abbiamo troppe fabbriche, senza riscire ad alzarlo
+Secondo me dovremmo aggiungere l'entità "area verde" , sia nelle user stories che nel documento di design e in tutto il resto perchè altrimenti il livello di ecologia si abbassa tantissimo se abbiamo troppe fabbriche, senza riscire ad alzarlo.
+il parco potrebbe anche aumentare la felicità.
+
+aggiungere nel documento di design tutte le interaione grafiche fra tick/tick che avanza da solo/ shop...
+
+abggiungere lo sturmento di abbattiment oedifici
+
+MAC
+per la validazione degli edifici deve controllare che ci sia una strada nel rafggio di 3 caselle. aggiungi una lista di edifici attivi (che edo usa per il calocolo delle stats),
+nella lista degli edifici attivi sono presenti gli edifici in cui si è controllato che ci sia energia/acqua sufficiente e una strda nel raggio previsto. 
