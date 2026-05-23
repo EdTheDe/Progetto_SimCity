@@ -15,11 +15,17 @@ public abstract class Building extends UrbanEntity {
         this.waterDemand = waterDemand;
     }
 
+    /**
+     * Il consumo di energia scala dinamicamente in base al livello di sviluppo dell'edificio.
+     */
     public double getEnergyDemand() {
-        return energyDemand;
+        return energyDemand * getDevelopmentLevel();
     }
 
+    /**
+     * Il consumo di acqua scala dinamicamente in base al livello di sviluppo dell'edificio.
+     */
     public double getWaterDemand() {
-        return waterDemand;
+        return waterDemand * getDevelopmentLevel();
     }
 }
