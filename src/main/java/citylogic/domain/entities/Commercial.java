@@ -14,6 +14,6 @@ public class Commercial extends Building {
     }
 
     public double getBaseIncome() {
-        return baseIncome;
+        return baseIncome * getDevelopmentLevel();
     }
 }

@@ -6,14 +6,18 @@ package citylogic.domain.entities;
  */
 public class Residential extends Building {
     
-    private int housingCapacity; //capacità abitativa
+    private int baseHousingCapacity; //capacità abitativa
 
-    public Residential(double placementCost, double energyDemand, double waterDemand, int housingCapacity) {
+    public Residential(double placementCost, double energyDemand, double waterDemand, int baseHousingCapacity) {
         super(placementCost, energyDemand, waterDemand);
-        this.housingCapacity = housingCapacity;
+        this.baseHousingCapacity = baseHousingCapacity;
     }
 
+    /**
+     * Calcola la capacità abitativa dinamicamente in base al livello di sviluppo.
+     * @return
+     */
     public int getHousingCapacity() {
-        return housingCapacity;
+        return baseHousingCapacity * getDevelopmentLevel();
     }
 }

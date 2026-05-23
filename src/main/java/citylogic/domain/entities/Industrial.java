@@ -7,19 +7,19 @@ package citylogic.domain.entities;
 public class Industrial extends Building {
     
     private double basePollution;   //Inquinamento prodotto da una fabbrica
-    private int jobsProduced;       
+    private int baseJobsProduced;       
 
-    public Industrial(double placementCost, double energyDemand, double waterDemand, double basePollution, int jobsProduced) {
+    public Industrial(double placementCost, double energyDemand, double waterDemand, double basePollution, int baseJobsProduced) {
         super(placementCost, energyDemand, waterDemand);
         this.basePollution = basePollution;
-        this.jobsProduced = jobsProduced;
+        this.baseJobsProduced = baseJobsProduced;
     }
 
     public double getBasePollution() {
-        return basePollution;
+        return basePollution * getDevelopmentLevel();
     }
 
     public int getJobsProduced() {
-        return jobsProduced;
+        return baseJobsProduced * getDevelopmentLevel();
     }
 }
