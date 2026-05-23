@@ -58,10 +58,4 @@ class RegolaFondiSufficienti implements RegolaCostruzione {
     }
 }
 
-// --- ECCEZIONE PERSONALIZZATA ---
 
-class CostruzioneException extends Exception {
-    public CostruzioneException(String message) {
-        super(message);
-    }
-}

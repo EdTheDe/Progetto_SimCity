@@ -1,8 +1,10 @@
 package citylogic.core.validation;
 
-import citylogic.domain.StatoCitta;
-import citylogic.domain.map.Cella;
-import citylogic.domain.entities.EntitaUrbana;
+import citylogic.core.validation.BuilderValidator;
+import citylogic.core.validation.CostruzioneException;
+import citylogic.domain.state.StatoCitta;
+import citylogic.domain.map.Cell;
+import citylogic.domain.entities.UrbanEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -20,10 +22,10 @@ class BuilderValidatorTest {
     private BuilderValidator builderValidator;
 
     @Mock
-    private EntitaUrbana entitaMock;
+    private UrbanEntity entitaMock;
 
     @Mock
-    private Cella cellaMock;
+    private Cell cellaMock;
 
     @Mock
     private StatoCitta statoMock;
@@ -35,39 +37,35 @@ class BuilderValidatorTest {
 
     @Test
     void validaCostruzione_Successo_QuandoSpazioLiberoEFondiSufficienti() {
-        // Arrange
-        when(cellaMock.isOccupata()).thenReturn(false);
-        when(entitaMock.getCostoPiazzamento()).thenReturn(100.0);
+        when(cellaMock.isOccupied()).thenReturn(false);
+        when(entitaMock.getPlacementCost()).thenReturn(100.0);
         when(statoMock.getFinanze()).thenReturn(150.0);
 
-        // Act & Assert
         assertDoesNotThrow(() -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock),
                 "La validazione non dovrebbe lanciare eccezioni se i requisiti sono soddisfatti.");
     }
 
     @Test
     void validaCostruzione_LanciaEccezione_QuandoCellaOccupata() {
-        // Arrange
-        when(cellaMock.isOccupata()).thenReturn(true);
+        when(cellaMock.isOccupied()).thenReturn(true);
 
-        // Act & Assert
-        CostruzioneException exception = assertThrows(CostruzioneException.class, 
+        CostruzioneException exception = assertThrows(CostruzioneException.class,
                 () -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock));
-        
+
         assertEquals("Costruzione fallita: La cella selezionata è già occupata.", exception.getMessage());
     }
 
     @Test
     void validaCostruzione_LanciaEccezione_QuandoFondiInsufficienti() {
-        // Arrange
-        when(cellaMock.isOccupata()).thenReturn(false); // Passa la prima regola
-        when(entitaMock.getCostoPiazzamento()).thenReturn(200.0);
+        when(cellaMock.isOccupied()).thenReturn(false);
+        when(entitaMock.getPlacementCost()).thenReturn(200.0);
         when(statoMock.getFinanze()).thenReturn(50.0);
 
-        // Act & Assert
-        CostruzioneException exception = assertThrows(CostruzioneException.class, 
+        CostruzioneException exception = assertThrows(CostruzioneException.class,
                 () -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock));
-        
-        assertEquals("Fondi insufficienti. Costo: 200,00, Disponibili: 50,00", exception.getMessage().replace(".", ",")); // Gestione della virgola mobile in base al locale
+
+        // Uso di String.format per rispettare fedelmente l'eccezione lanciata dalla classe originale
+        String expectedMessage = String.format("Fondi insufficienti. Costo: %.2f, Disponibili: %.2f", 200.0, 50.0);
+        assertEquals(expectedMessage, exception.getMessage());
     }
 }
