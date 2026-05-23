@@ -86,4 +86,31 @@ public class UrbanGrid {
         // 3. Se la riga sopra va a buon fine (nessuna eccezione), registriamo l'edificio
         activeEntities.add(entity);
     }
+
+    /**
+     * Rimuove un'entità dalla griglia alle coordinate specificate (Demolizione).
+     * @param x Coordinata X
+     * @param y Coordinata Y
+     * @return true se un'entità è stata effettivamente rimossa, false se la cella era già vuota.
+     */
+    public boolean removeEntity(int x, int y) {
+        // 1. Recupera la cella (isWithinBounds è gestito in automatico)
+        Cell targetCell = getCell(x, y);
+
+        // 2. Controlla se c'è effettivamente qualcosa da demolire
+        if (!targetCell.isOccupied()) {
+            return false; // La cella è già vuota, non facciamo nulla
+        }
+
+        // 3. Salviamo un riferimento all'entità prima di cancellarla dalla cella
+        UrbanEntity entityToRemove = targetCell.getEntity();
+
+        // 4. Svuotiamo la cella
+        targetCell.clearEntity();
+
+        // 5. Rimuoviamo l'entità dalla lista globale per fermare i calcoli del "Tick"
+        activeEntities.remove(entityToRemove);
+
+        return true;
+    }
 }

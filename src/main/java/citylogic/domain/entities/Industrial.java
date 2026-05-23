@@ -7,7 +7,7 @@ package citylogic.domain.entities;
 public class Industrial extends Building {
     
     private double basePollution;   //Inquinamento prodotto da una fabbrica
-    private int jobsProduced;
+    private int jobsProduced;       
 
     public Industrial(double placementCost, double energyDemand, double waterDemand, double basePollution, int jobsProduced) {
         super(placementCost, energyDemand, waterDemand);
