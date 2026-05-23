@@ -20,4 +20,9 @@ public class Residential extends Building {
     public int getHousingCapacity() {
         return baseHousingCapacity * getDevelopmentLevel();
     }
+
+    @Override
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        stats.addCapacitaAbitativa(getHousingCapacity());
+    }
 }

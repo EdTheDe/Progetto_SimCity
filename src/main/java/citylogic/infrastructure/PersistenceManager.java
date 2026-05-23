@@ -1,6 +1,6 @@
 package citylogic.infrastructure;
 
-import citylogic.domain.state.Citta;
+import citylogic.domain.state.StatoCitta;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -45,9 +45,9 @@ public class PersistenceManager {
     }
 
     /**
-     * Serializza l'intero oggetto Citta e lo scrive su disco.
+     * Serializza l'intero oggetto StatoCitta e lo scrive su disco.
      */
-    public void salvaPartita(Citta citta, String nomeFile) throws IOException {
+    public void salvaPartita(StatoCitta citta, String nomeFile) throws IOException {
         Path fileDestinazione = saveDirectory.resolve(nomeFile + ".json");
         objectMapper.writeValue(fileDestinazione.toFile(), citta);
         System.out.println("Partita salvata con successo in: " + fileDestinazione.toAbsolutePath());
@@ -56,14 +56,14 @@ public class PersistenceManager {
     /**
      * Legge il JSON dal disco e ricostruisce l'albero degli oggetti in memoria.
      */
-    public Citta caricaPartita(String nomeFile) throws IOException {
+    public StatoCitta caricaPartita(String nomeFile) throws IOException {
         Path fileSorgente = saveDirectory.resolve(nomeFile + ".json");
         
         if (Files.notExists(fileSorgente)) {
             throw new IOException("File di salvataggio non trovato: " + fileSorgente.getFileName());
         }
         
-        Citta citta = objectMapper.readValue(fileSorgente.toFile(), Citta.class);
+        StatoCitta citta = objectMapper.readValue(fileSorgente.toFile(), StatoCitta.class);
         System.out.println("Partita caricata con successo.");
         return citta;
     }

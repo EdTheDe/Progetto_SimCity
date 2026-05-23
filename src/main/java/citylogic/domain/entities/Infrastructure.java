@@ -29,4 +29,9 @@ public abstract class Infrastructure extends UrbanEntity {
     public int getMaxCapacity() {
         return baseMaxCapacity * getDevelopmentLevel();
     }
+
+    @Override
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        stato.addFinanze(-getMaintenanceCost());
+    }
 }

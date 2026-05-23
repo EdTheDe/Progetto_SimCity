@@ -22,4 +22,10 @@ public class Industrial extends Building {
     public int getJobsProduced() {
         return baseJobsProduced * getDevelopmentLevel();
     }
+
+    @Override
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        stats.addPostiLavoro(getJobsProduced());
+        stats.addPuntiInquinamento((int) getBasePollution());
+    }
 }

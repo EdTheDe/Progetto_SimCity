@@ -1,85 +1,64 @@
 package citylogic.core.engine;
 
 import citylogic.domain.state.StatoCitta;
-import citylogic.domain.entities.Edificio;
+import citylogic.domain.state.TickStats;
+import citylogic.domain.entities.UrbanEntity;
+import citylogic.domain.map.UrbanGrid;
 import citylogic.core.strategy.PoliticaStrategy;
 import java.util.List;
+import java.util.ArrayList;
 
 public class SimulationEngine {
     private StatoCitta stato;
-    private List<Edificio> grigliaEdifici;
+    private UrbanGrid griglia;
     private List<PoliticaStrategy> politicheAttive;
 
-    public SimulationEngine(StatoCitta stato, List<Edificio> griglia, List<PoliticaStrategy> politiche) {
+    public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
-        this.grigliaEdifici = griglia;
-        this.politicheAttive = politiche;
+        this.griglia = griglia;
+        this.politicheAttive = new ArrayList<>();
+    }
+
+    public void addPolitica(PoliticaStrategy politica) {
+        this.politicheAttive.add(politica);
     }
 
     public void tick() {
-        // 1. Variabili di accumulo temporaneo per il tick corrente
-        int capacitaAbitativa = 0;
-        int postiLavoro = 0;
-        int puntiInquinamento = 0;
-        double redditoCommerciale = 0.0;
-        int puntiSicurezza = 0;
-        int puntiSanita = 0;
+        TickStats stats = new TickStats();
 
-        // 2. Lettura dei contributi dalla griglia
-        for (Edificio edificio : grigliaEdifici) {
-            if (!edificio.isValid()) continue; // Salta edifici senza servizi base
-
-            double valoreBase = edificio.getLivello() * 10.0;
-
-            switch (edificio.getTipo()) {
-                case RESIDENZIALE: 
-                    capacitaAbitativa += (int) valoreBase; 
-                    break;
-                case INDUSTRIALE: 
-                    postiLavoro += (int) valoreBase;
-                    puntiInquinamento += (int) valoreBase; 
-                    break;
-                case COMMERCIALE: 
-                    redditoCommerciale += valoreBase; 
-                    break;
-                case POLIZIA: 
-                    puntiSicurezza += (int) valoreBase; 
-                    break;
-                case OSPEDALE:
-                case SCUOLA: 
-                    puntiSanita += (int) valoreBase; 
-                    break;
-                default:
-                    break;
+        // 1. Lettura dei contributi dalla griglia usando il polimorfismo
+        for (UrbanEntity entity : griglia.getActiveEntities()) {
+            if (entity.isFunctioning()) {
+                entity.processTick(stato, stats);
             }
         }
 
         double modFelicita = calcolaModificatoreFelicita();
 
-        // 3. Gestione Dinamica Popolazione
-        if (stato.getPopolazione() < capacitaAbitativa) {
-            int crescita = (int) Math.ceil((capacitaAbitativa - stato.getPopolazione()) * 0.2 * modFelicita);
+        // 2. Gestione Dinamica Popolazione
+        if (stato.getPopolazione() < stats.getCapacitaAbitativa()) {
+            int crescita = (int) Math.ceil((stats.getCapacitaAbitativa() - stato.getPopolazione()) * 0.2 * modFelicita);
             stato.setPopolazione(stato.getPopolazione() + Math.max(1, crescita));
-        } else if (stato.getPopolazione() > capacitaAbitativa) {
-            stato.setPopolazione(capacitaAbitativa); 
+        } else if (stato.getPopolazione() > stats.getCapacitaAbitativa()) {
+            stato.setPopolazione(stats.getCapacitaAbitativa()); 
         }
 
         int popAttiva = Math.max(1, stato.getPopolazione()); // Evita divisioni per 0
 
-        // 4. Ricalcolo Metriche di Base
-        stato.setLavoro(((double) postiLavoro / popAttiva) * 100.0);
-        stato.setSicurezza((((double) puntiSicurezza * modFelicita) / popAttiva) * 100.0);
-        stato.setSanita((((double) puntiSanita * modFelicita) / popAttiva) * 100.0);
+        // 3. Ricalcolo Metriche di Base
+        stato.setLavoro(((double) stats.getPostiLavoro() / popAttiva) * 100.0);
+        stato.setSicurezza((((double) stats.getPuntiSicurezza() * modFelicita) / popAttiva) * 100.0);
+        stato.setSanita((((double) stats.getPuntiSanita() * modFelicita) / popAttiva) * 100.0);
         
-        stato.setEcologia(100.0 - (((double) puntiInquinamento / popAttiva) * 30.0));
+        stato.setEcologia(100.0 - (((double) stats.getPuntiInquinamento() / popAttiva) * 30.0));
 
-        // 5. Entrate Commerciali
-        stato.addFinanze(redditoCommerciale * modFelicita);
+        // 4. Entrate Commerciali
+        stato.addFinanze(stats.getRedditoCommerciale() * modFelicita);
 
-        // 6. Applicazione Malus e Dinamiche Globali
+        // 5. Applicazione Malus e Dinamiche Globali
         applicaDinamicheGlobali();
 
-        // 7. Applicazione Strategy (Politiche Cittadine)
+        // 6. Applicazione Strategy (Politiche Cittadine)
         for (PoliticaStrategy politica : politicheAttive) {
             politica.applicaModificatori(stato);
         }

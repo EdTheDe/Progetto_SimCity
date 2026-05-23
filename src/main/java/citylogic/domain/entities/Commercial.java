@@ -16,4 +16,9 @@ public class Commercial extends Building {
     public double getBaseIncome() {
         return baseIncome * getDevelopmentLevel();
     }
+
+    @Override
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        stats.addRedditoCommerciale(getBaseIncome());
+    }
 }

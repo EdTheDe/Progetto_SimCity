@@ -26,4 +26,12 @@ public abstract class UrbanEntity {
     public void upgradeLevel() {
         this.developmentLevel++;
     }
+
+    public boolean isFunctioning() {
+        return true;
+    }
+
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        // Default: no-op
+    }
 }

@@ -1,0 +1,315 @@
+Software Engineering
+project for the final course exam
+A.A. 2025-26
+luca boldrin – luigi rizzoTopics
+Regole generali
+Deliverables
+Argomento del progetto
+Metodologia
+Valutazione
+4/22/2026
+Exam project
+2Regole generali
+Il progetto dovrà essere realizzato in team composto da 4 persone. Registrare il team in:
+https://docs.google.com/spreadsheets/d/1AD_TQYzESVRQYfWx_dKAwETqVxVUA8ad/
+(ovviamente registrarsi anche su uniweb)
+Il team si deve registrare entro le date di consegna del Progetto
+4/22/2026
+Exam project
+3Regole generali - consegna
+•
+Alla consegna, inviare in ogni caso una mail a luca.boldrin@unipd.it e luigi.rizzo@unipd.it
+•
+in CC tutti i componenti del Gruppo
+•Creare Il progetto su Github (una guida). Invitare gli utenti “luca-unipd” e “luigi-rizzo-0606 ” al GitHub.
+•Scadenze (pending confirmation):
+•11/6/26 Ore 8:30 aula Da - presentazione progetto e iscrizione entro 3 giugno alle 24:00
+•1/7/26 Ore 8:30 aula Da/H3 - presentazione progetto e iscrizione entro 23 giugno alle 24:00
+•16/9/26 ore 8:30 aula Da - presentazione progetto e iscrizione entro 28 agosto alle 24:00
+•TBD/2/27 ore 8:30 aula TBD - presentazione progetto e iscrizione entro TBD gennaio alle 24:00
+Successivamente alla consegna ogni gruppo verrà convocato per discutere il Progetto in un orario preciso.
+4/22/2026
+Exam project
+4Regole generali
+• Utilizzare Java
+• User stories su jira
+• Codice e altra documentazione su github.
+• Il design deve includere I diagrammi UML
+• Si consiglia di utilizzare IntelliJ, visualstudio o Eclipse come IDE (maven per le dipendenze)
+• Vanno utilizzati strumenti AI a supporto di user stories, design, coding, test
+4/22/2026
+Exam project
+5Regole generali - consegna
+Verifiche finali prima della consegna
+• rileggere attentamente le specifiche di progetto
+• E’ stato consegnato tutto quello che era richiesto nelle specifiche di
+progetto? (vedi DELIVERABLES)
+• Per eseguire il codice basta fare clone del repository e seguire le
+istruzioni nel manuale di installazione (foolproof) ?
+• Avete padronanza dei contenuti generati con AI ?
+4/22/2026
+Exam project
+6Topics
+Regole generali
+Deliverables
+Argomento del progetto
+Metodologia
+Valutazione
+4/22/2026
+Exam project
+7Deliverables
+6 deliverables SEPARATI:
+1. un manuale" →2-3 pagine - github
+2. Definizione di user stories → jira
+3. un documento di design → 4-5 pagine - github
+4. il codice → github
+5. un documento di system test → 1-2 pagine - github
+6. un report di unit test → automatico
+4/22/2026
+Exam project
+8Deliverables
+manuale (jira) →2-3 pagine
+1. descrizione ad alto livello del Progetto
+2. istruzioni su come installare e lanciare il software.
+3. Indicazioni su ambienti di esecuzione, vincoli su version java, etc.
+4. Un’indicazione delle principali funzioni riutilizzate da librerie esistenti
+(escluse quella banali, log4j, java.utils....)
+5. Indicazione di principali API esterne utilizzate
+6. Indicazione degli strumenti AI utilizzati
+4/22/2026
+Exam project
+9Deliverables
+Definizione di user stories
+(jira) → 10-15 (indicativo)
+1. User stories su jira
+2. Descrizione testuale di
+dettaglio all’interno di ogni
+user story
+3. Includere Acceptance
+(corrispondono n-1 alle user
+stories)
+Utilizzare AI a supporto delle
+user stories (guidato da voi)
+4/22/2026
+Exam project
+10Deliverables
+documento di design (github) → 4-5 pagine
+1. domain model, con una descrizione testuale (se serve)
+2. system sequence diagrams
+3. design class model
+4. Internal sequence diagrams (i più significativi)
+Utilizzare AI a support del design (in modelità guidata)
+4/22/2026
+Exam project
+11Deliverables
+codice (github)
+• Progetto maven con codice, files di compilazione, etc.
+• opportunamente commentato
+• Leggibile e compilabile con un IDE
+• All’interno del codice ci devono essere anche le classi di test (junit)
+Utilizzare per quanto possible AI code generation, richiedendo
+l’utilizzo di design patterns
+Utilizzare AI per la generazione di unit test
+Dovete essere in grado di spiegare e motivare il codice generato
+4/22/2026
+Exam project
+12Deliverables
+Documento di system test (jira) →
+1-2 pagine (indicativo)
+• è un doc che riporta il risultato della
+validazione di ciascun acceptance
+criteria (ok/ko, commenti, data)
+4/22/2026
+Exam project
+13Deliverables
+unit test report (jira)
+• Gli unit test case sono già nel codice, come classi di test. Di
+solito corrispondono 1-1 alle classi software significative.
+• il report è quello generato automaticamente da junit
+4/22/2026
+Exam project
+14Topics
+Regole generali
+Deliverables
+Argomento del progetto
+Metodologia
+Valutazione
+4/22/2026
+Exam project
+15The project
+A ''SimCity Lite'' Engine
+Citylogic is a rule-based simulation engine where users
+manage a city's growth through strategic policy and
+infrastructure placement.
+Unlike visual games, the focus is on the Domain Model: how
+buildings, resources, and policies interact in a complex object-
+oriented environment.
+The goal is to optimize "City Health" (Happiness, Economy,
+Budget, Population, Pollution, …). over a series of simulation
+"ticks".
+4/22/2026
+Exam project
+16Main functionalities
+The Urban Grid
+•Grid Representation: A logic-based map (e.g., 20x20 cells).
+•Object Placement: Ability to "build" different types of entities on the grid:
+• Buildings: Residential (houses), Industrial (factories), Commercial (shops).
+• Infrastructure: Power plants, parks, roads.
+•Resource Management: Every object placed must impact a central "City State" (e.g., Factories
+increase Money but also increase Pollution; Parks decrease Money but increase Happiness).
+The Simulation Engine
+•The "Tick" Mechanism: A command that advances time by one unit (e.g., "Step to Next Month").
+•State Update: In each tick, the engine must iterate through the grid and update global metrics (Budget,
+Population, Pollution, Happiness).
+•Rule Enforcement: Basic logic such as "Residential zones don't grow if there is no Power Plant
+nearby.”
+4/22/2026
+Exam project
+17Main functionalities
+Policy & Strategy System
+•Active Ordinances: The user must be able to activate at least two different "City Policies" (e.g.,
+Environmental Tax vs. Industrial Expansion).
+•Pattern Requirement: implemented using the Strategy Pattern. The calculation of pollution or income
+should change dynamically based on the active strategy.
+Persistence (File I/O)
+•Save/Load: Ability to save the current grid and city stats to a file (JSON or XML) and reload it later. This
+replaces the need for a database.
+Visual "Dashboard"
+a simple dashboard using Java Swing or JavaFX to show real-time graphs of city growth can help in the final
+presentation.
+•Constraint: The UI must be strictly separated from the logic (MVC/Clean Architecture).
+4/22/2026
+Exam project
+18Optional functionalities
+Dynamic Event System Random Events:
+Implement random occurrences like "Fires," "Economic Crashes," or "Heatwaves."
+•These events "Notify" relevant buildings or systems (Observer Pattern). For example, a "Heatwave"
+notifies all buildings to double their energy consumption.
+Citizen Satisfaction Model
+Instead of a global happiness score, create a Citizen or PopulationGroup class with specific needs
+(Jobs, Health, Safety).
+•This allows for a richer Domain Model with more complex interactions.
+Web "Dashboard"
+Use Spring Boot for presentation instead of Java Swing or JavaFX
+4/22/2026
+Exam project
+19Topics
+Regole generali
+Deliverables
+Argomento del progetto
+Metodologia
+Valutazione
+4/22/2026
+Exam project
+20AI usage
+Al is your assistant, not your replacement. You must use Al at every step:
+,.,
+Jira Stories: Draft 10-15 stories via Al.
+Design: Prompt Al for initial UML skeletons.
+</> Coding: Generate calculation methods.
+Testing: Automate edge-case tests.
+Warning: "Black-box'' code you cannot explain will be penalized.
+4/22/2026
+Exam project
+21Dos
+• Do focus on abstraction: Use inheritance and interfaces for buildings (e.g., abstract class Building, interface PowerConsumer).
+• Do use Patterns, e.g.
+•Strategy Pattern: for "City Ordinances." Switching from a "Fossil Fuel Policy" to a "Green Policy" should be as simple as swapping a strategy
+object.
+•Factory Pattern: Ensure your simulation engine doesn't know the concrete classes of the buildings it creates.
+•Observer Pattern: Your "Dashboard" or "Status Logger" should be an observer of the City state, ensuring low coupling.
+• Do use AI for "Pair Programming": Use AI to generate boilerplate, but specifically prompt it to follow the GoF/GRASP
+principles
+• Do document your Prompts: Keep a small log of how AI helped you move from a Requirement to a Design and finally to Code.
+• Do use AI for Unit Testing: Ask AI to generate edge-case tests (e.g., "What happens to the simulation if the budget becomes
+negative?").
+• Do maintain Jira daily: Your 10-15 User Stories must reflect the actual progress. Don't create them all at the end of the 40
+days.
+• Do use GitHub correctly: Use branches and Pull Requests. A single giant commit at the end of the project is a major red flag.
+4/22/2026
+Exam project
+22Don’ts
+• No Databases: Do not use MySQL, PostgreSQL, or MongoDB. These introduce "impedance
+mismatch" problems that distract from object design. Use memory structures (Lists, Maps) and
+simple File I/O.
+• No Low-Code App Builders: Avoid tools like Bubble or Lovable for the final delivery. They are
+great for prototyping ideas, but they hide the object-oriented design we are evaluating.
+• Don't "Copy-Paste-Forget": Never include AI-generated code that you cannot explain line-by-line.
+If you can't motivate why a specific pattern was used, it's considered a failure in the design process.
+• Don't skip the Design Phase: Do not ask AI to "Write the whole app." Instead, ask it to "Suggest a
+class hierarchy for these 3 specific user stories."
+• Avoid the City class doing everything: Do not put tax calculations, building logic, and file saving
+all in one class. This violates the GRASP Creator and Information Expert principles.
+4/22/2026
+Exam project
+23Recommended roadmap
+Week1Week 2-3Week4Weeks
+Team Setup
+User Stories
+Domain ModelCore Logic includ in g
+Design Patterns.Unit test writing/execution
+System test
+Bug Fixing
+ReadmeFinal P ol is h,
+c od e Review, &
+Deliverable Submission.
+Design Model
+4/22/2026
+Exam project
+24Technical resources
+4/22/2026
+Exam project
+25Inspirational resources
+Micropolis-Java
+What it is: A Java port of the original SimCity source code.
+Why study it: It shows how to handle a large grid of objects (Tile objects) and how a simulation
+"engine" iterates through them to calculate effects (pollution, fire risk, growth).
+SE Focus: Look at the Engine and CityLocation classes to see how domain logic is separated
+from state.
+Mars-Simulation-Project
+What it is: A highly complex scientific simulation of a Mars settlement.
+Why study it: It is a masterclass in the Observer Pattern and Factory Pattern. Every settlement
+component is an object that consumes resources.
+SE Focus: Observe how they use "Ticks" to advance time and how various System objects (Air,
+Water, Power) interact without being tightly coupled.
+Open-City-RPG-Backend
+What it is: Various Java-based city "backends" found under the GitHub "City Simulation" topic.
+Why study it: These often show how to implement File I/O (saving/loading city data) using JSON.
+4/22/2026
+Exam project
+26Technical resources
+A. Data Persistence: Jackson Databind
+Converting your Java City object into a .json file and back again.
+B. Unit Testing: JUnit 5
+Testing your calculation strategies.
+C. Pattern Implementation: Java Design Patterns
+This is a live catalog of GoF patterns with Java examples.
+4/22/2026
+Exam project
+27Prompt engineering resources
+Prompt-Engineering-Guide: To learn how to ask AI for Design Patterns specifically
+(e.g., "Chain of Thought" prompting for UML diagrams).
+4/22/2026
+Exam project
+28Topics
+Regole generali
+Deliverables
+Argomento del progetto
+Metodologia
+Valutazione
+4/22/2026
+Exam project
+29Valutazione
+La valutazione del progetto avverrà tenendo conto dei seguenti punti:
+▪ La realizzazione delle specifiche funzionali;
+▪ La coerenza nell’uso della metodologia;
+▪ L’organizzazione e la leggibilità del codice;
+▪ L’adeguatezza della documentazione allegata al progetto
+▪ La corretta definizione dei test
+▪ La presentazione del Progetto
+▪ La capacità di motivare le parti AI generated
+La valutazione individuale dipende dall’efficacia di ciascuno nella presentazione del
+Progetto e da alcune domande individuali sulla parte teorica.
+4/22/2026
+Exam project
+30

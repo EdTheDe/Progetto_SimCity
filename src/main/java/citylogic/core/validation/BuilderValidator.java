@@ -1,8 +1,8 @@
 package citylogic.core.validation;
 
-import citylogic.domain.StatoCitta;
-import citylogic.domain.map.Cella;
-import citylogic.domain.entities.EntitaUrbana;
+import citylogic.domain.state.StatoCitta;
+import citylogic.domain.map.Cell;
+import citylogic.domain.entities.UrbanEntity;
 import java.util.List;
 
 /**
@@ -24,7 +24,7 @@ public class BuilderValidator {
     /**
      * Esegue tutte le validazioni necessarie prima di autorizzare la costruzione.
      */
-    public void validaCostruzione(EntitaUrbana entita, Cella cella, StatoCitta stato) throws CostruzioneException {
+    public void validaCostruzione(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
         for (RegolaCostruzione regola : regole) {
             regola.valida(entita, cella, stato);
         }
@@ -34,13 +34,13 @@ public class BuilderValidator {
 // --- INTERFACCIA E IMPLEMENTAZIONI DELLE REGOLE ---
 
 interface RegolaCostruzione {
-    void valida(EntitaUrbana entita, Cella cella, StatoCitta stato) throws CostruzioneException;
+    void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException;
 }
 
 class RegolaSpazioLibero implements RegolaCostruzione {
     @Override
-    public void valida(EntitaUrbana entita, Cella cella, StatoCitta stato) throws CostruzioneException {
-        if (cella.isOccupata()) {
+    public void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
+        if (cella.isOccupied()) {
             throw new CostruzioneException("Costruzione fallita: La cella selezionata è già occupata.");
         }
     }
@@ -48,11 +48,11 @@ class RegolaSpazioLibero implements RegolaCostruzione {
 
 class RegolaFondiSufficienti implements RegolaCostruzione {
     @Override
-    public void valida(EntitaUrbana entita, Cella cella, StatoCitta stato) throws CostruzioneException {
-        if (stato.getFinanze() < entita.getCostoPiazzamento()) {
+    public void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
+        if (stato.getFinanze() < entita.getPlacementCost()) {
             throw new CostruzioneException(
                 String.format("Fondi insufficienti. Costo: %.2f, Disponibili: %.2f", 
-                              entita.getCostoPiazzamento(), stato.getFinanze())
+                              entita.getPlacementCost(), stato.getFinanze())
             );
         }
     }
