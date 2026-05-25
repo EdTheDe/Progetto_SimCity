@@ -53,7 +53,10 @@ public class UrbanEntityFactory {
             case "road":
                 // Solo costo di piazzamento
                 return new Road(10.0);
-
+            // Ospedale
+            case "hospital":
+                // Costo di piazzamento, Mantenimento, Capacità sanità erogata
+                return new Hospital(400.0, 40.0, 60);
             default:
                 throw new IllegalArgumentException("Unknown entity type: " + type);
         }
