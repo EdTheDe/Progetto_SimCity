@@ -5,22 +5,30 @@ import citylogic.domain.state.TickStats;
 import citylogic.domain.entities.UrbanEntity;
 import citylogic.domain.map.UrbanGrid;
 import citylogic.core.strategy.PoliticaStrategy;
-import java.util.List;
-import java.util.ArrayList;
+import citylogic.core.strategy.PoliticaNeutrale;
+import citylogic.core.strategy.PoliticaAmbientale;
+import citylogic.core.strategy.PoliticaIndustriale;
+
 
 public class SimulationEngine {
     private StatoCitta stato;
     private UrbanGrid griglia;
-    private List<PoliticaStrategy> politicheAttive;
+    private PoliticaStrategy politicaAttiva;
 
     public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
         this.griglia = griglia;
-        this.politicheAttive = new ArrayList<>();
+        this.politicaAttiva = new PoliticaNeutrale();
     }
 
-    public void addPolitica(PoliticaStrategy politica) {
-        this.politicheAttive.add(politica);
+    public void setPoliticaAttiva(PoliticaStrategy nuovaPolitica) {
+        if (nuovaPolitica != null) {
+            this.politicaAttiva = nuovaPolitica;
+        }
+    }
+
+    public PoliticaStrategy getPoliticaAttiva() {
+        return this.politicaAttiva;
     }
 
     public void tick() {
@@ -59,9 +67,7 @@ public class SimulationEngine {
         applicaDinamicheGlobali();
 
         // 6. Applicazione Strategy (Politiche Cittadine)
-        for (PoliticaStrategy politica : politicheAttive) {
-            politica.applicaModificatori(stato);
-        }
+        politicaAttiva.applicaModificatori(stato);
     }
 
     private void applicaDinamicheGlobali() {

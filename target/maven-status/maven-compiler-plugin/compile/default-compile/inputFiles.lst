@@ -1,28 +1,31 @@
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\StateBuilding.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\infrastructure\PersistenceManager.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\ui\MappaGriglia.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\ui\TimeBar.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\core\validation\BuilderValidator.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\ui\TopBar.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Commercial.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\state\TickStats.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\UrbanEntityFactory.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\FireStation.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\UrbanEntity.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\map\Cell.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Building.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Hospital.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Infrastructure.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\PoliceStation.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Industrial.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\WaterPlant.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\School.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\ui\SideBar.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\ui\CityApp.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\PowerPlant.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Residential.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\entities\Road.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\map\UrbanGrid.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\domain\state\StatoCitta.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\core\engine\SimulationEngine.java
-C:\Users\matte\Desktop\Università\PROGETTO NUOVO\Progetto_SimCity\src\main\java\citylogic\core\strategy\PoliticaStrategy.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/state/StatoCitta.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/strategy/PoliticaStrategy.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/strategy/PoliticaAmbientale.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Residential.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/ui/MappaGriglia.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/ui/CityApp.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/strategy/PoliticaIndustriale.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Building.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Industrial.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/School.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Infrastructure.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/PowerPlant.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/state/TickStats.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/PoliceStation.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/StateBuilding.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/ui/SideBar.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/ui/TimeBar.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/engine/SimulationEngine.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/UrbanEntityFactory.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/ui/TopBar.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/FireStation.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/validation/BuilderValidator.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/map/Cell.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/map/UrbanGrid.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/core/strategy/PoliticaNeutrale.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/infrastructure/PersistenceManager.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Commercial.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/UrbanEntity.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Road.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/WaterPlant.java
+/home/edoedoedo/Desktop/Ingegneria del software/SimCity/src/main/java/citylogic/domain/entities/Hospital.java

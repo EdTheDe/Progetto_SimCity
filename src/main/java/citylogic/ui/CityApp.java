@@ -40,6 +40,7 @@ public class CityApp extends Application {
 
         TopBar barraSuperiore = new TopBar();
         barraSuperiore.aggiornaDati(statoCitta);
+        barraSuperiore.setSimulationEngine(motore);
         
         MappaGriglia mappaVisiva = new MappaGriglia(grigliaLogica, validatore, statoCitta, barraSuperiore);
         SideBar barraLaterale = new SideBar(mappaVisiva);

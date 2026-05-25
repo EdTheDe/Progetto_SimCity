@@ -19,11 +19,17 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.File;
 
+import citylogic.core.engine.SimulationEngine;
+import citylogic.core.strategy.PoliticaNeutrale;
+import citylogic.core.strategy.PoliticaAmbientale;
+import citylogic.core.strategy.PoliticaIndustriale;
+
 public class TopBar extends HBox {
 
     private Label lblFinanze, lblPopolazione;
     private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita;
-    private ChoiceBox<String> selettoreModalita;
+    private ChoiceBox<String> selettorePolitica;
+    private SimulationEngine engine;
 
     public TopBar() {
         setSpacing(20);
@@ -63,12 +69,29 @@ public class TopBar extends HBox {
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        // --- SELETTORE MODALITÀ ---
-        selettoreModalita = new ChoiceBox<>();
-        selettoreModalita.getItems().addAll("🟢 Sandbox", "🟡 Standard", "🔴 Sfida");
-        selettoreModalita.setValue("🟡 Standard"); 
-        selettoreModalita.setStyle("-fx-font-weight: bold; -fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #bdc3c7; -fx-border-radius: 12; -fx-padding: 2px 10px;");
-        
+        // --- SELETTORE POLITICHE ---
+        selettorePolitica = new ChoiceBox<>();
+        selettorePolitica.getItems().addAll("⚪ Nessuna Politica", "🟢 Tassa Ambientale", "🏭 Sviluppo Industriale");
+        selettorePolitica.setValue("⚪ Nessuna Politica"); 
+        selettorePolitica.setStyle("-fx-font-weight: bold; -fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #bdc3c7; -fx-border-radius: 12; -fx-padding: 2px 10px;");
+
+        // Listener che intercetta il cambio di selezione e aggiorna la strategia nel motore
+        selettorePolitica.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (engine == null) return;
+            
+            switch (newValue) {
+                case "🟢 Tassa Ambientale":
+                    engine.setPoliticaAttiva(new PoliticaAmbientale());
+                    break;
+                case "🏭 Sviluppo Industriale":
+                    engine.setPoliticaAttiva(new PoliticaIndustriale());
+                    break;
+                default:
+                    engine.setPoliticaAttiva(new PoliticaNeutrale());
+                    break;
+            }
+        });
+
         pbSicurezza = new ProgressBar(0);
         pbSanita = new ProgressBar(0);
         pbEcologia = new ProgressBar(0);
@@ -76,7 +99,7 @@ public class TopBar extends HBox {
 
         // Blocco di destra
         HBox contenitoreDestra = new HBox(15, 
-            selettoreModalita,
+            selettorePolitica,
             creaBarra("🛡️ Sicurezza", pbSicurezza, "-fx-accent: #3498db;"),
             creaBarra("🏥 Sanità", pbSanita, "-fx-accent: #e74c3c;"),
             creaBarra("🌱 Ecologia", pbEcologia, "-fx-accent: #2ecc71;"),
@@ -86,6 +109,10 @@ public class TopBar extends HBox {
         contenitoreDestra.setAlignment(Pos.CENTER_LEFT);
 
         getChildren().addAll(btnImpostazioni, contenitoreSinistra, spacer, contenitoreDestra);
+    }
+
+    public void setSimulationEngine(SimulationEngine engine) {
+        this.engine = engine;
     }
 
     private VBox creaBarra(String nome, ProgressBar bar, String colore) {
