@@ -57,6 +57,10 @@ public class UrbanEntityFactory {
             case "hospital":
                 // Costo di piazzamento, Mantenimento, Capacità sanità erogata
                 return new Hospital(400.0, 40.0, 60);
+            // --- ECOLOGIA E PARCHI ---
+            case "greenarea":
+                // Costo, Mantenimento, Riduzione inquinamento
+                return new GreenArea(50.0, 5.0, -20);
             default:
                 throw new IllegalArgumentException("Unknown entity type: " + type);
         }
