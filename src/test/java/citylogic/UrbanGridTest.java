@@ -32,11 +32,11 @@ class UrbanGridTest {
 
     @Test
     void testGridInitialization() {
-        // Verifica la KAN-4: La mappa deve essere 20x20
-        assertEquals(20, grid.getWidth(), "La larghezza della griglia dovrebbe essere 20");
-        assertEquals(20, grid.getHeight(), "L'altezza della griglia dovrebbe essere 20");
+        // Verifica le dimensioni aggiornate della mappa (24x14)
+        assertEquals(24, grid.getWidth(), "La larghezza della griglia dovrebbe essere 24");
+        assertEquals(14, grid.getHeight(), "L'altezza della griglia dovrebbe essere 14");
 
-        // Verifica la KAN-4: Tutte le celle devono essere vuote all'inizio
+        // Tutte le celle devono essere vuote all'inizio
         Cell cellaProva = grid.getCell(5, 5);
         assertNotNull(cellaProva, "La cella non dovrebbe essere null");
         assertFalse(cellaProva.isOccupied(), "La cella dovrebbe essere vuota appena creata");
