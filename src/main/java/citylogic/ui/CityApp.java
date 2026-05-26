@@ -7,12 +7,11 @@ import citylogic.domain.state.StatoCitta;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundImage;
-import javafx.scene.layout.BackgroundPosition;
-import javafx.scene.layout.BackgroundRepeat;
-import javafx.scene.layout.BackgroundSize;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 
 public class CityApp extends Application {
@@ -29,42 +28,68 @@ public class CityApp extends Application {
         motore = new SimulationEngine(statoCitta, grigliaLogica);
 
         AnchorPane root = new AnchorPane();
-        
-        try {
-            Image sfondImg = new Image(getClass().getResourceAsStream("/immagini/sfondo_isola.png"));
-            BackgroundImage bg = new BackgroundImage(sfondImg, BackgroundRepeat.NO_REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.CENTER, new BackgroundSize(100, 100, true, true, false, true));
-            root.setBackground(new Background(bg));
-        } catch (Exception e) {
-            root.setStyle("-fx-background-color: #87CEEB;");
-        }
+        root.setStyle("-fx-background-color: #1a252f;");
 
         TopBar barraSuperiore = new TopBar();
         barraSuperiore.aggiornaDati(statoCitta);
         barraSuperiore.setSimulationEngine(motore);
         
         MappaGriglia mappaVisiva = new MappaGriglia(grigliaLogica, validatore, statoCitta, barraSuperiore);
+        barraSuperiore.setRiferimenti(grigliaLogica, statoCitta, mappaVisiva);
+        
         SideBar barraLaterale = new SideBar(mappaVisiva);
         TimeBar barraTempo = new TimeBar(motore, barraSuperiore, mappaVisiva, statoCitta);
 
-        // Aggiungiamo tutti gli elementi sovrapposti
-        root.getChildren().addAll(mappaVisiva, barraSuperiore, barraLaterale, barraTempo);
+        // Blocco logico 1280x720 che unisce griglia e immagine
+        StackPane areaGiocoBase = new StackPane();
+        areaGiocoBase.setPrefSize(1280, 720);
+        areaGiocoBase.setMinSize(1280, 720);
+        areaGiocoBase.setMaxSize(1280, 720);
 
-        // La mappa occupa tutto lo schermo ed è sul fondo
-        AnchorPane.setTopAnchor(mappaVisiva, 0.0);
-        AnchorPane.setBottomAnchor(mappaVisiva, 0.0);
-        AnchorPane.setLeftAnchor(mappaVisiva, 0.0);
-        AnchorPane.setRightAnchor(mappaVisiva, 0.0);
+        try {
+            Image sfondImg = new Image(getClass().getResourceAsStream("/immagini/sfondo_isola.png"));
+            ImageView sfondoView = new ImageView(sfondImg);
+            sfondoView.setFitWidth(1280);
+            sfondoView.setFitHeight(720);
+            areaGiocoBase.getChildren().add(sfondoView);
+        } catch (Exception e) {
+            areaGiocoBase.setStyle("-fx-background-color: #87CEEB;");
+        }
 
-        // Barra superiore trasparente ancorata in alto
+        // Regolazione in pixel della griglia
+        mappaVisiva.setTranslateY(40); 
+        areaGiocoBase.getChildren().add(mappaVisiva);
+
+        // --- LA SOLUZIONE DEFINITIVA ---
+        // Pane normale (nessuna centratura automatica che sballa i bordi)
+        Pane contenitoreScalabile = new Pane(areaGiocoBase);
+        
+        Scale scaleTransform = new Scale();
+        // Fissiamo il punto di origine dell'ingrandimento in alto a sinistra!
+        scaleTransform.setPivotX(0);
+        scaleTransform.setPivotY(0);
+        
+        // Colleghiamo la scala alle dimensioni della finestra
+        scaleTransform.xProperty().bind(root.widthProperty().divide(1280.0));
+        scaleTransform.yProperty().bind(root.heightProperty().divide(720.0));
+        
+        areaGiocoBase.getTransforms().add(scaleTransform);
+        // --- FINE ---
+
+        AnchorPane.setTopAnchor(contenitoreScalabile, 0.0);
+        AnchorPane.setBottomAnchor(contenitoreScalabile, 0.0);
+        AnchorPane.setLeftAnchor(contenitoreScalabile, 0.0);
+        AnchorPane.setRightAnchor(contenitoreScalabile, 0.0);
+
+        root.getChildren().addAll(contenitoreScalabile, barraSuperiore, barraLaterale, barraTempo);
+
         AnchorPane.setTopAnchor(barraSuperiore, 0.0);
         AnchorPane.setLeftAnchor(barraSuperiore, 0.0);
         AnchorPane.setRightAnchor(barraSuperiore, 0.0);
 
-        // Menu laterale ancorato a sinistra sotto la TopBar
         AnchorPane.setTopAnchor(barraLaterale, 80.0); 
         AnchorPane.setLeftAnchor(barraLaterale, 20.0);
 
-        // Controlli del tempo ancorati in basso a destra
         AnchorPane.setBottomAnchor(barraTempo, 30.0);
         AnchorPane.setRightAnchor(barraTempo, 30.0);
 

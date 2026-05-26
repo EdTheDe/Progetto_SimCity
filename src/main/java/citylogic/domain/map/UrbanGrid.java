@@ -113,4 +113,13 @@ public class UrbanGrid {
 
         return true;
     }
+
+    public void azzeraMappa() {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                grid[i][j] = new Cell(i, j);
+            }
+        }
+        activeEntities.clear();
+    }
 }
