@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/citylogic/domain/entities/UrbanEntityFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/citylogic/domain/entities/UrbanEntityFactory.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
