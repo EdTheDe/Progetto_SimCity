@@ -1,6 +1,18 @@
-Secondo me dovremmo aggiungere l'entità "area verde" , sia nelle user stories che nel documento di design e in tutto il resto perchè altrimenti il livello di ecologia si abbassa tantissimo se abbiamo troppe fabbriche, senza riscire ad alzarlo.
-il parco potrebbe anche aumentare la felicità.
-
 aggiungere nel documento di design tutte le interaione grafiche fra tick/tick che avanza da solo/ shop, aggiungere un glossario...
 
-agigungere il modificatore delle politiche che attualmente non funziona
+
+
+COSE DA SISTEMARE PER GUI BIANZ
+
+-Nella barra delle statistiche manca "Lavoro", da aggiungere
+-Da rimuovere l'immagine dietro "dell isola" e tenere qualcosa di piu semplice, come ad esempio una "pianura" perchè l'isola limita la porzione di schermo in cui può essere visibile la griglia => icone più piccole. Risoluzione: Sostituire l'immagine dell isola dietro, aggiungere immagine di erba normale, ampliare la zona di schermo in cui è visibile la griglia e renderla responsive alla dimensione dello schermo.
+-sistemare la dimensione 
+-ampliare la dimensione delle icone e sistemare il fatto che le strade posizionate in orizzontale non compaiono e più in generale non si collegano le strade
+
+COSE DA SISTEMARE EDO
+-Nonostante non ci siano edifici costruiti nell isola, vengono scalati soldi con l'avanzamento dei tick (immagino come costi di mantenimento)
+-controllare sche scuola, pompieri, polizia e ospedale influiscano effettivamente nel calcolo delle statistiche
+
+COSE DA SISTEMARE MAC
+Quando salvo una partita, ricomincio e dopo faccio importa partita, non riposizione gli edifici posizionati, non ritorna allo stesso valore di denaro ... non importa il salvataggio . può essere per un assenza dell'action listener sul bottone di importa (problema bianz) oppure perche il metodo che importa non funziona (problema mac)
+-controllare che gli edifici per essere validi siano collegati a una centrale di polizia, dei pompieri e ad un ospedale (come scritto nelle user stories)
