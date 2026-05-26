@@ -15,3 +15,4 @@ COSE DA SISTEMARE EDO
 
 COSE DA SISTEMARE MAC
 Quando salvo una partita, ricomincio e dopo faccio importa partita, non riposizione gli edifici posizionati, non ritorna allo stesso valore di denaro ... non importa il salvataggio . può essere per un assenza dell'action listener sul bottone di importa (problema bianz) oppure perche il metodo che importa non funziona (problema mac)
+-controllare che gli edifici per essere validi siano collegati a una centrale di polizia, dei pompieri e ad un ospedale (come scritto nelle user stories)
