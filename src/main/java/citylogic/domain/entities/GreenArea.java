@@ -24,4 +24,10 @@ public class GreenArea extends Infrastructure {
     public int getPollutionReduction() {
         return getMaxCapacity();
     }
+
+    @Override
+    public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        stats.addPuntiInquinamento((int) getPollutionReduction());
+    }
+
 }
