@@ -21,8 +21,8 @@ public class UrbanGrid {
      * KAN-4 -> "generare una mappa logica 20x20".
      */
     public UrbanGrid() {
-        this.width = 24;
-        this.height = 14;
+        this.width = 20;
+        this.height = 20;
         this.grid = new Cell[width][height];
         initializeGrid();
         this.activeEntities = new ArrayList<>(); // lista aggiunta alla griglia
@@ -37,7 +37,7 @@ public class UrbanGrid {
     }
 
     public int getWidth() { 
-        return width; 
+        return width;   
     }
     
     public int getHeight() { 
@@ -76,6 +76,10 @@ public class UrbanGrid {
      * @param y Coordinata Y
      */
     public void placeEntity(UrbanEntity entity, int x, int y) {
+        // Controllo che entità esista e non sia null.
+        if (entity == null) {
+        throw new IllegalArgumentException("Impossibile piazzare un'entità nulla sulla griglia.");
+    }
         // 1. Recupera la cella in sicurezza (il controllo Out-of-Bounds è già in getCell!)
         Cell targetCell = getCell(x, y);
 
