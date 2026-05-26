@@ -21,8 +21,8 @@ public class UrbanGrid {
      * KAN-4 -> "generare una mappa logica 20x20".
      */
     public UrbanGrid() {
-        this.width = 24;
-        this.height = 14;
+        this.width = 20;
+        this.height = 20;
         this.grid = new Cell[width][height];
         initializeGrid();
         this.activeEntities = new ArrayList<>(); // lista aggiunta alla griglia
