@@ -21,8 +21,8 @@ public class UrbanGrid {
      * KAN-4 -> "generare una mappa logica 20x20".
      */
     public UrbanGrid() {
-        this.width = 20;
-        this.height = 20;
+        this.width = 24;
+        this.height = 14;
         this.grid = new Cell[width][height];
         initializeGrid();
         this.activeEntities = new ArrayList<>(); // lista aggiunta alla griglia
@@ -112,5 +112,14 @@ public class UrbanGrid {
         activeEntities.remove(entityToRemove);
 
         return true;
+    }
+
+    public void azzeraMappa() {
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                grid[i][j] = new Cell(i, j);
+            }
+        }
+        activeEntities.clear();
     }
 }

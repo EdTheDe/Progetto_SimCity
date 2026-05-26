@@ -32,6 +32,16 @@ public class StatoCitta {
         return Math.max(0.0, Math.min(100.0, value));
     }
 
+    public void reset() {
+        this.popolazione = 0;
+        this.finanze = 1000.0;
+        this.felicita = 50.0; // Ricorda che puoi mettere 0.0 se vuoi che non parta a metà
+        this.ecologia = 100.0;
+        this.lavoro = 0.0;
+        this.sicurezza = 0.0;
+        this.sanita = 0.0;
+    }
+
     public int getPopolazione() { return popolazione; }
     public double getFinanze() { return finanze; }
     public double getFelicita() { return felicita; }
