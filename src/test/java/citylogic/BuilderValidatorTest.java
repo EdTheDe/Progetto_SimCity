@@ -46,6 +46,18 @@ class BuilderValidatorTest {
     }
 
     @Test
+    void validaCostruzione_Successo_QuandoFondiEsattamenteSufficienti() {
+        // Arrange: Il giocatore ha i soldi contati per l'edificio
+        when(cellaMock.isOccupied()).thenReturn(false);
+        when(entitaMock.getPlacementCost()).thenReturn(100.0);
+        when(statoMock.getFinanze()).thenReturn(100.0);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock),
+                "La validazione deve passare se i fondi del giocatore sono esattamente pari al costo dell'edificio.");
+    }
+
+    @Test
     void validaCostruzione_LanciaEccezione_QuandoCellaOccupata() {
         when(cellaMock.isOccupied()).thenReturn(true);
 

@@ -1,205 +1,110 @@
 classDiagram
-    %% ==========================================
-    %% PATTERN OBSERVER (Separazione Logica / UI)
-    %% ==========================================
-    class Subject {
-        <<interface>>
-        +attach(Observer o)
-        +detach(Observer o)
-        +notifyObservers()
-    }
-    class Observer {
-        <<interface>>
-        +update(StatoCitta stato)
-    }
-
-    %% ==========================================
-    %% CORE ENGINE & PERSISTENCE (Architettura)
-    %% ==========================================
     class SimulationEngine {
-        -Citta citta
-        -List~Observer~ observers
+        -UrbanGrid grid
+        -StatoCitta state
+        -PoliticaStrategy activePolicy
         +tick()
-        +costruisciEntita(String tipo, int x, int y)
-        +attivaPolitica(PoliticaStrategy p)
-    }
-
-    class PersistenceManager {
-        <<interface>>
-        +salvaStato(Citta citta, String path)
-        +caricaStato(String path) : Citta
-    }
-    class JsonCityRepository {
-        +salvaStato(Citta citta, String path)
-        +caricaStato(String path) : Citta
-    }
-
-    %% ==========================================
-    %% DOMAIN MODEL - CLASSI CENTRALI
-    %% ==========================================
-    class Citta {
-        -StatoCitta stato
-        -GrigliaUrbana griglia
-        -List~PoliticaStrategy~ politicheAttive
-        -List~EventoSpeciale~ eventiAttivi
-        +aggiornaCitta()
     }
 
     class StatoCitta {
-        -int finanze
-        -int popolazione
-        -int felicita
-        -int lavoro
-        -int sicurezza
-        -int sanita
-        -int ecologia
-        +aggiornaMetrica(String metrica, int valore)
+        -int finances
+        -int population
+        -int happiness
+        -int jobs
+        -int safety
+        -int health
+        -int ecology
     }
 
-    class GrigliaUrbana {
-        -int dimensione
-        -Cella[][] celle
-        +getCella(int x, int y) : Cella
-        +posizionaEntita(EntitaUrbana e, int x, int y)
+    class UrbanGrid {
+        -int width
+        -int height
+        -Cell[][] cells
+        +placeEntity(UrbanEntity entity, int x, int y)
     }
 
-    class Cella {
-        -int coordX
-        -int coordY
-        -EntitaUrbana occupante
-        +isLibera() : boolean
+    class Cell {
+        -int x
+        -int y
+        -UrbanEntity occupant
     }
 
-    %% ==========================================
-    %% PATTERN FACTORY
-    %% ==========================================
-    class EntitaUrbanaFactory {
-        +creaEntita(String tipo) : EntitaUrbana
-    }
-
-    %% ==========================================
-    %% GERARCHIA ENTITÀ URBANE (Ereditarietà)
-    %% ==========================================
-    class EntitaUrbana {
+    class UrbanEntity {
         <<abstract>>
-        -int costoPiazzamento
-        -int livello
-        +applicaEffettoTick(StatoCitta stato)*
+        -int placementCost
+        -int developmentLevel
     }
 
-    class Edificio {
+    class Road {
+    }
+
+    class Building {
         <<abstract>>
-        -int fabbisognoEnergetico
-        -int fabbisognoIdrico
+        -int energyDemand
+        -int waterDemand
     }
 
-    class Infrastruttura {
+    class Commercial {
+        -int baseIncome
+    }
+
+    class Industrial {
+        -int basePollution
+        -int baseJobs
+    }
+
+    class Residential {
+        -int housingCapacity
+    }
+
+    class Infrastructure {
         <<abstract>>
-        -int capacitaMassima
-        -int costoMantenimento
+        -int maxCapacity
+        -int maintenanceCost
     }
 
-    class Strada {
-        +applicaEffettoTick(StatoCitta stato)
+    class PowerPlant {
     }
 
-    %% Sottoclassi Edificio
-    class Residenziale {
-        -int capacitaAbitativa
-        +applicaEffettoTick(StatoCitta stato)
-    }
-    class Industriale {
-        -int inquinamentoBase
-        +applicaEffettoTick(StatoCitta stato)
-    }
-    class Commerciale {
-        -int redditoBase
-        +applicaEffettoTick(StatoCitta stato)
+    class WaterPlant {
     }
 
-    %% Sottoclassi Infrastruttura
-    class EdificioElettrico {
-        +immettiEnergia(ReteElettrica rete)
-    }
-    class EdificioIdrico {
-        +immettiAcqua(ReteIdrica rete)
-    }
-    class Statale {
+    class StateBuilding {
         <<abstract>>
     }
-    class Polizia { +applicaEffettoTick(StatoCitta stato) }
-    class Scuola { +applicaEffettoTick(StatoCitta stato) }
-    class Pompieri { +applicaEffettoTick(StatoCitta stato) }
 
-    %% Reti Logiche
-    class ReteElettrica {
-        -int caricoAttuale
-        +bilanciaRete()
-    }
-    class ReteIdrica {
-        -int pressioneAttuale
-        +bilanciaRete()
+    class PoliceStation {
     }
 
-    %% ==========================================
-    %% PATTERN STRATEGY (Politiche)
-    %% ==========================================
+    class School {
+    }
+
+    class FireStation {
+    }
+
     class PoliticaStrategy {
         <<interface>>
-        +applicaRegola(StatoCitta stato)
-    }
-    class TassaAmbientale {
-        +applicaRegola(StatoCitta stato)
-    }
-    class EspansioneIndustriale {
-        +applicaRegola(StatoCitta stato)
+        +applyEffects(StatoCitta state)
     }
 
-    %% Eventi Speciali
-    class EventoSpeciale {
-        -String tipoEvento
-        -int durata
-        -int intensita
-        +innescaEffetto(StatoCitta stato)
-    }
+    SimulationEngine "1" --> "1" UrbanGrid : contains
+    SimulationEngine "1" --> "1" StatoCitta : manages
+    SimulationEngine "1" --> "0..*" PoliticaStrategy : applies
+    UrbanGrid "1" --> "20x20" Cell : subdivides into
+    Cell "1" --> "0..1" UrbanEntity : hosts
+    
+    UrbanEntity <|-- Road
+    UrbanEntity <|-- Building
+    UrbanEntity <|-- Infrastructure
 
-    %% ==========================================
-    %% RELAZIONI E COLLEGAMENTI
-    %% ==========================================
-    Subject <|.. SimulationEngine : implements
-    Observer <|.. DashboardView : implements (UI)
+    Building <|-- Residential
+    Building <|-- Industrial
+    Building <|-- Commercial
 
-    SimulationEngine --> Citta : gestisce
-    SimulationEngine --> EntitaUrbanaFactory : usa
-    SimulationEngine --> PersistenceManager : usa
-    PersistenceManager <|.. JsonCityRepository : implements
+    Infrastructure <|-- PowerPlant
+    Infrastructure <|-- WaterPlant
+    Infrastructure <|-- StateBuilding
 
-    Citta *-- StatoCitta : composizione
-    Citta *-- GrigliaUrbana : composizione
-    Citta o-- PoliticaStrategy : aggregazione
-    Citta o-- EventoSpeciale : aggregazione
-
-    GrigliaUrbana *-- Cella : composizione
-    Cella o-- EntitaUrbana : contiene (0..1)
-
-    EntitaUrbana <|-- Edificio : inheritance
-    EntitaUrbana <|-- Infrastruttura : inheritance
-    EntitaUrbana <|-- Strada : inheritance
-
-    Edificio <|-- Residenziale
-    Edificio <|-- Industriale
-    Edificio <|-- Commerciale
-
-    Infrastruttura <|-- EdificioElettrico
-    Infrastruttura <|-- EdificioIdrico
-    Infrastruttura <|-- Statale
-
-    Statale <|-- Polizia
-    Statale <|-- Scuola
-    Statale <|-- Pompieri
-
-    EdificioElettrico --> ReteElettrica : alimenta
-    EdificioIdrico --> ReteIdrica : alimenta
-
-    PoliticaStrategy <|.. TassaAmbientale
-    PoliticaStrategy <|.. EspansioneIndustriale
+    StateBuilding <|-- PoliceStation
+    StateBuilding <|-- School
+    StateBuilding <|-- FireStation

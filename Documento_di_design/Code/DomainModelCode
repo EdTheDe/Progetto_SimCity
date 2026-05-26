@@ -1,131 +1,125 @@
 classDiagram
+    class Simulation {
+        nomeCitta
+    }
+    
+    class Policy {
+        nome
+        attiva
+        costo
+    }
+    
+    class SpecialEvent {
+        tipoEvento
+        durata
+        intensita
+    }
+    
+    class UrbanGrid {
+        dimensioni
+    }
+    
+    class Cell {
+        coordinate
+        occupata
+    }
+    
+    class UrbanEntity {
+        costoPiazzamento
+        livelloSviluppo
+    }
+    
+    class Road 
+    
+    class Building {
+        fabbisognoEnergetico
+        fabbisognoIdrico
+    }
+    
+    class Infrastructure {
+        capacitaMassima
+        costoMantenimento
+    }
+    
+    class Residential {
+        capacitaAbitativa
+    }
+    
+    class Industrial {
+        produzioneInquinamento
+        produzioneLavoro
+    }
+    
+    class Commercial {
+        generazioneReddito
+    }
+    
+    class PowerPlant {
+        energiaImMessa
+    }
+    
+    class WaterPlant {
+        acquaImMessa
+    }
+    
+    class StateBuilding 
+    class PoliceStation 
+    class School 
+    class FireStation 
+    
+    class PowerGrid {
+        caricoAttuale
+    }
+    
+    class WaterGrid {
+        pressioneAttuale
+    }
+    
+    class StatoCitta {
+        finanze
+        popolazione
+        felicita
+        lavoro
+        sicurezza
+        sanita
+        ecologia
+    }
 
-class Citta {
-  nome
-}
+    %% Relazioni principali della Simulazione
+    Simulation "1" --> "0..*" Policy : applica
+    Simulation "1" --> "0..*" SpecialEvent : subisce
+    Simulation "1" --> "1" UrbanGrid : formata da
+    Simulation "1" --> "1" StatoCitta : possiede
 
-class StatoCitta {
-  Finanze
-  Popolazione
-  Felicità
-  Lavoro
-  Sicurezza
-  Sanità
-  Ecologia
+    %% Composizione della Mappa
+    UrbanGrid "1" --> "1..*" Cell : suddivisa in
+    Cell "1" --> "0..1" UrbanEntity : ospita fisicamente
 
-}
+    %% Gerarchia delle Entità Urbane
+    UrbanEntity <|-- Road
+    UrbanEntity <|-- Building
+    UrbanEntity <|-- Infrastructure
 
-class PoliticaCittadina {
-  nome
-  attiva
-  costo
-}
+    %% Tipologie di Edifici
+    Building <|-- Residential
+    Building <|-- Industrial
+    Building <|-- Commercial
 
-class GrigliaUrbana {
-  dimensione
-}
+    %% Tipologie di Infrastrutture
+    Infrastructure <|-- PowerPlant
+    Infrastructure <|-- WaterPlant
+    Infrastructure <|-- StateBuilding
 
-class EventoSpeciale {
-  tipo evento
-  durata
-  intensita
-}
+    %% Edifici Statali
+    StateBuilding <|-- PoliceStation
+    StateBuilding <|-- School
+    StateBuilding <|-- FireStation
 
-class Cella {
-  coordinate
-  occupata
-}
+    %% Gestione Reti e Impatti
+    Building "1..*" --> "1" PowerGrid : consuma energia da
+    Building "1..*" --> "1" WaterGrid : consuma acqua da
 
-class EntitaUrbana {
-  costo piazzamento
-  livello
-}
+    PowerPlant "1..*" --> "1" PowerGrid : immette energia in
+    WaterPlant "1..*" --> "1" WaterGrid : immette acqua in
 
-class Edificio {
-  fabbisogno energetico
-  fabbisogno idrico
-}
-
-class Infrastruttura {
-  capacita massima edificio
-  costo mantenimento
-}
-
-class Residenziale {
-  capacita abitativa
-}
-
-class Industriale {
-  produzione inquinamento base
-  produzione Lavoro
-}
-
-class Commerciale {
-  generazione reddito base
-}
-
-class EdificioElettrico {
-}
-
-class EdificioIdrico {
-}
-
-class Strada {
-}
-
-class Statale {
-}
-
-class Polizia {
-    capacita poliziotti
-}
-
-class Scuola {
-  capacita studenti
-}
-
-class Pompieri {
-  capacita pompieri
-}
-
-class ReteElettrica {
-  carico attuale
-}
-
-class ReteIdrica {
-  pressione attuale
-}
-
-Citta "1" *-- "1" StatoCitta : possiede
-Citta "1" o-- "*" PoliticaCittadina : applica
-Citta "1" *-- "1" GrigliaUrbana : formata da
-Citta "1" o-- "*" EventoSpeciale : subisce
-
-GrigliaUrbana "1" *-- "*" Cella : suddivisa in
-Cella "1" --> "0..1" EntitaUrbana : ospita fisicamente
-
-
-EntitaUrbana <|-- Edificio
-EntitaUrbana <|-- Strada
-EntitaUrbana <|-- Infrastruttura
-
-Edificio <|-- Residenziale
-Edificio <|-- Industriale
-Edificio <|-- Commerciale
-
-Infrastruttura <|-- EdificioElettrico
-Infrastruttura <|-- EdificioIdrico
-Infrastruttura <|-- Statale
-
-Statale <|-- Polizia
-Statale <|-- Scuola
-Statale <|-- Pompieri
-
-EdificioElettrico "1" --> "1" ReteElettrica : immette energia in
-EdificioIdrico "1" --> "1" ReteIdrica : immette acqua in
-
-Edificio "*" --> "1" ReteElettrica : consuma energia da
-Edificio "*" --> "1" ReteIdrica : consuma acqua da
-
-Statale --> StatoCitta : influisce in
-Edificio --> StatoCitta: influisce in
+    UrbanEntity "0..*" --> "1" StatoCitta : influisce su
