@@ -8,17 +8,47 @@ import citylogic.core.strategy.PoliticaStrategy;
 import citylogic.core.strategy.PoliticaNeutrale;
 import citylogic.core.strategy.PoliticaAmbientale;
 import citylogic.core.strategy.PoliticaIndustriale;
+import citylogic.core.events.RandomEvent;
+import citylogic.core.events.PrimaveraEvent;
+import citylogic.core.events.CrisiEconomicaEvent;
+import citylogic.core.events.GuerraEvent;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Random;
 
 
 public class SimulationEngine {
     private StatoCitta stato;
     private UrbanGrid griglia;
     private PoliticaStrategy politicaAttiva;
+    
+    private List<CityObserver> observers;
+    private RandomEvent activeEvent;
+    private Random random;
 
     public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
         this.griglia = griglia;
         this.politicaAttiva = new PoliticaNeutrale();
+        this.observers = new ArrayList<>();
+        this.random = new Random();
+        this.activeEvent = null;
+    }
+
+    public void addObserver(CityObserver observer) {
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
+    }
+
+    public void removeObserver(CityObserver observer) {
+        observers.remove(observer);
+    }
+
+    private void notifyObservers() {
+        for (CityObserver observer : observers) {
+            observer.onSimulationUpdated(stato);
+        }
     }
 
     public void setPoliticaAttiva(PoliticaStrategy nuovaPolitica) {
@@ -68,6 +98,34 @@ public class SimulationEngine {
 
         // 6. Applicazione Strategy (Politiche Cittadine)
         politicaAttiva.applicaModificatori(stato);
+
+        // 7. Gestione Eventi Randomici
+        gestisciEventi(stats);
+
+        // 8. Notifica gli Observer (UI)
+        notifyObservers();
+    }
+
+    private void gestisciEventi(TickStats stats) {
+        if (activeEvent != null) {
+            // Applica modificatori e decrementa durata
+            activeEvent.applyModifiers(stato, stats);
+            activeEvent.decrementTick();
+            
+            if (activeEvent.isExpired()) {
+                activeEvent = null; // Fine evento
+            }
+        } else {
+            // Possibilità del 15% di triggerare un nuovo evento
+            if (random.nextDouble() < 0.15) {
+                int tipoEvento = random.nextInt(3);
+                switch (tipoEvento) {
+                    case 0: activeEvent = new PrimaveraEvent(); break;
+                    case 1: activeEvent = new CrisiEconomicaEvent(); break;
+                    case 2: activeEvent = new GuerraEvent(); break;
+                }
+            }
+        }
     }
 
     private void applicaDinamicheGlobali() {
