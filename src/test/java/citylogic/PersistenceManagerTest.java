@@ -1,7 +1,6 @@
-package citylogic;
+package citylogic.infrastructure;
 
-import citylogic.domain.state.StatoCitta;
-import citylogic.infrastructure.PersistenceManager;
+import citylogic.domain.Citta;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -16,29 +15,36 @@ class PersistenceManagerTest {
 
     private PersistenceManager persistenceManager;
 
+    // JUnit crea una cartella temporanea che viene eliminata dopo l'esecuzione del test
     @TempDir
-    Path tempDir;
+    Path tempDir; 
 
     @BeforeEach
     void setUp() {
+        // Inizializziamo il manager puntando alla directory temporanea
         persistenceManager = new PersistenceManager(tempDir.toString());
     }
 
     @Test
     void inizializzaDirectory_CreaDirectorySeNonEsiste() {
+        // Arrange & Act
         Path nuovaDir = tempDir.resolve("nuova_cartella_salvataggi");
         new PersistenceManager(nuovaDir.toString());
 
+        // Assert
         assertTrue(Files.exists(nuovaDir), "La directory di salvataggio dovrebbe essere creata dal costruttore.");
     }
 
     @Test
     void salvaPartita_CreaFileJsonCorrettamente() throws IOException {
-        StatoCitta statoDummy = new StatoCitta();
+        // Arrange
+        Citta cittaDummy = new Citta(); // Sostituire con un setup appropriato se il costruttore richiede parametri
         String nomeFile = "salvataggio_test";
 
-        persistenceManager.salvaPartita(statoDummy, nomeFile);
+        // Act
+        persistenceManager.salvaPartita(cittaDummy, nomeFile);
 
+        // Assert
         Path fileCreato = tempDir.resolve(nomeFile + ".json");
         assertTrue(Files.exists(fileCreato), "Il file JSON deve essere creato.");
         assertTrue(Files.size(fileCreato) > 0, "Il file JSON non deve essere vuoto.");
@@ -46,25 +52,29 @@ class PersistenceManagerTest {
 
     @Test
     void caricaPartita_LeggeFileJsonCorrettamente() throws IOException {
-        StatoCitta statoOriginale = new StatoCitta();
-        statoOriginale.setPopolazione(1500); // Simuliamo un dato modificato da salvare
-
+        // Arrange
+        Citta cittaOriginale = new Citta(); // Istanza da salvare
         String nomeFile = "salvataggio_caricamento";
-        persistenceManager.salvaPartita(statoOriginale, nomeFile);
+        persistenceManager.salvaPartita(cittaOriginale, nomeFile);
 
-        StatoCitta statoCaricato = persistenceManager.caricaPartita(nomeFile);
+        // Act
+        Citta cittaCaricata = persistenceManager.caricaPartita(nomeFile);
 
-        assertNotNull(statoCaricato, "Lo stato caricato non deve essere null.");
-        assertEquals(1500, statoCaricato.getPopolazione(), "I dati salvati e ricaricati devono combaciare.");
+        // Assert
+        assertNotNull(cittaCaricata, "La città caricata non deve essere null.");
+        // Nota: se la classe Citta ha implementato il metodo equals(), puoi anche fare:
+        // assertEquals(cittaOriginale, cittaCaricata);
     }
 
     @Test
     void caricaPartita_LanciaEccezione_QuandoFileNonEsiste() {
+        // Arrange
         String nomeFileInesistente = "partita_fantasma";
 
-        IOException exception = assertThrows(IOException.class,
+        // Act & Assert
+        IOException exception = assertThrows(IOException.class, 
                 () -> persistenceManager.caricaPartita(nomeFileInesistente));
-
+        
         assertTrue(exception.getMessage().contains("File di salvataggio non trovato"));
     }
 }

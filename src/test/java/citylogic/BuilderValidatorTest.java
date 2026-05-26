@@ -1,4 +1,4 @@
-package citylogic.core.validation;
+package citylogic; // <-- CORRETTO
 
 import citylogic.core.validation.BuilderValidator;
 import citylogic.core.validation.CostruzioneException;
