@@ -1,8 +1,6 @@
 package citylogic.infrastructure;
 
 import citylogic.domain.state.StatoCitta;
-import com.fasterxml.jackson.annotation.JsonAutoDetect;
-import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -25,18 +23,17 @@ public class PersistenceManager {
         this.saveDirectory = Paths.get(directoryPath);
         this.objectMapper = new ObjectMapper();
 
-        // Configurazioni per Jackson: formattazione e supporto per le date
+        // Configurazioni per Jackson: formattazione leggibile e supporto per le date
         this.objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
         this.objectMapper.registerModule(new JavaTimeModule());
         this.objectMapper.disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
 
-        // FIX CRITICO: Permette a Jackson di serializzare/deserializzare i campi privati
-        // anche se mancano i relativi metodi "setter" nella classe StatoCitta
-        this.objectMapper.setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
-
         inizializzaDirectory();
     }
 
+    /**
+     * Assicura che la directory di destinazione esista prima di operare.
+     */
     private void inizializzaDirectory() {
         try {
             if (Files.notExists(this.saveDirectory)) {
@@ -47,12 +44,18 @@ public class PersistenceManager {
         }
     }
 
+    /**
+     * Serializza l'intero oggetto StatoCitta e lo scrive su disco.
+     */
     public void salvaPartita(StatoCitta citta, String nomeFile) throws IOException {
         Path fileDestinazione = saveDirectory.resolve(nomeFile + ".json");
         objectMapper.writeValue(fileDestinazione.toFile(), citta);
         System.out.println("Partita salvata con successo in: " + fileDestinazione.toAbsolutePath());
     }
 
+    /**
+     * Legge il JSON dal disco e ricostruisce l'albero degli oggetti in memoria.
+     */
     public StatoCitta caricaPartita(String nomeFile) throws IOException {
         Path fileSorgente = saveDirectory.resolve(nomeFile + ".json");
 

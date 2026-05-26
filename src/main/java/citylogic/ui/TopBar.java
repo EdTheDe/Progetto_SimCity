@@ -141,7 +141,7 @@ public class TopBar extends HBox {
             if (file != null && logica != null && stato != null) {
                 try {
                     PersistenceManager pm = new PersistenceManager(file.getParent());
-                    pm.caricaPartita(file.getName().replace(".json", ""), stato, logica);
+                    pm.caricaPartita(file.getName().replace(".json", ""));
                     
                     mappaVisiva.rinfrescaMappaCompleta();
                     aggiornaDati(stato);
@@ -161,7 +161,7 @@ public class TopBar extends HBox {
             if (file != null && logica != null && stato != null) {
                 try {
                     PersistenceManager pm = new PersistenceManager(file.getParent());
-                    pm.salvaPartita(stato, logica, file.getName().replace(".json", ""));
+                    pm.salvaPartita(stato, file.getName().replace(".json", ""));
                     popup.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();

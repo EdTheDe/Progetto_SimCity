@@ -1,9 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SaveGameData.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SavedEntityData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/BuilderValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/BuilderValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/PersistenceManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/PersistenceManagerTest.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -20,10 +29,10 @@
     <commands />
     <urls />
   </component>
-  <component name="ProjectColorInfo"><![CDATA[{
-  "customColor": "",
-  "associatedIndex": 7
-}]]></component>
+  <component name="ProjectColorInfo">{
+  &quot;customColor&quot;: &quot;&quot;,
+  &quot;associatedIndex&quot;: 7
+}</component>
   <component name="ProjectId" id="3E8Q984HpjNUXTAKmLTV9XTVANh" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
@@ -41,6 +50,7 @@
     "git-widget-placeholder": "main",
     "junie.onboarding.icon.badge.shown": "true",
     "kotlin-language-version-configured": "true",
+    "node.js.selected.package.tslint": "(autodetect)",
     "to.speed.mode.migration.done": "true",
     "vue.rearranger.settings.migration": "true"
   }

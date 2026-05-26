@@ -1,4 +1,4 @@
-package citylogic.core.validation;
+package citylogic; // <-- CORRETTO
 
 import citylogic.core.validation.BuilderValidator;
 import citylogic.core.validation.CostruzioneException;
@@ -43,6 +43,18 @@ class BuilderValidatorTest {
 
         assertDoesNotThrow(() -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock),
                 "La validazione non dovrebbe lanciare eccezioni se i requisiti sono soddisfatti.");
+    }
+
+    @Test
+    void validaCostruzione_Successo_QuandoFondiEsattamenteSufficienti() {
+        // Arrange: Il giocatore ha i soldi contati per l'edificio
+        when(cellaMock.isOccupied()).thenReturn(false);
+        when(entitaMock.getPlacementCost()).thenReturn(100.0);
+        when(statoMock.getFinanze()).thenReturn(100.0);
+
+        // Act & Assert
+        assertDoesNotThrow(() -> builderValidator.validaCostruzione(entitaMock, cellaMock, statoMock),
+                "La validazione deve passare se i fondi del giocatore sono esattamente pari al costo dell'edificio.");
     }
 
     @Test
