@@ -4,26 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/core/engine/SimulationEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/core/engine/SimulationEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/BuilderValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/BuilderValidator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/domain/entities/UrbanEntityFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/domain/entities/UrbanEntityFactory.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/domain/map/UrbanGrid.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/domain/map/UrbanGrid.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/domain/state/StatoCitta.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/domain/state/StatoCitta.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SaveGameData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SaveGameData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SavedEntityData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SavedEntityData.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/CityApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/CityApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/MappaGriglia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/MappaGriglia.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/immagini/sfondo_isola.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/core/engine/SimulationEngineTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/core/engine/SimulationEngineTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/core/validation/BuilderValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/core/validation/BuilderValidatorTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/domain/map/UrbanGridTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/domain/map/UrbanGridTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/infrastructure/PersistenceManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/infrastructure/PersistenceManagerTest.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/citylogic/domain/entities/UrbanEntityFactory.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/citylogic/domain/entities/UrbanEntityFactory.class" afterDir="false" />
-    </list>
+    <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -84,7 +65,7 @@
       <updated>1779557563773</updated>
       <workItem from="1779557566948" duration="62000" />
       <workItem from="1779812459659" duration="4249000" />
-      <workItem from="1779872316750" duration="4437000" />
+      <workItem from="1779872316750" duration="5042000" />
     </task>
     <servers />
   </component>
