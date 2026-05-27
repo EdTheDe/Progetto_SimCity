@@ -34,6 +34,7 @@ public class CityApp extends Application {
         TopBar barraSuperiore = new TopBar();
         barraSuperiore.aggiornaDati(statoCitta);
         barraSuperiore.setSimulationEngine(motore);
+        motore.addObserver(barraSuperiore);
 
         MappaGriglia mappaVisiva = new MappaGriglia(grigliaLogica, validatore, statoCitta, barraSuperiore);
         barraSuperiore.setRiferimenti(grigliaLogica, statoCitta, mappaVisiva);
@@ -57,8 +58,8 @@ public class CityApp extends Application {
             areaGiocoBase.setStyle("-fx-background-color: #87CEEB;");
         }
 
-        // Spostamento verticale della mappa di 1 cella verso l'alto (da 40 a 10 pixel)
-        mappaVisiva.setTranslateY(10);
+        // Spostamento verticale della mappa per evitare sovrapposizioni con la TopBar
+        mappaVisiva.setTranslateY(40);
         areaGiocoBase.getChildren().add(mappaVisiva);
 
         // --- SISTEMA RESPONSIVE PER MAPPA E INTERFACCIA UTENTE ---

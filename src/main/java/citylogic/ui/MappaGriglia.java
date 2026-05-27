@@ -23,6 +23,7 @@ public class MappaGriglia extends GridPane {
     private final BuilderValidator validatore;
     private final StatoCitta statoCitta;
     private final TopBar topBarRef;
+    private static final double CELL_SIZE = 35.0; // Ottimizzato per l'erba
     
     // Ora tracciamo solo la stringa, non l'oggetto
     private String tipoEdificioSelezionato = null;
@@ -39,7 +40,7 @@ public class MappaGriglia extends GridPane {
         setStyle("-fx-background-color: transparent;"); 
         
 
-        this.setTranslateY(40);
+        // this.setTranslateY(40); rimosso per non sballare l'allineamento con l'erba
         
         rinfrescaMappaCompleta();
     }
@@ -57,8 +58,10 @@ public class MappaGriglia extends GridPane {
                 
                 Cell cellaLogica = grigliaLogica.getCell(x, y);
                 StackPane cellaVisiva = new StackPane();
+                cellaVisiva.setMinSize(CELL_SIZE, CELL_SIZE);
+                cellaVisiva.setMaxSize(CELL_SIZE, CELL_SIZE);
                 
-                Rectangle overlayFiltro = new Rectangle(30, 30);
+                Rectangle overlayFiltro = new Rectangle(CELL_SIZE, CELL_SIZE);
                 if (tipoEdificioSelezionato != null) {
                     overlayFiltro.setStroke(Color.web("#ffffff", 0.3));
                 } else {
@@ -71,6 +74,20 @@ public class MappaGriglia extends GridPane {
                 if (cellaLogica.isOccupied()) {
                     UrbanEntity e = cellaLogica.getEntity();
                     visualizzatore.setImage(ottieniImmaginePerEntita(e, x, y));
+                    
+                    if (!(e instanceof Road)) {
+                        visualizzatore.setFitWidth(CELL_SIZE * 1.8);
+                        visualizzatore.setFitHeight(CELL_SIZE * 1.8);
+                        visualizzatore.setTranslateY(-CELL_SIZE * 0.4);
+                        visualizzatore.setPreserveRatio(true);
+                    } else {
+                        visualizzatore.setFitWidth(CELL_SIZE);
+                        visualizzatore.setFitHeight(CELL_SIZE);
+                        visualizzatore.setPreserveRatio(false);
+                    }
+                } else {
+                    visualizzatore.setFitWidth(CELL_SIZE);
+                    visualizzatore.setFitHeight(CELL_SIZE);
                 }
 
                 cellaVisiva.getChildren().addAll(visualizzatore, overlayFiltro);
@@ -164,17 +181,18 @@ public class MappaGriglia extends GridPane {
         } else if (e instanceof Commercial) {
             nomeFile = "commercial_" + livello + ".png";
         } else if (e instanceof PowerPlant) {
-            nomeFile = "powerplant.png";
+            nomeFile = "powerplant_" + livello + ".png";
         } else if (e instanceof WaterPlant) {
-            nomeFile = "waterplant.png";
+            nomeFile = "waterplant_" + livello + ".png";
         } else if (e instanceof PoliceStation) {
-            nomeFile = "police.png";
+            nomeFile = "police_" + livello + ".png";
         } else if (e instanceof School) {
-            nomeFile = "school.png";
+            nomeFile = "school_" + livello + ".png";
         } else if (e instanceof Hospital) {
-            nomeFile = "hospital.png";
+            nomeFile = "hospital_" + livello + ".png";
         } else if (e instanceof FireStation) {
-            nomeFile = "firestation.png";
+            // Per FireStation usiamo un trucco: se livello 1 cerchiamo "firestation.png" come indicato nell'ls, oppure fallback
+            nomeFile = (livello == 1) ? "firestation.png" : "firestation_" + livello + ".png";
         } else if (e instanceof Road) {
             boolean nord = y > 0 && grigliaLogica.getCell(x, y - 1).getEntity() instanceof Road;
             boolean sud = y < grigliaLogica.getHeight() - 1 && grigliaLogica.getCell(x, y + 1).getEntity() instanceof Road;
@@ -211,8 +229,7 @@ public class MappaGriglia extends GridPane {
         }
 
        try {
-            // Il motore grafico prende la tua immagine 64x64 e la comprime nativamente a 30x30
-            Image img = new Image(getClass().getResourceAsStream("/immagini/" + nomeFile), 30, 30, true, true);
+            Image img = new Image(getClass().getResourceAsStream("/immagini/" + nomeFile), CELL_SIZE * 1.8, CELL_SIZE * 1.8, true, true);
             imageCache.put(nomeFile, img);
             return img;
         } catch (Exception ex) {

@@ -14,7 +14,7 @@ public class SideBar extends VBox {
         setSpacing(8);
         setPadding(new Insets(15));
         setStyle("-fx-background-color: rgba(255, 255, 255, 0.85); -fx-background-radius: 12; -fx-border-color: #bdc3c7; -fx-border-radius: 12;");
-        setPrefWidth(240);
+        setPrefWidth(160);
         setPickOnBounds(false); 
 
         Label lblTitolo = new Label("COSTRUZIONE");

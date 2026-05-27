@@ -103,6 +103,8 @@ public class UrbanGrid {
 
         // 2. Assegna l'entità.
         // Se la cella è occupata, setEntity() in Cell.java lancerà in automatico la IllegalStateException
+        entity.setX(x);
+        entity.setY(y);
         targetCell.setEntity(entity);
 
         // 3. Se la riga sopra va a buon fine (nessuna eccezione), registriamo l'edificio

@@ -4,6 +4,7 @@ import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 import citylogic.domain.entities.UrbanEntity;
 import citylogic.domain.entities.UrbanEntityFactory;
+import citylogic.domain.entities.*;
 import citylogic.domain.map.UrbanGrid;
 import citylogic.domain.map.Cell;
 import citylogic.core.strategy.PoliticaStrategy;
@@ -29,6 +30,7 @@ public class SimulationEngine {
     private List<CityObserver> observers;
     private RandomEvent activeEvent;
     private Random random;
+    private int ticksInNegativeFunds = 0;
 
     public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
@@ -68,9 +70,9 @@ public class SimulationEngine {
     public void tick() {
         TickStats stats = new TickStats();
 
-        // 1. Lettura dei contributi dalla griglia usando il polimorfismo
+        // 1. Lettura dei contributi dalla griglia usando il polimorfismo e controllo copertura
         for (UrbanEntity entity : griglia.getActiveEntities()) {
-            if (entity.isFunctioning()) {
+            if (entity.isFunctioning() && checkCoverage(entity)) {
                 entity.processTick(stato, stats);
             }
         }
@@ -106,8 +108,21 @@ public class SimulationEngine {
         // 7. Gestione Eventi Randomici
         gestisciEventi(stats);
 
-        // 8. Notifica gli Observer (UI)
+        // 8. Controllo Game Over (Finanze negative)
+        if (stato.getFinanze() < 0) {
+            ticksInNegativeFunds++;
+        } else {
+            ticksInNegativeFunds = 0;
+        }
+
+        // 9. Notifica gli Observer (UI)
         notifyObservers();
+
+        if (ticksInNegativeFunds > 5) {
+            for (CityObserver obs : observers) {
+                obs.onGameOver();
+            }
+        }
     }
 
     private void gestisciEventi(TickStats stats) {
@@ -120,16 +135,70 @@ public class SimulationEngine {
                 activeEvent = null; // Fine evento
             }
         } else {
-            // Possibilità del 15% di triggerare un nuovo evento
-            if (random.nextDouble() < 0.15) {
+            // Possibilità del 5% di triggerare un nuovo evento
+            if (random.nextDouble() < 0.05) {
                 int tipoEvento = random.nextInt(3);
+                String eventName = "";
+                String eventDesc = "";
                 switch (tipoEvento) {
-                    case 0: activeEvent = new PrimaveraEvent(); break;
-                    case 1: activeEvent = new CrisiEconomicaEvent(); break;
-                    case 2: activeEvent = new GuerraEvent(); break;
+                    case 0: 
+                        activeEvent = new PrimaveraEvent(); 
+                        eventName = "Primavera";
+                        eventDesc = "Il clima è fantastico! La felicità aumenta e la criminalità diminuisce.";
+                        break;
+                    case 1: 
+                        activeEvent = new CrisiEconomicaEvent(); 
+                        eventName = "Crisi Economica";
+                        eventDesc = "L'economia è in ginocchio. Le entrate commerciali crollano e la criminalità sale.";
+                        break;
+                    case 2: 
+                        activeEvent = new GuerraEvent(); 
+                        eventName = "Guerra";
+                        eventDesc = "Conflitto armato in corso! Le tasse sono alle stelle ma la popolazione è terrorizzata.";
+                        break;
+                }
+                for (CityObserver obs : observers) {
+                    obs.onEventStarted(eventName, eventDesc);
                 }
             }
         }
+    }
+
+    private boolean checkCoverage(UrbanEntity entity) {
+        // Le infrastrutture non hanno bisogno di copertura
+        if (entity instanceof PoliceStation || entity instanceof FireStation || 
+            entity instanceof Hospital || entity instanceof PowerPlant || 
+            entity instanceof WaterPlant || entity instanceof Road || entity instanceof School) {
+            return true;
+        }
+
+        int x = entity.getX();
+        int y = entity.getY();
+        if (x < 0 || y < 0) return false;
+
+        int raggioCopertura = 5;
+        boolean polizia = false, pompieri = false, ospedale = false, acqua = false, luce = false;
+        
+        int minX = Math.max(0, x - raggioCopertura);
+        int maxX = Math.min(griglia.getWidth() - 1, x + raggioCopertura);
+        int minY = Math.max(0, y - raggioCopertura);
+        int maxY = Math.min(griglia.getHeight() - 1, y + raggioCopertura);
+
+        for (int i = minX; i <= maxX; i++) {
+            for (int j = minY; j <= maxY; j++) {
+                Cell c = griglia.getCell(i, j);
+                if (c.isOccupied()) {
+                    UrbanEntity e = c.getEntity();
+                    if (e instanceof PoliceStation) polizia = true;
+                    if (e instanceof FireStation) pompieri = true;
+                    if (e instanceof Hospital) ospedale = true;
+                    if (e instanceof WaterPlant) acqua = true;
+                    if (e instanceof PowerPlant) luce = true;
+                }
+            }
+        }
+        
+        return polizia && pompieri && ospedale && acqua && luce;
     }
 
     private void applicaDinamicheGlobali() {

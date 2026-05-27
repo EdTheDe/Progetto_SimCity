@@ -24,13 +24,15 @@ public class TimeBar extends VBox {
         setPadding(new Insets(15));
         // Impostata l'opacità a 0.5 per la semi-trasparenza richiesta
         setStyle("-fx-background-color: rgba(255, 255, 255, 0.5); -fx-background-radius: 12; -fx-border-color: rgba(189, 195, 199, 0.5); -fx-border-radius: 12;");
-        setPrefWidth(220);
+        setMinWidth(javafx.scene.layout.Region.USE_COMPUTED_SIZE);
         setAlignment(Pos.CENTER);
 
         Label lblTempo = new Label("TIME CONTROLS");
         lblTempo.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-text-fill: #2c3e50;");
 
         Slider sliderVelocita = new Slider(1, 3, 1);
+        sliderVelocita.setOrientation(javafx.geometry.Orientation.VERTICAL);
+        sliderVelocita.setMinHeight(150); // Più alto
         sliderVelocita.setMajorTickUnit(1);
         sliderVelocita.setMinorTickCount(0);
         sliderVelocita.setSnapToTicks(true);

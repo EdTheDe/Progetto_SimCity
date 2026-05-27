@@ -27,10 +27,10 @@ import citylogic.core.strategy.PoliticaNeutrale;
 import citylogic.core.strategy.PoliticaAmbientale;
 import citylogic.core.strategy.PoliticaIndustriale;
 
-public class TopBar extends HBox {
+public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
 
     private Label lblFinanze, lblPopolazione;
-    private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita;
+    private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita, pbLavoro;
     private ChoiceBox<String> selettorePolitica;
     private SimulationEngine engine;
     
@@ -43,6 +43,7 @@ public class TopBar extends HBox {
         setPadding(new Insets(15, 20, 15, 30)); 
         setStyle("-fx-background-color: transparent;");
         setAlignment(Pos.CENTER_LEFT);
+        setPickOnBounds(false);
 
         Button btnImpostazioni = new Button();
         try {
@@ -89,13 +90,15 @@ public class TopBar extends HBox {
         pbSanita = new ProgressBar(0);
         pbEcologia = new ProgressBar(0);
         pbFelicita = new ProgressBar(0);
+        pbLavoro = new ProgressBar(0);
 
         HBox contenitoreDestra = new HBox(15, 
             selettorePolitica,
             creaBarra("🛡️ Sicurezza", pbSicurezza, "-fx-accent: #3498db;"),
             creaBarra("🏥 Sanità", pbSanita, "-fx-accent: #e74c3c;"),
             creaBarra("🌱 Ecologia", pbEcologia, "-fx-accent: #2ecc71;"),
-            creaBarra("😊 Felicità", pbFelicita, "-fx-accent: #f1c40f;")
+            creaBarra("😊 Felicità", pbFelicita, "-fx-accent: #f1c40f;"),
+            creaBarra("💼 Lavoro", pbLavoro, "-fx-accent: #9b59b6;")
         );
         contenitoreDestra.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 10 20; -fx-background-radius: 15; -fx-border-color: #bdc3c7; -fx-border-radius: 15;");
         contenitoreDestra.setAlignment(Pos.CENTER_LEFT);
@@ -240,5 +243,51 @@ public class TopBar extends HBox {
         pbSanita.setProgress(stato.getSanita() / 100.0);
         pbEcologia.setProgress(stato.getEcologia() / 100.0);
         pbFelicita.setProgress(stato.getFelicita() / 100.0);
+        pbLavoro.setProgress(stato.getLavoro() / 100.0);
+    }
+
+    @Override
+    public void onSimulationUpdated(StatoCitta stato) {
+        aggiornaDati(stato);
+    }
+
+    @Override
+    public void onEventStarted(String eventName, String description) {
+        javafx.stage.Popup popup = new javafx.stage.Popup();
+        VBox popupContent = new VBox(15);
+        popupContent.setStyle("-fx-background-color: rgba(44, 62, 80, 0.95); -fx-padding: 30; -fx-background-radius: 20; -fx-border-color: #f39c12; -fx-border-width: 4; -fx-border-radius: 20; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.8), 20, 0, 0, 0);");
+        popupContent.setAlignment(Pos.CENTER);
+        
+        Label lblTitle = new Label("⚠️ EVENTO: " + eventName.toUpperCase() + " ⚠️");
+        lblTitle.setStyle("-fx-text-fill: #f39c12; -fx-font-size: 24px; -fx-font-weight: bold;");
+        
+        Label lblDesc = new Label(description);
+        lblDesc.setStyle("-fx-text-fill: white; -fx-font-size: 16px; -fx-wrap-text: true; -fx-text-alignment: center;");
+        lblDesc.setMaxWidth(400);
+        
+        Button btnClose = new Button("RICEVUTO");
+        btnClose.setStyle("-fx-background-color: #f39c12; -fx-text-fill: #2c3e50; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 10 30; -fx-cursor: hand; -fx-background-radius: 10;");
+        btnClose.setOnAction(e -> popup.hide());
+        
+        popupContent.getChildren().addAll(lblTitle, lblDesc, btnClose);
+        popup.getContent().add(popupContent);
+        
+        if (this.getScene() != null && this.getScene().getWindow() != null) {
+            javafx.stage.Window window = this.getScene().getWindow();
+            // Centra il popup rispetto alla finestra
+            popup.show(window);
+            popup.setX(window.getX() + window.getWidth() / 2 - popupContent.prefWidth(-1) / 2 - 200);
+            popup.setY(window.getY() + window.getHeight() / 2 - popupContent.prefHeight(-1) / 2 - 100);
+        }
+    }
+
+    @Override
+    public void onGameOver() {
+        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(javafx.scene.control.Alert.AlertType.ERROR);
+        alert.setTitle("GAME OVER");
+        alert.setHeaderText("Bancarotta!");
+        alert.setContentText("I fondi della tua città sono stati in rosso troppo a lungo. Il sindaco è stato rimosso dall'incarico.");
+        alert.showAndWait();
+        System.exit(0);
     }
 }
