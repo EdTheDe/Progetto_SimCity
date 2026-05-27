@@ -14,7 +14,7 @@ public class SimulationEngineTest {
     void testTickProcessAndReset() {
         // AC 10.1 & 10.2
         StatoCitta stato = new StatoCitta();
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         
         // Piazziamo un paio di edifici per verificare che passi su "active entities"
         Residential r1 = new Residential(100.0, 10.0, 10.0, 50);
@@ -32,7 +32,7 @@ public class SimulationEngineTest {
     void testObserverPattern() {
         // AC 20.1
         StatoCitta stato = new StatoCitta();
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         SimulationEngine engine = new SimulationEngine(stato, grid);
         
         // Creiamo un observer dummy
@@ -54,7 +54,7 @@ public class SimulationEngineTest {
     void testRandomEventsPersistence() {
         // AC 27.2
         StatoCitta stato = new StatoCitta();
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         SimulationEngine engine = new SimulationEngine(stato, grid);
         
         PrimaveraEvent event = new PrimaveraEvent(); // dura 4 tick, aumenta felicita di 20
@@ -73,7 +73,7 @@ public class SimulationEngineTest {
     void testDemographicGrowth() {
         // AC 28.2
         StatoCitta stato = new StatoCitta();
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         
         Residential r = new Residential(100.0, 10.0, 10.0, 100);
         grid.placeEntity(r, 0, 0);

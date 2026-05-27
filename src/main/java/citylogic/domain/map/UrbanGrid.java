@@ -20,9 +20,13 @@ public class UrbanGrid {
      * Costruttore di default. 
      * KAN-4 -> "generare una mappa logica 20x20".
      */
-    public UrbanGrid() {
-        this.width = 20;
-        this.height = 20;
+    /**
+     * Costruttore dinamico.
+     * Accetta larghezza e altezza per permettere mappe rettangolari.
+     */
+    public UrbanGrid(int width, int height) {
+        this.width = width;
+        this.height = height;
         this.grid = new Cell[width][height];
         initializeGrid();
         this.activeEntities = new ArrayList<>(); // lista aggiunta alla griglia
@@ -32,6 +36,20 @@ public class UrbanGrid {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 grid[i][j] = new Cell(i, j);
+            }
+        }
+    }
+
+    /**
+     * Rimuove tutte le entità presenti nella griglia per prepararla a un ripristino.
+     */
+    public void svuotaGriglia() {
+        for (int i = 0; i < getWidth(); i++) {
+            for (int j = 0; j < getHeight(); j++) {
+                Cell cella = getCell(i, j);
+                if (cella != null) {
+                    cella.setEntity(null); // Rimuove l'edificio dalla cella
+                }
             }
         }
     }

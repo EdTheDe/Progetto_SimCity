@@ -8,7 +8,7 @@ public class UrbanGridTest {
 
     @Test
     void testGridInitialization() {
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         // Verifichiamo che i limiti siano impostati (es. 20x20 o in base al costruttore, che attualmente è 24x14)
         // Per AC 4.1 il requisito è la corretta istanziazione
         assertNotNull(grid.getCell(0, 0), "Cells must be instantiated");
@@ -19,7 +19,7 @@ public class UrbanGridTest {
 
     @Test
     void testGridOutOfBounds() {
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         assertThrows(IllegalArgumentException.class, () -> grid.getCell(-1, -1), "Should throw exception on out of bounds");
         assertThrows(IllegalArgumentException.class, () -> grid.getCell(100, 100), "Should throw exception on out of bounds");
     }
@@ -27,7 +27,7 @@ public class UrbanGridTest {
     @Test
     void testRemoveEntity() {
         // AC 10.1 / KAN-10
-        UrbanGrid grid = new UrbanGrid();
+        UrbanGrid grid = new UrbanGrid(10, 10);
         Residential res = new Residential(100.0, 10.0, 10.0, 50);
         
         grid.placeEntity(res, 5, 5);

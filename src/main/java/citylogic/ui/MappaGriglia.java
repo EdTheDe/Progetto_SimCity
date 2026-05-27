@@ -38,8 +38,8 @@ public class MappaGriglia extends GridPane {
         setAlignment(Pos.CENTER);
         setStyle("-fx-background-color: transparent;"); 
         
-        // Sposta l'intera griglia di 35 pixel verso l'alto per centrarla sul prato
-        this.setTranslateY(60); 
+
+        this.setTranslateY(40);
         
         rinfrescaMappaCompleta();
     }

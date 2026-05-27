@@ -18,7 +18,7 @@ public class UrbanEntityFactory {
         }
 
         switch (type.toLowerCase()) {
-            
+
             // --- ZONE (BUILDINGS) ---
             case "residential":
                 // Costo, Energia, Acqua, Capacità abitativa
@@ -40,6 +40,7 @@ public class UrbanEntityFactory {
 
             // --- SERVIZI STATALI ---
             case "police":
+            case "policestation": // Aggiunto per compatibilità con il caricamento da file JSON
                 // Costo, Mantenimento, Capacità sicurezza
                 return new PoliceStation(300.0, 30.0, 50);
             case "school":

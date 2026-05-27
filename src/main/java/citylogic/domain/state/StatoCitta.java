@@ -49,4 +49,8 @@ public class StatoCitta {
     public double getLavoro() { return lavoro; }
     public double getSicurezza() { return sicurezza; }
     public double getSanita() { return sanita; }
+
+    public void setFinanze(double finanze) {
+        this.finanze = finanze;
+    }
 }

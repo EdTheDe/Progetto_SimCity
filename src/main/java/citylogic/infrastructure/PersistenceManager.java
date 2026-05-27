@@ -1,6 +1,5 @@
 package citylogic.infrastructure;
 
-import citylogic.domain.state.StatoCitta;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -45,26 +44,47 @@ public class PersistenceManager {
     }
 
     /**
-     * Serializza l'intero oggetto StatoCitta e lo scrive su disco.
+     * Serializza l'intero oggetto SaveGameData (StatoCitta + Edifici) e lo scrive su disco.
      */
-    public void salvaPartita(StatoCitta citta, String nomeFile) throws IOException {
+    public void salvaPartita(SaveGameData datiPartita, String nomeFile) throws IOException {
         Path fileDestinazione = saveDirectory.resolve(nomeFile + ".json");
-        objectMapper.writeValue(fileDestinazione.toFile(), citta);
+        objectMapper.writeValue(fileDestinazione.toFile(), datiPartita);
         System.out.println("Partita salvata con successo in: " + fileDestinazione.toAbsolutePath());
     }
 
     /**
-     * Legge il JSON dal disco e ricostruisce l'albero degli oggetti in memoria.
+     * Legge il JSON dal disco (tramite nome del file) e ricostruisce l'albero degli oggetti in memoria.
      */
-    public StatoCitta caricaPartita(String nomeFile) throws IOException {
+    public SaveGameData caricaPartita(String nomeFile) throws IOException {
         Path fileSorgente = saveDirectory.resolve(nomeFile + ".json");
 
         if (Files.notExists(fileSorgente)) {
             throw new IOException("File di salvataggio non trovato: " + fileSorgente.getFileName());
         }
 
-        StatoCitta citta = objectMapper.readValue(fileSorgente.toFile(), StatoCitta.class);
+        SaveGameData datiPartita = objectMapper.readValue(fileSorgente.toFile(), SaveGameData.class);
         System.out.println("Partita caricata con successo.");
-        return citta;
+        return datiPartita;
+    }
+
+    /**
+     * NUOVO: Legge il JSON dal disco tramite percorso ASSOLUTO (ideale per il JFileChooser dell'Interfaccia Grafica).
+     */
+    public SaveGameData loadGame(String absolutePath) {
+        try {
+            Path fileSorgente = Paths.get(absolutePath);
+            if (Files.notExists(fileSorgente)) {
+                System.err.println("File di salvataggio non trovato al percorso: " + absolutePath);
+                return null;
+            }
+
+            SaveGameData datiPartita = objectMapper.readValue(fileSorgente.toFile(), SaveGameData.class);
+            System.out.println("Partita caricata con successo da: " + absolutePath);
+            return datiPartita;
+
+        } catch (IOException e) {
+            System.err.println("Errore durante il caricamento del salvataggio: " + e.getMessage());
+            return null;
+        }
     }
 }

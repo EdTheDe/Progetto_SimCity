@@ -4,17 +4,19 @@ public class SavedEntityData {
     private int x;
     private int y;
     private String tipo;
-    private int livelloSviluppo;
+    private int livello;
 
+    // Costruttore vuoto richiesto per la deserializzazione JSON
     public SavedEntityData() {}
 
-    public SavedEntityData(int x, int y, String tipo, int livelloSviluppo) {
+    public SavedEntityData(int x, int y, String tipo, int livello) {
         this.x = x;
         this.y = y;
         this.tipo = tipo;
-        this.livelloSviluppo = livelloSviluppo;
+        this.livello = livello;
     }
 
+    // Getters e Setters
     public int getX() { return x; }
     public void setX(int x) { this.x = x; }
 
@@ -24,6 +26,6 @@ public class SavedEntityData {
     public String getTipo() { return tipo; }
     public void setTipo(String tipo) { this.tipo = tipo; }
 
-    public int getLivelloSviluppo() { return livelloSviluppo; }
-    public void setLivelloSviluppo(int livelloSviluppo) { this.livelloSviluppo = livelloSviluppo; }
+    public int getLivello() { return livello; }
+    public void setLivello(int livello) { this.livello = livello; }
 }

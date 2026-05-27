@@ -2,6 +2,7 @@ package citylogic.ui;
 
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.map.UrbanGrid;
+import citylogic.infrastructure.SaveGameData;
 import citylogic.infrastructure.PersistenceManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -141,8 +142,14 @@ public class TopBar extends HBox {
             if (file != null && logica != null && stato != null) {
                 try {
                     PersistenceManager pm = new PersistenceManager(file.getParent());
-                    pm.caricaPartita(file.getName().replace(".json", ""));
-                    
+
+                    // 1. Carica l'oggetto contenente lo stato del file JSON
+                    SaveGameData datiCaricati = pm.caricaPartita(file.getName().replace(".json", ""));
+
+                    // 2. CRUCIALE: Passa i dati al motore di gioco per ricostruire mappa ed entità
+                    engine.ripristinaDatiSalvataggio(datiCaricati);
+
+                    // 3. Rinfresca i componenti grafici della UI
                     mappaVisiva.rinfrescaMappaCompleta();
                     aggiornaDati(stato);
                     popup.close();
@@ -161,7 +168,12 @@ public class TopBar extends HBox {
             if (file != null && logica != null && stato != null) {
                 try {
                     PersistenceManager pm = new PersistenceManager(file.getParent());
-                    pm.salvaPartita(stato, file.getName().replace(".json", ""));
+
+                    // 1. Recupera l'oggetto SaveGameData dal motore (usando 'engine', non 'motore')
+                    citylogic.infrastructure.SaveGameData datiDaSalvare = engine.impacchettaDatiSalvataggio();
+
+                    // 2. Salva questo oggetto utilizzando 'pm' e usa il nome del file scelto dall'utente
+                    pm.salvaPartita(datiDaSalvare, file.getName().replace(".json", ""));
                     popup.close();
                 } catch (Exception ex) {
                     ex.printStackTrace();
