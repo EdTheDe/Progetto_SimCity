@@ -39,4 +39,38 @@ public class UrbanGridTest {
         assertFalse(grid.getCell(5, 5).isOccupied(), "Cell should be empty after removal");
         assertFalse(grid.getActiveEntities().contains(res), "Active entities should not contain removed entity");
     }
+
+    // --- TEST DI STRESS DEL CODICE ---
+
+    @Test
+    void testPlaceEntityAlreadyOccupied() {
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        Residential res1 = new Residential(100.0, 10.0, 10.0, 50);
+        Residential res2 = new Residential(100.0, 10.0, 10.0, 50);
+        
+        grid.placeEntity(res1, 2, 2);
+        
+        // Tentativo di costruzione su una cella già occupata (Verifica KAN-9)
+        assertThrows(IllegalStateException.class, () -> grid.placeEntity(res2, 2, 2), 
+            "Deve lanciare IllegalStateException se si prova a costruire su una cella già occupata");
+    }
+
+    @Test
+    void testPlaceNullEntity() {
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        
+        // Tentativo di passare un'entità null alla griglia
+        assertThrows(IllegalArgumentException.class, () -> grid.placeEntity(null, 3, 3), 
+            "Deve lanciare IllegalArgumentException se si prova a piazzare un'entità null");
+    }
+
+    @Test
+    void testRemoveEmptyCell() {
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        
+        // Tentativo di rimozione su una cella appena inizializzata (quindi vuota)
+        boolean removed = grid.removeEntity(4, 4);
+        
+        assertFalse(removed, "removeEntity deve ritornare false se si cerca di demolire su una cella vuota");
+    }
 }
