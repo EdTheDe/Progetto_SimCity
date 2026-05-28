@@ -85,7 +85,6 @@ public class UrbanEntityTest {
     void testInfrastructureMaintenanceDeduction() {
         Hospital hospital = new Hospital(400.0, 40.0, 60);
         StatoCitta stato = new StatoCitta();
-        stato.addFinanze(1000.0); 
         TickStats stats = new TickStats();
 
         hospital.processTick(stato, stats);
@@ -97,7 +96,6 @@ public class UrbanEntityTest {
     void testInfrastructureMaintenanceScaling() {
         Hospital hospital = new Hospital(400.0, 40.0, 60);
         StatoCitta stato = new StatoCitta();
-        stato.addFinanze(1000.0);
         TickStats stats = new TickStats();
 
         hospital.upgradeLevel(); 
