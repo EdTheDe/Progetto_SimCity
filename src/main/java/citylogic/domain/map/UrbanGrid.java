@@ -48,7 +48,7 @@ public class UrbanGrid {
             for (int j = 0; j < getHeight(); j++) {
                 Cell cella = getCell(i, j);
                 if (cella != null) {
-                    cella.setEntity(null); // Rimuove l'edificio dalla cella
+                    cella.clearEntity(); // Rimuove l'edificio dalla cella
                 }
             }
         }
