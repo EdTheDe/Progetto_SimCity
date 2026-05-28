@@ -32,7 +32,10 @@ public abstract class UrbanEntity {
     }
 
     public void upgradeLevel() {
-        this.developmentLevel++;
+        // Blocco di sicurezza: impedisce di superare il livello 5
+        if (this.developmentLevel < 5) {
+            this.developmentLevel++;
+        }
     }
 
     public boolean isFunctioning() {
