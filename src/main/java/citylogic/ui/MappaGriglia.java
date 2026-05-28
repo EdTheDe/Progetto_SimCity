@@ -75,6 +75,14 @@ public class MappaGriglia extends GridPane {
                     UrbanEntity e = cellaLogica.getEntity();
                     visualizzatore.setImage(ottieniImmaginePerEntita(e, x, y));
                     
+                    if (topBarRef != null && topBarRef.getSimulationEngine() != null) {
+                        if (!e.isFunctioning() || !topBarRef.getSimulationEngine().checkCoverage(e)) {
+                            visualizzatore.setOpacity(0.5);
+                        } else {
+                            visualizzatore.setOpacity(1.0);
+                        }
+                    }
+                    
                     if (!(e instanceof Road)) {
                         visualizzatore.setFitWidth(CELL_SIZE * 1.8);
                         visualizzatore.setFitHeight(CELL_SIZE * 1.8);
@@ -140,14 +148,20 @@ public class MappaGriglia extends GridPane {
     private void mostraMenuContestuale(Cell cella, StackPane nodoVisivo, int x, int y, double screenX, double screenY) {
         UrbanEntity entita = cella.getEntity();
         ContextMenu menu = new ContextMenu();
+        
+        javafx.scene.control.Label lblTitolo = new javafx.scene.control.Label(entita.getClass().getSimpleName());
+        lblTitolo.setStyle("-fx-font-weight: bold; -fx-text-fill: black; -fx-font-size: 13px;");
+        javafx.scene.control.CustomMenuItem btnTitolo = new javafx.scene.control.CustomMenuItem(lblTitolo);
+        btnTitolo.setHideOnClick(false);
 
-        MenuItem btnMigliora = new MenuItem("Migliora (Livello " + entita.getDevelopmentLevel() + ")");
-        if (entita instanceof Road) {
+        double costoUpgrade = entita.getPlacementCost() * (entita.getDevelopmentLevel() * 0.75);
+        MenuItem btnMigliora = new MenuItem("Migliora a Liv. " + (entita.getDevelopmentLevel() + 1) + " (Costo: " + (int)costoUpgrade + "$)");
+        
+        if (entita instanceof Road || entita.getDevelopmentLevel() >= 4 || statoCitta.getFinanze() < costoUpgrade) {
             btnMigliora.setDisable(true);
         }
 
         btnMigliora.setOnAction(e -> {
-            double costoUpgrade = entita.getPlacementCost() * 0.5;
             if (statoCitta.getFinanze() >= costoUpgrade) {
                 statoCitta.addFinanze(-costoUpgrade);
                 entita.upgradeLevel();
@@ -162,7 +176,7 @@ public class MappaGriglia extends GridPane {
             rinfrescaMappaCompleta(); 
         });
 
-        menu.getItems().addAll(btnMigliora, btnDemolisci);
+        menu.getItems().addAll(btnTitolo, btnMigliora, btnDemolisci);
         menu.show(nodoVisivo, screenX, screenY);
     }
 
@@ -193,6 +207,8 @@ public class MappaGriglia extends GridPane {
         } else if (e instanceof FireStation) {
             // Per FireStation usiamo un trucco: se livello 1 cerchiamo "firestation.png" come indicato nell'ls, oppure fallback
             nomeFile = (livello == 1) ? "firestation.png" : "firestation_" + livello + ".png";
+        } else if (e instanceof citylogic.domain.entities.GreenArea) {
+            nomeFile = "greenarea_" + livello + ".png";
         } else if (e instanceof Road) {
             boolean nord = y > 0 && grigliaLogica.getCell(x, y - 1).getEntity() instanceof Road;
             boolean sud = y < grigliaLogica.getHeight() - 1 && grigliaLogica.getCell(x, y + 1).getEntity() instanceof Road;

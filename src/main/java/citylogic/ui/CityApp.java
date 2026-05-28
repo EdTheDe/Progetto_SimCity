@@ -41,6 +41,7 @@ public class CityApp extends Application {
 
         SideBar barraLaterale = new SideBar(mappaVisiva);
         TimeBar barraTempo = new TimeBar(motore, barraSuperiore, mappaVisiva, statoCitta);
+        motore.addObserver(barraTempo);
 
         // Blocco logico a risoluzione nativa 1280x720 per lo sfondo dell'isola
         StackPane areaGiocoBase = new StackPane();
@@ -58,7 +59,7 @@ public class CityApp extends Application {
             areaGiocoBase.setStyle("-fx-background-color: #87CEEB;");
         }
 
-        // Spostamento verticale della mappa per evitare sovrapposizioni con la TopBar
+        // Spostamento della mappa per evitare sovrapposizioni con la TopBar e con i menu di destra
         mappaVisiva.setTranslateY(40);
         areaGiocoBase.getChildren().add(mappaVisiva);
 
