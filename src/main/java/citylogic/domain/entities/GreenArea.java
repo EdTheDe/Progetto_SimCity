@@ -27,6 +27,7 @@ public class GreenArea extends Infrastructure {
 
     @Override
     public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats) {
+        super.processTick(stato, stats);
         stats.addPuntiInquinamento((int) getPollutionReduction());
     }
 
