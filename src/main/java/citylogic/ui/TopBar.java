@@ -38,6 +38,10 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
     private StatoCitta stato;
     private MappaGriglia mappaVisiva;
 
+    public SimulationEngine getSimulationEngine() {
+        return engine;
+    }
+
     public TopBar() {
         setSpacing(20);
         setPadding(new Insets(15, 20, 15, 30)); 
@@ -197,17 +201,15 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
                 }
                 
                 // 2. Ripristino brutale dei valori al costruttore originale
-                stato.addFinanze(1000.0 - stato.getFinanze());
-                stato.setPopolazione(0);
-                stato.setFelicita(50.0);
-                stato.setEcologia(100.0);
-                stato.setLavoro(0.0);
-                stato.setSicurezza(0.0);
-                stato.setSanita(0.0);
+                stato.reset();
                 
                 // 3. Ridisegno grafico
                 mappaVisiva.rinfrescaMappaCompleta();
                 aggiornaDati(stato);
+                
+                if (engine != null) {
+                    engine.forceNotifyObservers();
+                }
             }
             popup.close(); 
         });

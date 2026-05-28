@@ -30,6 +30,7 @@ public class SideBar extends VBox {
         addButtonEdificio(mappa, "🏥 Scuola", "school", "#2ecc71");
         addButtonEdificio(mappa, "🚒 Pompieri", "firestation", "#e74c3c");
         addButtonEdificio(mappa, "🏥 Ospedale", "hospital", "#e74c3c");
+        addButtonEdificio(mappa, "🌳 Area Verde", "greenarea", "#2ecc71");
         addButtonEdificio(mappa, "🛣️ Strada", "road", "#7f8c8d");
     }
 

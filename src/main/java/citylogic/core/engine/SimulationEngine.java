@@ -51,7 +51,7 @@ public class SimulationEngine {
         observers.remove(observer);
     }
 
-    private void notifyObservers() {
+    public void forceNotifyObservers() {
         for (CityObserver observer : observers) {
             observer.onSimulationUpdated(stato);
         }
@@ -67,13 +67,33 @@ public class SimulationEngine {
         return this.politicaAttiva;
     }
 
+    public List<UrbanEntity> getActiveEntities() {
+        return griglia.getActiveEntities();
+    }
+
     public void tick() {
         TickStats stats = new TickStats();
 
         // 1. Lettura dei contributi dalla griglia usando il polimorfismo e controllo copertura
         for (UrbanEntity entity : griglia.getActiveEntities()) {
+            
+            // Calcolo statistiche fisse dell'entità per UI (es. Acqua richiesta)
+            if (entity instanceof citylogic.domain.entities.Building) {
+                stats.addAcquaRichiesta(((citylogic.domain.entities.Building) entity).getWaterDemand());
+                stats.addEnergiaRichiesta(((citylogic.domain.entities.Building) entity).getEnergyDemand());
+            }
+            if (entity instanceof citylogic.domain.entities.WaterPlant) {
+                stats.addAcquaFornita(((citylogic.domain.entities.WaterPlant) entity).getWaterOutput());
+            }
+            if (entity instanceof citylogic.domain.entities.PowerPlant) {
+                stats.addEnergiaFornita(((citylogic.domain.entities.PowerPlant) entity).getEnergyOutput());
+            }
+
             if (entity.isFunctioning() && checkCoverage(entity)) {
                 entity.processTick(stato, stats);
+                if (entity instanceof citylogic.domain.entities.Industrial) {
+                    stats.addIndustriaAttiva();
+                }
             }
         }
 
@@ -100,10 +120,14 @@ public class SimulationEngine {
         stato.addFinanze(stats.getRedditoCommerciale() * modFelicita);
 
         // 5. Applicazione Malus e Dinamiche Globali
+        stato.setAcquaFornita(stats.getAcquaFornita());
+        stato.setAcquaRichiesta(stats.getAcquaRichiesta());
+        stato.setEnergiaFornita(stats.getEnergiaFornita());
+        stato.setEnergiaRichiesta(stats.getEnergiaRichiesta());
         applicaDinamicheGlobali();
 
         // 6. Applicazione Strategy (Politiche Cittadine)
-        politicaAttiva.applicaModificatori(stato);
+        politicaAttiva.applicaModificatori(stato, stats);
 
         // 7. Gestione Eventi Randomici
         gestisciEventi(stats);
@@ -116,7 +140,7 @@ public class SimulationEngine {
         }
 
         // 9. Notifica gli Observer (UI)
-        notifyObservers();
+        forceNotifyObservers();
 
         if (ticksInNegativeFunds > 5) {
             for (CityObserver obs : observers) {
@@ -137,7 +161,7 @@ public class SimulationEngine {
         } else {
             // Possibilità del 5% di triggerare un nuovo evento
             if (random.nextDouble() < 0.05) {
-                int tipoEvento = random.nextInt(3);
+                int tipoEvento = random.nextInt(4);
                 String eventName = "";
                 String eventDesc = "";
                 switch (tipoEvento) {
@@ -154,7 +178,12 @@ public class SimulationEngine {
                     case 2: 
                         activeEvent = new GuerraEvent(); 
                         eventName = "Guerra";
-                        eventDesc = "Conflitto armato in corso! Le tasse sono alle stelle ma la popolazione è terrorizzata.";
+                        eventDesc = "La nazione è in guerra! Disoccupazione, tristezza e instabilità globale.";
+                        break;
+                    case 3:
+                        activeEvent = new citylogic.core.events.PioggiaDiMeteoritiEvent(stato, griglia);
+                        eventName = "Pioggia di Meteoriti";
+                        eventDesc = "Una letale pioggia di meteoriti si è abbattuta sulla città! Edifici distrutti e panico diffuso.";
                         break;
                 }
                 for (CityObserver obs : observers) {
@@ -164,7 +193,7 @@ public class SimulationEngine {
         }
     }
 
-    private boolean checkCoverage(UrbanEntity entity) {
+    public boolean checkCoverage(UrbanEntity entity) {
         // Le infrastrutture non hanno bisogno di copertura
         if (entity instanceof PoliceStation || entity instanceof FireStation || 
             entity instanceof Hospital || entity instanceof PowerPlant || 
@@ -176,29 +205,55 @@ public class SimulationEngine {
         int y = entity.getY();
         if (x < 0 || y < 0) return false;
 
-        int raggioCopertura = 5;
-        boolean polizia = false, pompieri = false, ospedale = false, acqua = false, luce = false;
+        boolean polizia = false, pompieri = false, ospedale = false;
+        boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();
+        boolean luce = stato.getEnergiaFornita() >= stato.getEnergiaRichiesta();
         
-        int minX = Math.max(0, x - raggioCopertura);
-        int maxX = Math.min(griglia.getWidth() - 1, x + raggioCopertura);
-        int minY = Math.max(0, y - raggioCopertura);
-        int maxY = Math.min(griglia.getHeight() - 1, y + raggioCopertura);
+        for (UrbanEntity e : griglia.getActiveEntities()) {
+            if (polizia && pompieri && ospedale) break;
+            
+            int distMax = Math.max(Math.abs(e.getX() - x), Math.abs(e.getY() - y));
+            int raggio = 5 + (e.getDevelopmentLevel() * 2);
 
-        for (int i = minX; i <= maxX; i++) {
-            for (int j = minY; j <= maxY; j++) {
-                Cell c = griglia.getCell(i, j);
-                if (c.isOccupied()) {
-                    UrbanEntity e = c.getEntity();
-                    if (e instanceof PoliceStation) polizia = true;
-                    if (e instanceof FireStation) pompieri = true;
-                    if (e instanceof Hospital) ospedale = true;
-                    if (e instanceof WaterPlant) acqua = true;
-                    if (e instanceof PowerPlant) luce = true;
-                }
-            }
+            if (e instanceof PoliceStation && distMax <= raggio) polizia = true;
+            if (e instanceof FireStation && distMax <= raggio) pompieri = true;
+            if (e instanceof Hospital && distMax <= raggio) ospedale = true;
         }
         
         return polizia && pompieri && ospedale && acqua && luce;
+    }
+
+    public String getMotivoInattivita(UrbanEntity entity) {
+        if (!entity.isFunctioning()) return "Fondi insufficienti";
+        if (checkCoverage(entity)) return "Attivo";
+        
+        int x = entity.getX();
+        int y = entity.getY();
+        if (x < 0 || y < 0) return "Fuori mappa";
+
+        boolean polizia = false, pompieri = false, ospedale = false;
+        boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();
+        boolean luce = stato.getEnergiaFornita() >= stato.getEnergiaRichiesta();
+        
+        for (UrbanEntity e : griglia.getActiveEntities()) {
+            if (polizia && pompieri && ospedale) break;
+            
+            int distMax = Math.max(Math.abs(e.getX() - x), Math.abs(e.getY() - y));
+            int raggio = 5 + (e.getDevelopmentLevel() * 2);
+
+            if (e instanceof PoliceStation && distMax <= raggio) polizia = true;
+            if (e instanceof FireStation && distMax <= raggio) pompieri = true;
+            if (e instanceof Hospital && distMax <= raggio) ospedale = true;
+        }
+
+        StringBuilder motivi = new StringBuilder();
+        if (!polizia) motivi.append("Manca Polizia. ");
+        if (!pompieri) motivi.append("Manca Pompieri. ");
+        if (!ospedale) motivi.append("Manca Ospedale. ");
+        if (!acqua) motivi.append("Manca Acqua. ");
+        if (!luce) motivi.append("Manca Elettricità. ");
+        
+        return motivi.toString().trim();
     }
 
     private void applicaDinamicheGlobali() {
