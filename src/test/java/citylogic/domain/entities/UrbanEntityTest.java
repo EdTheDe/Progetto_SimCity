@@ -78,4 +78,31 @@ public class UrbanEntityTest {
         park.processTick(stato, stats);
         assertEquals(-20, stats.getPuntiInquinamento(), "La zona verde deve dare un contributo negativo (mitigazione) ai punti inquinamento");
     }
+
+    // --- TEST PER I COSTI DI MANTENIMENTO ---
+
+    @Test
+    void testInfrastructureMaintenanceDeduction() {
+        Hospital hospital = new Hospital(400.0, 40.0, 60);
+        StatoCitta stato = new StatoCitta();
+        stato.addFinanze(1000.0); 
+        TickStats stats = new TickStats();
+
+        hospital.processTick(stato, stats);
+
+        assertEquals(960.0, stato.getFinanze(), "L'infrastruttura deve dedurre il costo di mantenimento base");
+    }
+
+    @Test
+    void testInfrastructureMaintenanceScaling() {
+        Hospital hospital = new Hospital(400.0, 40.0, 60);
+        StatoCitta stato = new StatoCitta();
+        stato.addFinanze(1000.0);
+        TickStats stats = new TickStats();
+
+        hospital.upgradeLevel(); 
+        hospital.processTick(stato, stats);
+
+        assertEquals(920.0, stato.getFinanze(), "L'infrastruttura al livello 2 deve dedurre il doppio del mantenimento");
+    }
 }
