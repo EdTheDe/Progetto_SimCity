@@ -103,4 +103,18 @@ public class UrbanEntityTest {
 
         assertEquals(2920.0, stato.getFinanze(), "L'infrastruttura al livello 2 deve dedurre il doppio del mantenimento");
     }
+
+    @Test
+    void testUpgradeLevelCap() {
+        citylogic.domain.entities.Commercial com = new citylogic.domain.entities.Commercial(100.0, 10.0, 10.0, 100.0);
+        
+        // Tentiamo di fare upgrade 20 volte di fila (simulando un giocatore che preme il tasto o un bug)
+        for (int i = 0; i < 20; i++) {
+            com.upgradeLevel();
+        }
+        
+        // Verifichiamo che il livello si sia bloccato a un limite massimo sensato (es. Livello 5)
+        assertEquals(5, com.getDevelopmentLevel(), 
+            "Il livello di sviluppo deve bloccarsi a un tetto massimo (es. 5) per evitare che i moltiplicatori esplodano");
+    }
 }
