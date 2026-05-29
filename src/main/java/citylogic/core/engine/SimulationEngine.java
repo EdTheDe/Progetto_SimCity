@@ -196,16 +196,23 @@ public class SimulationEngine {
     }
 
     public boolean checkCoverage(UrbanEntity entity) {
-        // Le infrastrutture non hanno bisogno di copertura
-        if (entity instanceof PoliceStation || entity instanceof FireStation || 
-            entity instanceof Hospital || entity instanceof PowerPlant || 
-            entity instanceof WaterPlant || entity instanceof Road || entity instanceof School) {
-            return true;
-        }
+        if (entity instanceof Road) return true;
 
         int x = entity.getX();
         int y = entity.getY();
         if (x < 0 || y < 0) return false;
+
+        if (!griglia.hasAdjacentRoad(x, y)) {
+            return false;
+        }
+
+        // Le infrastrutture pubbliche e di servizio non hanno bisogno di polizia/pompieri/acqua per generare risorse, 
+        // a patto che abbiano la strada.
+        if (entity instanceof PoliceStation || entity instanceof FireStation || 
+            entity instanceof Hospital || entity instanceof PowerPlant || 
+            entity instanceof WaterPlant || entity instanceof School || entity instanceof GreenArea) {
+            return true;
+        }
 
         boolean polizia = false, pompieri = false, ospedale = false;
         boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();
@@ -232,6 +239,16 @@ public class SimulationEngine {
         int x = entity.getX();
         int y = entity.getY();
         if (x < 0 || y < 0) return "Fuori mappa";
+
+        if (!(entity instanceof Road) && !griglia.hasAdjacentRoad(x, y)) {
+            return "Nessun collegamento stradale";
+        }
+
+        if (entity instanceof PoliceStation || entity instanceof FireStation || 
+            entity instanceof Hospital || entity instanceof PowerPlant || 
+            entity instanceof WaterPlant || entity instanceof School || entity instanceof GreenArea) {
+            return "Errore sconosciuto";
+        }
 
         boolean polizia = false, pompieri = false, ospedale = false;
         boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();

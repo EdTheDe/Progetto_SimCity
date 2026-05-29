@@ -17,7 +17,7 @@ public class StatoCitta {
 
     public StatoCitta() {
         this.popolazione = 0;
-        this.finanze = 3000.0;
+        this.finanze = 4500.0;
         this.felicita = 50.0;
         this.ecologia = 100.0; // Parte pulita
         this.lavoro = 0.0;

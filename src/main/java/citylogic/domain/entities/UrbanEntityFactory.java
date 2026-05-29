@@ -22,10 +22,10 @@ public class UrbanEntityFactory {
             // --- ZONE (BUILDINGS) ---
             case "residential":
                 // Costo, Energia, Acqua, Capacità abitativa
-                return new Residential(150.0, 10.0, 5.0, 20);
+                return new Residential(100.0, 10.0, 5.0, 20);
             case "industrial":
                 // Costo, Energia, Acqua, Inquinamento base, Lavori base
-                return new Industrial(250.0, 20.0, 15.0, 15.0, 10);
+                return new Industrial(150.0, 20.0, 15.0, 15.0, 10);
             case "commercial":
                 // Costo, Energia, Acqua, Reddito base
                 return new Commercial(200.0, 12.0, 8.0, 40.0);
@@ -36,24 +36,24 @@ public class UrbanEntityFactory {
                 return new PowerPlant(500.0, 30.0, 100);
             case "waterplant":
                 // Costo, Mantenimento, Acqua immessa
-                return new WaterPlant(450.0, 25.0, 100);
+                return new WaterPlant(400.0, 25.0, 100);
 
             // --- SERVIZI STATALI ---
             case "police":
             case "policestation": // Aggiunto per compatibilità con il caricamento da file JSON
                 // Costo, Mantenimento, Capacità sicurezza
-                return new PoliceStation(500.0, 15.0, 50);
+                return new PoliceStation(300.0, 15.0, 50);
             case "school":
                 // Costo, Mantenimento, Capacità istruzione
-                return new School(400.0, 15.0, 40);
+                return new School(250.0, 15.0, 40);
             case "firestation":
                 // Costo, Mantenimento, Capacità pompieri
-                return new FireStation(500.0, 15.0, 50);
+                return new FireStation(350.0, 15.0, 50);
 
             // --- VIABILITÀ ---
             case "road":
                 // Solo costo di piazzamento
-                return new Road(50.0);
+                return new Road(10.0);
             // Ospedale
             case "hospital":
                 // Costo di piazzamento, Mantenimento, Capacità sanità erogata
@@ -61,7 +61,7 @@ public class UrbanEntityFactory {
             // --- ECOLOGIA E PARCHI ---
             case "greenarea":
                 // Costo, Mantenimento, Riduzione inquinamento
-                return new GreenArea(100.0, 10.0, -30);
+                return new GreenArea(50.0, 10.0, -30);
             default:
                 throw new IllegalArgumentException("Unknown entity type: " + type);
         }

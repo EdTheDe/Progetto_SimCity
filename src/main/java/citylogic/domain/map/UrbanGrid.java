@@ -138,6 +138,20 @@ public class UrbanGrid {
         return true;
     }
 
+    public boolean hasAdjacentRoad(int x, int y) {
+        int[][] dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        for (int[] d : dirs) {
+            int nx = x + d[0];
+            int ny = y + d[1];
+            if (isWithinBounds(nx, ny)) {
+                if (getCell(nx, ny).isOccupied() && getCell(nx, ny).getEntity() instanceof citylogic.domain.entities.Road) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     public void azzeraMappa() {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
