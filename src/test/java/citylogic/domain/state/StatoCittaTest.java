@@ -11,8 +11,8 @@ public class StatoCittaTest {
         StatoCitta stato = new StatoCitta();
         
         assertEquals(0, stato.getPopolazione(), "Popolazione iniziale deve essere 0");
-        // FIX: Corretto il valore da 1000.0 a 3000.0 per combaciare con il dominio
-        assertEquals(3000.0, stato.getFinanze(), "Finanze iniziali default"); 
+        // FIX: Corretto il valore da 1000.0 a 4500.0 per combaciare con il dominio
+        assertEquals(4500.0, stato.getFinanze(), "Finanze iniziali default"); 
         assertEquals(50.0, stato.getFelicita(), "Felicità iniziale media");
         assertEquals(100.0, stato.getEcologia(), "Ecologia iniziale max");
         assertEquals(0.0, stato.getLavoro(), "Lavoro iniziale 0");
@@ -52,21 +52,21 @@ public class StatoCittaTest {
         
         // Verifichiamo che TUTTO sia tornato alle origini
         assertEquals(0, stato.getPopolazione(), "Il reset deve azzerare la popolazione");
-        assertEquals(3000.0, stato.getFinanze(), "Il reset deve riportare le finanze a 3000.0");
+        assertEquals(4500.0, stato.getFinanze(), "Il reset deve riportare le finanze a 4500.0");
         assertEquals(50.0, stato.getFelicita(), "Il reset deve riportare la felicità a 50.0");
         assertEquals(0.0, stato.getAcquaFornita(), "Il reset deve azzerare le metriche di servizio");
     }
 
     @Test
     void testAddFinanze() {
-        StatoCitta stato = new StatoCitta(); // Finanze iniziali: 3000.0
+        StatoCitta stato = new StatoCitta(); // Finanze iniziali: 4500.0
         
         // Simulazione di entrate (es. tasse commerciali)
         stato.addFinanze(500.0);
-        assertEquals(3500.0, stato.getFinanze(), "addFinanze deve incrementare correttamente il budget");
+        assertEquals(5000.0, stato.getFinanze(), "addFinanze deve incrementare correttamente il budget");
         
         // Simulazione di uscite (es. mantenimento edifici o eventi catastrofici)
         stato.addFinanze(-1000.0);
-        assertEquals(2500.0, stato.getFinanze(), "addFinanze con valori negativi deve dedurre correttamente il budget");
+        assertEquals(4000.0, stato.getFinanze(), "addFinanze con valori negativi deve dedurre correttamente il budget");
     }
 }

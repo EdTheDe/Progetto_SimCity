@@ -14,18 +14,19 @@ public class SimulationEngineTest {
     void testTickProcessConInfrastruttura() {
         // AC 10.1 & 10.2 - Usiamo una infrastruttura per testare il tick base, 
         // poiché le infrastrutture ignorano i vincoli di checkCoverage.
-        StatoCitta stato = new StatoCitta(); // Finanze: 3000.0
+        StatoCitta stato = new StatoCitta(); // Finanze: 4500.0
         UrbanGrid grid = new UrbanGrid(10, 10);
         
         PowerPlant power = new PowerPlant(500.0, 30.0, 100); // Mantenimento: 30.0
         grid.placeEntity(power, 0, 0);
+        grid.placeEntity(new Road(10.0), 0, 1); // La centrale necessita di una strada
         
         SimulationEngine engine = new SimulationEngine(stato, grid);
         
         engine.tick();
         
-        // Verifica che il tick abbia elaborato la centrale deducendo il mantenimento (3000 - 30 = 2970)
-        assertEquals(2970.0, stato.getFinanze(), "Il tick deve dedurre il mantenimento dell'infrastruttura");
+        // Verifica che il tick abbia elaborato la centrale deducendo il mantenimento (4500 - 30 = 4470)
+        assertEquals(4470.0, stato.getFinanze(), "Il tick deve dedurre il mantenimento dell'infrastruttura");
         assertEquals(100.0, stato.getEnergiaFornita(), "La centrale deve aver registrato la sua energia nello StatoCitta");
     }
 
@@ -81,12 +82,17 @@ public class SimulationEngineTest {
         grid.placeEntity(new FireStation(500, 10, 50), 3, 0);
         grid.placeEntity(new Hospital(500, 10, 50), 4, 0);
         
+        // Piazziamo le strade adiacenti a tutti i servizi
+        for(int i = 0; i <= 4; i++) {
+            grid.placeEntity(new Road(10.0), i, 1);
+        }
+        
         // Facciamo un Tick a vuoto affinché le centrali eroghino acqua ed energia nel sistema
         engine.tick();
         
-        // 2. Ora piazziamo la casa (che finalmente risulterà coperta e funzionante!)
+        // 2. Ora piazziamo la casa (che finalmente risulterà coperta e funzionante, vicina alla strada in 0,1)
         Residential residenziale = new Residential(100.0, 10.0, 10.0, 100);
-        grid.placeEntity(residenziale, 0, 1);
+        grid.placeEntity(residenziale, 0, 2);
         
         assertEquals(0, stato.getPopolazione(), "Prima del tick la popolazione deve essere zero");
         

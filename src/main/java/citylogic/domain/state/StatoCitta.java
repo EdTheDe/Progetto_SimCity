@@ -46,7 +46,7 @@ public class StatoCitta {
 
     public void reset() {
         this.popolazione = 0;
-        this.finanze = 3000.0;
+        this.finanze = 4500.0;
         this.felicita = 50.0; // Ricorda che puoi mettere 0.0 se vuoi che non parta a metà
         this.ecologia = 100.0;
         this.lavoro = 0.0;

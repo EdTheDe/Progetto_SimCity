@@ -89,7 +89,7 @@ public class UrbanEntityTest {
 
         hospital.processTick(stato, stats);
 
-        assertEquals(2960.0, stato.getFinanze(), "L'infrastruttura deve dedurre il costo di mantenimento base");
+        assertEquals(4460.0, stato.getFinanze(), "L'infrastruttura deve dedurre il costo di mantenimento base");
     }
 
     @Test
@@ -101,7 +101,7 @@ public class UrbanEntityTest {
         hospital.upgradeLevel(); 
         hospital.processTick(stato, stats);
 
-        assertEquals(2920.0, stato.getFinanze(), "L'infrastruttura al livello 2 deve dedurre il doppio del mantenimento");
+        assertEquals(4420.0, stato.getFinanze(), "L'infrastruttura al livello 2 deve dedurre il doppio del mantenimento");
     }
 
     @Test

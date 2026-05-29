@@ -15,10 +15,10 @@ public class PersistenceManagerTest {
     void testSaveAndLoadWithEntities() {
         // Inizializzazione del manager in una cartella di test temporanea
         PersistenceManager pm = new PersistenceManager("test_saves");
-        StatoCitta stato = new StatoCitta(); // Finanze partono da 3000.0
+        StatoCitta stato = new StatoCitta(); // Finanze partono da 4500.0
 
         // Modifichiamo le finanze per verificare che vengano salvate correttamente
-        stato.addFinanze(4000.0); // 3000.0 + 4000.0 = 7000.0
+        stato.addFinanze(4000.0); // 4500.0 + 4000.0 = 8500.0
 
         SaveGameData dataToSave = new SaveGameData();
         dataToSave.setFinanze(stato.getFinanze());
@@ -42,7 +42,7 @@ public class PersistenceManagerTest {
             
             // 3. Verifiche di integrità
             assertNotNull(loadedData, "Il caricamento deve restituire un oggetto SaveGameData valido");
-            assertEquals(7000.0, loadedData.getFinanze(), "Le finanze devono combaciare dopo il caricamento (3000 + 4000)");
+            assertEquals(8500.0, loadedData.getFinanze(), "Le finanze devono combaciare dopo il caricamento (4500 + 4000)");
             assertEquals(150, loadedData.getPopolazione(), "La popolazione deve essere salvata correttamente");
             
             // 4. Verifica profonda degli edifici (Cruciale per P3)
