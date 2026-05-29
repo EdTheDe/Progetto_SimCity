@@ -4,6 +4,7 @@ import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 import citylogic.domain.entities.UrbanEntity;
 import citylogic.domain.entities.UrbanEntityFactory;
+import citylogic.domain.entities.*;
 import citylogic.domain.map.UrbanGrid;
 import citylogic.domain.map.Cell;
 import citylogic.core.strategy.PoliticaStrategy;
@@ -29,6 +30,7 @@ public class SimulationEngine {
     private List<CityObserver> observers;
     private RandomEvent activeEvent;
     private Random random;
+    private int ticksInNegativeFunds = 0;
 
     public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
@@ -49,7 +51,7 @@ public class SimulationEngine {
         observers.remove(observer);
     }
 
-    private void notifyObservers() {
+    public void forceNotifyObservers() {
         for (CityObserver observer : observers) {
             observer.onSimulationUpdated(stato);
         }
@@ -65,13 +67,33 @@ public class SimulationEngine {
         return this.politicaAttiva;
     }
 
+    public List<UrbanEntity> getActiveEntities() {
+        return griglia.getActiveEntities();
+    }
+
     public void tick() {
         TickStats stats = new TickStats();
 
-        // 1. Lettura dei contributi dalla griglia usando il polimorfismo
+        // 1. Lettura dei contributi dalla griglia usando il polimorfismo e controllo copertura
         for (UrbanEntity entity : griglia.getActiveEntities()) {
-            if (entity.isFunctioning()) {
+            
+            // Calcolo statistiche fisse dell'entità per UI (es. Acqua richiesta)
+            if (entity instanceof citylogic.domain.entities.Building) {
+                stats.addAcquaRichiesta(((citylogic.domain.entities.Building) entity).getWaterDemand());
+                stats.addEnergiaRichiesta(((citylogic.domain.entities.Building) entity).getEnergyDemand());
+            }
+            if (entity instanceof citylogic.domain.entities.WaterPlant) {
+                stats.addAcquaFornita(((citylogic.domain.entities.WaterPlant) entity).getWaterOutput());
+            }
+            if (entity instanceof citylogic.domain.entities.PowerPlant) {
+                stats.addEnergiaFornita(((citylogic.domain.entities.PowerPlant) entity).getEnergyOutput());
+            }
+
+            if (entity.isFunctioning() && checkCoverage(entity)) {
                 entity.processTick(stato, stats);
+                if (entity instanceof citylogic.domain.entities.Industrial) {
+                    stats.addIndustriaAttiva();
+                }
             }
         }
 
@@ -98,16 +120,35 @@ public class SimulationEngine {
         stato.addFinanze(stats.getRedditoCommerciale() * modFelicita);
 
         // 5. Applicazione Malus e Dinamiche Globali
+        stato.setAcquaFornita(stats.getAcquaFornita());
+        stato.setAcquaRichiesta(stats.getAcquaRichiesta());
+        stato.setEnergiaFornita(stats.getEnergiaFornita());
+        stato.setEnergiaRichiesta(stats.getEnergiaRichiesta());
         applicaDinamicheGlobali();
 
         // 6. Applicazione Strategy (Politiche Cittadine)
-        politicaAttiva.applicaModificatori(stato);
+        politicaAttiva.applicaModificatori(stato, stats);
 
         // 7. Gestione Eventi Randomici
         gestisciEventi(stats);
 
-        // 8. Notifica gli Observer (UI)
-        notifyObservers();
+        // 8. Controllo Game Over (Finanze negative)
+        if (stato.getFinanze() < 0) {
+            ticksInNegativeFunds++;
+        } else {
+            ticksInNegativeFunds = 0;
+        }
+
+        // 9. Notifica gli Observer (UI)
+        forceNotifyObservers();
+
+        if (ticksInNegativeFunds > 5) {
+            for (CityObserver obs : observers) {
+                obs.onGameOver();
+            }
+        }
+        
+        stato.addTicket();
     }
 
     private void gestisciEventi(TickStats stats) {
@@ -120,16 +161,101 @@ public class SimulationEngine {
                 activeEvent = null; // Fine evento
             }
         } else {
-            // Possibilità del 15% di triggerare un nuovo evento
-            if (random.nextDouble() < 0.15) {
-                int tipoEvento = random.nextInt(3);
+            // Possibilità del 5% di triggerare un nuovo evento
+            if (random.nextDouble() < 0.05) {
+                int tipoEvento = random.nextInt(4);
+                String eventName = "";
+                String eventDesc = "";
                 switch (tipoEvento) {
-                    case 0: activeEvent = new PrimaveraEvent(); break;
-                    case 1: activeEvent = new CrisiEconomicaEvent(); break;
-                    case 2: activeEvent = new GuerraEvent(); break;
+                    case 0: 
+                        activeEvent = new PrimaveraEvent(); 
+                        eventName = "Primavera";
+                        eventDesc = "Il clima è fantastico! La felicità aumenta e la criminalità diminuisce.";
+                        break;
+                    case 1: 
+                        activeEvent = new CrisiEconomicaEvent(); 
+                        eventName = "Crisi Economica";
+                        eventDesc = "L'economia è in ginocchio. Le entrate commerciali crollano e la criminalità sale.";
+                        break;
+                    case 2: 
+                        activeEvent = new GuerraEvent(); 
+                        eventName = "Guerra";
+                        eventDesc = "La nazione è in guerra! Disoccupazione, tristezza e instabilità globale.";
+                        break;
+                    case 3:
+                        activeEvent = new citylogic.core.events.PioggiaDiMeteoritiEvent(stato, griglia);
+                        eventName = "Pioggia di Meteoriti";
+                        eventDesc = "Una letale pioggia di meteoriti si è abbattuta sulla città! Edifici distrutti e panico diffuso.";
+                        break;
+                }
+                for (CityObserver obs : observers) {
+                    obs.onEventStarted(eventName, eventDesc);
                 }
             }
         }
+    }
+
+    public boolean checkCoverage(UrbanEntity entity) {
+        // Le infrastrutture non hanno bisogno di copertura
+        if (entity instanceof PoliceStation || entity instanceof FireStation || 
+            entity instanceof Hospital || entity instanceof PowerPlant || 
+            entity instanceof WaterPlant || entity instanceof Road || entity instanceof School) {
+            return true;
+        }
+
+        int x = entity.getX();
+        int y = entity.getY();
+        if (x < 0 || y < 0) return false;
+
+        boolean polizia = false, pompieri = false, ospedale = false;
+        boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();
+        boolean luce = stato.getEnergiaFornita() >= stato.getEnergiaRichiesta();
+        
+        for (UrbanEntity e : griglia.getActiveEntities()) {
+            if (polizia && pompieri && ospedale) break;
+            
+            int distMax = Math.max(Math.abs(e.getX() - x), Math.abs(e.getY() - y));
+            int raggio = 5 + (e.getDevelopmentLevel() * 2);
+
+            if (e instanceof PoliceStation && distMax <= raggio) polizia = true;
+            if (e instanceof FireStation && distMax <= raggio) pompieri = true;
+            if (e instanceof Hospital && distMax <= raggio) ospedale = true;
+        }
+        
+        return polizia && pompieri && ospedale && acqua && luce;
+    }
+
+    public String getMotivoInattivita(UrbanEntity entity) {
+        if (!entity.isFunctioning()) return "Fondi insufficienti";
+        if (checkCoverage(entity)) return "Attivo";
+        
+        int x = entity.getX();
+        int y = entity.getY();
+        if (x < 0 || y < 0) return "Fuori mappa";
+
+        boolean polizia = false, pompieri = false, ospedale = false;
+        boolean acqua = stato.getAcquaFornita() >= stato.getAcquaRichiesta();
+        boolean luce = stato.getEnergiaFornita() >= stato.getEnergiaRichiesta();
+        
+        for (UrbanEntity e : griglia.getActiveEntities()) {
+            if (polizia && pompieri && ospedale) break;
+            
+            int distMax = Math.max(Math.abs(e.getX() - x), Math.abs(e.getY() - y));
+            int raggio = 5 + (e.getDevelopmentLevel() * 2);
+
+            if (e instanceof PoliceStation && distMax <= raggio) polizia = true;
+            if (e instanceof FireStation && distMax <= raggio) pompieri = true;
+            if (e instanceof Hospital && distMax <= raggio) ospedale = true;
+        }
+
+        StringBuilder motivi = new StringBuilder();
+        if (!polizia) motivi.append("Manca Polizia. ");
+        if (!pompieri) motivi.append("Manca Pompieri. ");
+        if (!ospedale) motivi.append("Manca Ospedale. ");
+        if (!acqua) motivi.append("Manca Acqua. ");
+        if (!luce) motivi.append("Manca Elettricità. ");
+        
+        return motivi.toString().trim();
     }
 
     private void applicaDinamicheGlobali() {
@@ -152,81 +278,5 @@ public class SimulationEngine {
         return 0.5 + (stato.getFelicita() / 100.0);
     }
 
-    /**
-     * Crea un oggetto SaveGameData contenente lo stato economico e la posizione
-     * esatta di tutti gli edifici presenti sulla mappa.
-     */
-    public SaveGameData impacchettaDatiSalvataggio() {
-        SaveGameData dati = new SaveGameData();
 
-        // Salva i parametri correnti della città
-        dati.setFinanze(this.stato.getFinanze());
-        dati.setPopolazione(this.stato.getPopolazione());
-        dati.setFelicita(this.stato.getFelicita());
-        dati.setEcologia(this.stato.getEcologia());
-        dati.setSicurezza(this.stato.getSicurezza());
-        dati.setSanita(this.stato.getSanita());
-        dati.setLavoro(this.stato.getLavoro());
-
-        // Scansiona la griglia per trovare tutti gli edifici da salvare
-        List<SavedEntityData> listaEdifici = new ArrayList<>();
-        for (int x = 0; x < griglia.getWidth(); x++) {
-            for (int y = 0; y < griglia.getHeight(); y++) {
-                Cell cella = griglia.getCell(x, y);
-                if (cella.isOccupied()) {
-                    UrbanEntity entita = cella.getEntity();
-                    // Ottiene il nome della classe come stringa (es. "Residential", "Road")
-                    String tipoSemplice = entita.getClass().getSimpleName();
-                    int livello = entita.getDevelopmentLevel();
-
-                    // Crea il record con coordinate x, y, tipo e livello di upgrade
-                    listaEdifici.add(new SavedEntityData(x, y, tipoSemplice, livello));
-                }
-            }
-        }
-        dati.setEdifici(listaEdifici);
-
-        return dati;
-    }
-
-    /**
-     * Ripristina i parametri della simulazione e ricostruisce la griglia
-     * posizionando gli edifici memorizzati nel file JSON di salvataggio.
-     */
-    public void ripristinaDatiSalvataggio(SaveGameData dati) {
-        if (dati == null) return;
-
-        // 1. Ripristina i valori numerici dello stato della città
-        this.stato.setFinanze(dati.getFinanze());
-        this.stato.setPopolazione(dati.getPopolazione());
-        this.stato.setFelicita(dati.getFelicita());
-        this.stato.setEcologia(dati.getEcologia());
-        this.stato.setSicurezza(dati.getSicurezza());
-        this.stato.setSanita(dati.getSanita());
-        this.stato.setLavoro(dati.getLavoro());
-
-        // 2. Svuota completamente la griglia logica corrente per evitare sovrapposizioni
-        this.griglia.azzeraMappa();
-
-        // 3. Rigenera gli edifici dalle coordinate salvate
-        if (dati.getEdifici() != null) {
-            for (SavedEntityData d : dati.getEdifici()) {
-                try {
-                    // Utilizza la factory per istanziare nuovamente l'edificio corretto tramite la stringa del tipo
-                    UrbanEntity nuovaEntita = UrbanEntityFactory.createEntity(d.getTipo());
-
-                    if (nuovaEntita != null) {
-                        // Esegue i cicli di upgrade necessari per ritornare al livello salvato
-                        for (int i = 1; i < d.getLivello(); i++) {
-                            nuovaEntita.upgradeLevel();
-                        }
-                        // Riposiziona l'edificio ricostruito nella griglia logica
-                        this.griglia.placeEntity(nuovaEntita, d.getX(), d.getY());
-                    }
-                } catch (Exception e) {
-                    System.err.println("Impossibile caricare l'edificio a (" + d.getX() + "," + d.getY() + "): " + e.getMessage());
-                }
-            }
-        }
-    }
 }

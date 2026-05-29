@@ -24,7 +24,7 @@ public class CityApp extends Application {
     public void start(Stage primaryStage) {
         statoCitta = new StatoCitta();
         // Griglia rettangolare ottimizzata per l'area verde dell'isola
-        grigliaLogica = new UrbanGrid(24, 18);
+        grigliaLogica = new UrbanGrid(24, 16);
         validatore = new BuilderValidator(grigliaLogica);
         motore = new SimulationEngine(statoCitta, grigliaLogica);
 
@@ -34,13 +34,15 @@ public class CityApp extends Application {
         TopBar barraSuperiore = new TopBar();
         barraSuperiore.aggiornaDati(statoCitta);
         barraSuperiore.setSimulationEngine(motore);
+        motore.addObserver(barraSuperiore);
 
         MappaGriglia mappaVisiva = new MappaGriglia(grigliaLogica, validatore, statoCitta, barraSuperiore);
         barraSuperiore.setRiferimenti(grigliaLogica, statoCitta, mappaVisiva);
 
         SideBar barraLaterale = new SideBar(mappaVisiva);
         TimeBar barraTempo = new TimeBar(motore, barraSuperiore, mappaVisiva, statoCitta);
-
+        motore.addObserver(barraTempo);
+		barraSuperiore.setTimeBar(barraTempo);
         // Blocco logico a risoluzione nativa 1280x720 per lo sfondo dell'isola
         StackPane areaGiocoBase = new StackPane();
         areaGiocoBase.setPrefSize(1280, 720);
@@ -57,7 +59,7 @@ public class CityApp extends Application {
             areaGiocoBase.setStyle("-fx-background-color: #87CEEB;");
         }
 
-        // Spostamento verticale della mappa di 1 cella verso l'alto (da 40 a 10 pixel)
+        // Spostamento della mappa per evitare sovrapposizioni con la TopBar e con i menu di destra
         mappaVisiva.setTranslateY(10);
         areaGiocoBase.getChildren().add(mappaVisiva);
 
@@ -114,6 +116,9 @@ public class CityApp extends Application {
         primaryStage.setTitle("CityLogic Simulator");
         primaryStage.setScene(scene);
         primaryStage.show();
+
+        // Mostra il tutorial all'avvio
+        TutorialPopup.mostraTutorial();
     }
 
     public static void main(String[] args) {

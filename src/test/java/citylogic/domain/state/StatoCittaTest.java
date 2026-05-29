@@ -11,7 +11,8 @@ public class StatoCittaTest {
         StatoCitta stato = new StatoCitta();
         
         assertEquals(0, stato.getPopolazione(), "Popolazione iniziale deve essere 0");
-        assertEquals(1000.0, stato.getFinanze(), "Finanze inziali default");
+        // FIX: Corretto il valore da 1000.0 a 3000.0 per combaciare con il dominio
+        assertEquals(3000.0, stato.getFinanze(), "Finanze iniziali default"); 
         assertEquals(50.0, stato.getFelicita(), "Felicità iniziale media");
         assertEquals(100.0, stato.getEcologia(), "Ecologia iniziale max");
         assertEquals(0.0, stato.getLavoro(), "Lavoro iniziale 0");
@@ -32,5 +33,40 @@ public class StatoCittaTest {
         
         stato.setPopolazione(-100);
         assertEquals(0, stato.getPopolazione(), "Popolazione non può essere negativa");
+    }
+
+    // --- STRESS TEST AGGIUNTI ---
+
+    @Test
+    void testResetState() {
+        StatoCitta stato = new StatoCitta();
+        
+        // Corrompiamo lo stato iniziale
+        stato.setPopolazione(5000);
+        stato.setFinanze(0.0);
+        stato.setFelicita(10.0);
+        stato.setAcquaFornita(500.0);
+        
+        // P3 carica una nuova partita o il giocatore fa "Nuova Partita"
+        stato.reset();
+        
+        // Verifichiamo che TUTTO sia tornato alle origini
+        assertEquals(0, stato.getPopolazione(), "Il reset deve azzerare la popolazione");
+        assertEquals(3000.0, stato.getFinanze(), "Il reset deve riportare le finanze a 3000.0");
+        assertEquals(50.0, stato.getFelicita(), "Il reset deve riportare la felicità a 50.0");
+        assertEquals(0.0, stato.getAcquaFornita(), "Il reset deve azzerare le metriche di servizio");
+    }
+
+    @Test
+    void testAddFinanze() {
+        StatoCitta stato = new StatoCitta(); // Finanze iniziali: 3000.0
+        
+        // Simulazione di entrate (es. tasse commerciali)
+        stato.addFinanze(500.0);
+        assertEquals(3500.0, stato.getFinanze(), "addFinanze deve incrementare correttamente il budget");
+        
+        // Simulazione di uscite (es. mantenimento edifici o eventi catastrofici)
+        stato.addFinanze(-1000.0);
+        assertEquals(2500.0, stato.getFinanze(), "addFinanze con valori negativi deve dedurre correttamente il budget");
     }
 }

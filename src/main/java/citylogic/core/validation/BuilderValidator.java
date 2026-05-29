@@ -22,8 +22,7 @@ public class BuilderValidator {
         // Registrazione delle regole attive nel motore
         this.regole = List.of(
                 new RegolaSpazioLibero(),
-                new RegolaFondiSufficienti(),
-                new RegolaCollegamentoServizi(griglia, 5) // Impostato un raggio di 5 celle
+                new RegolaFondiSufficienti()
         );
     }
 

@@ -1,0 +1,416 @@
+
+classDiagram
+
+    %% ==========================================
+    %% PACKAGE: INTERFACES & CORE
+    %% ==========================================
+    class CityObserver {
+        <<interface>>
+        +onCityUpdate(stato: StatoCitta, griglia: UrbanGrid)
+        +onGameOver()
+        +onEventTriggered(titolo: String, descrizione: String)
+    }
+
+    class PoliticaStrategy {
+        <<interface>>
+        +applica(stato: StatoCitta, griglia: UrbanGrid)
+    }
+
+    class RandomEvent {
+        <<interface>>
+        +trigger(griglia: UrbanGrid, stato: StatoCitta)
+    }
+
+    %% ==========================================
+    %% PACKAGE: CORE.VALIDATION
+    %% ==========================================
+    class BuilderValidator {
+        -regole : List~RegolaCostruzione~
+        +BuilderValidator(griglia: UrbanGrid)
+        +validaCostruzione(entita: UrbanEntity, cella: Cell, stato: StatoCitta) void
+    }
+
+    class RegolaCostruzione {
+        <<interface>>
+        +valida(entita: UrbanEntity, cella: Cell, stato: StatoCitta) void
+    }
+    BuilderValidator "1" *-- "many" RegolaCostruzione : usa
+
+    %% ==========================================
+    %% PACKAGE: DOMAIN.ENTITIES
+    %% ==========================================
+    class UrbanEntity {
+        <<abstract>>
+        #baseCost : int
+        #placementCost : int
+        #maintenanceCost : int
+        #developmentLevel : int
+        #effectRadius : int
+        #active : boolean
+        #inactivityReason : String
+        +getPlacementCost() int
+        +getMaintenanceCost() int
+        +getDevelopmentLevel() int
+        +getEffectRadius() int
+        +isActive() boolean
+        +setActive(active: boolean)
+        +getInactivityReason() String
+        +setInactivityReason(reason: String)
+        +upgradeLevel() void
+        +processTick() void
+    }
+
+    class Building {
+        <<abstract>>
+        +processTick() void
+    }
+
+    class Infrastructure {
+        <<abstract>>
+        +processTick() void
+    }
+
+    class StateBuilding {
+        <<abstract>>
+        +processTick() void
+    }
+
+    %% Concrete Entities
+    class Residential {
+        +Residential()
+        +upgradeLevel() void
+        +processTick() void
+    }
+    class Commercial {
+        +Commercial()
+        +upgradeLevel() void
+        +processTick() void
+    }
+    class Industrial {
+        +Industrial()
+        +upgradeLevel() void
+        +processTick() void
+    }
+
+    class Road {
+        +Road()
+    }
+    class PowerPlant {
+        +PowerPlant()
+        +processTick() void
+    }
+    class WaterPlant {
+        +WaterPlant()
+        +processTick() void
+    }
+    class GreenArea {
+        +GreenArea()
+        +upgradeLevel() void
+        +processTick() void
+    }
+
+    class PoliceStation {
+        +PoliceStation()
+        +upgradeLevel() void
+        +processTick() void
+    }
+    class FireStation {
+        +FireStation()
+        +upgradeLevel() void
+        +processTick() void
+    }
+    class Hospital {
+        +Hospital()
+        +upgradeLevel() void
+        +processTick() void
+    }
+    class School {
+        +School()
+        +upgradeLevel() void
+        +processTick() void
+    }
+
+    %% Entity Relationships
+    UrbanEntity <|-- Building
+    UrbanEntity <|-- Infrastructure
+    UrbanEntity <|-- StateBuilding
+
+    Building <|-- Residential
+    Building <|-- Commercial
+    Building <|-- Industrial
+
+    Infrastructure <|-- Road
+    Infrastructure <|-- PowerPlant
+    Infrastructure <|-- WaterPlant
+    Infrastructure <|-- GreenArea
+
+    StateBuilding <|-- PoliceStation
+    StateBuilding <|-- FireStation
+    StateBuilding <|-- Hospital
+    StateBuilding <|-- School
+
+    class UrbanEntityFactory {
+        <<utility>>
+        +createEntity(tipo: String) UrbanEntity$
+    }
+    UrbanEntityFactory ..> UrbanEntity : creates
+
+    %% ==========================================
+    %% PACKAGE: DOMAIN.MAP
+    %% ==========================================
+    class Cell {
+        -x : int
+        -y : int
+        -entity : UrbanEntity
+        +Cell(x: int, y: int)
+        +getX() int
+        +getY() int
+        +getEntity() UrbanEntity
+        +setEntity(e: UrbanEntity)
+        +isOccupied() boolean
+    }
+
+    class UrbanGrid {
+        -width : int
+        -height : int
+        -cells : Cell[][]
+        +UrbanGrid(w: int, h: int)
+        +getWidth() int
+        +getHeight() int
+        +getCell(x: int, y: int) Cell
+        +placeEntity(e: UrbanEntity, x: int, y: int) void
+        +removeEntity(x: int, y: int) void
+        +azzeraMappa() void
+        +getAdjacentCells(x: int, y: int) List~Cell~
+        +getCellsInRadius(x: int, y: int, radius: int) List~Cell~
+    }
+
+    UrbanGrid "1" *-- "many" Cell : contains
+    Cell "1" o-- "0..1" UrbanEntity : holds
+
+    %% ==========================================
+    %% PACKAGE: DOMAIN.STATE
+    %% ==========================================
+    class StatoCitta {
+        -finanze : double
+        -popolazione : int
+        -felicita : int
+        -ecologia : int
+        -sicurezza : int
+        -sanita : int
+        -lavoro : int
+        -tickNegativi : int
+        +StatoCitta()
+        +getFinanze() double
+        +setFinanze(f: double)
+        +addFinanze(amount: double)
+        +getPopolazione() int
+        +setPopolazione(p: int)
+        +getFelicita() int
+        +setFelicita(f: int)
+        +getEcologia() int
+        +setEcologia(e: int)
+        +getSicurezza() int
+        +setSicurezza(s: int)
+        +getSanita() int
+        +setSanita(s: int)
+        +getLavoro() int
+        +setLavoro(l: int)
+        +getTickNegativi() int
+        +incrementaTickNegativi()
+        +resetTickNegativi()
+    }
+
+    class TickStats {
+        -speseMantenimento : double
+        -introitiTasse : double
+        -bilancioNetto : double
+        -nuoviAbitanti : int
+        -nuoviPostiLavoro : int
+        +TickStats(...)
+        +getSpeseMantenimento() double
+        +getIntroitiTasse() double
+        +getBilancioNetto() double
+        +getNuoviAbitanti() int
+        +getNuoviPostiLavoro() int
+    }
+
+    %% ==========================================
+    %% PACKAGE: CORE.ENGINE
+    %% ==========================================
+    class SimulationEngine {
+        -griglia : UrbanGrid
+        -stato : StatoCitta
+        -politicaAttuale : PoliticaStrategy
+        -observers : List~CityObserver~
+        -simulationThread : Thread
+        -running : boolean
+        -speedDelay : int
+        -paused : boolean
+        +SimulationEngine(g: UrbanGrid, s: StatoCitta)
+        +start() void
+        +pause() void
+        +resume() void
+        +setSpeedMultiplier(multiplier: int) void
+        +setPolitica(p: PoliticaStrategy) void
+        +applicaTick() void
+        -calcolaParametriGlobali() void
+        -gestisciEventiCasuali() void
+        +addObserver(o: CityObserver) void
+        +removeObserver(o: CityObserver) void
+        +notifyObservers() void
+        +forceNotifyObservers() void
+    }
+
+    SimulationEngine "1" *-- "1" UrbanGrid
+    SimulationEngine "1" *-- "1" StatoCitta
+    SimulationEngine "1" o-- "1" PoliticaStrategy : applies
+    SimulationEngine "1" o-- "many" CityObserver : notifies
+    SimulationEngine ..> RandomEvent : triggers
+
+    %% Concrete Strategies
+    class PoliticaAmbientale {
+        +applica(stato: StatoCitta, griglia: UrbanGrid)
+    }
+    class PoliticaIndustriale {
+        +applica(stato: StatoCitta, griglia: UrbanGrid)
+    }
+    class PoliticaNeutrale {
+        +applica(stato: StatoCitta, griglia: UrbanGrid)
+    }
+    PoliticaStrategy <|.. PoliticaAmbientale
+    PoliticaStrategy <|.. PoliticaIndustriale
+    PoliticaStrategy <|.. PoliticaNeutrale
+
+    %% Concrete Events
+    class CrisiEconomicaEvent {
+        +trigger(griglia: UrbanGrid, stato: StatoCitta)
+    }
+    class PioggiaDiMeteoritiEvent {
+        +trigger(griglia: UrbanGrid, stato: StatoCitta)
+    }
+    class PrimaveraEvent {
+        +trigger(griglia: UrbanGrid, stato: StatoCitta)
+    }
+    class GuerraEvent {
+        +trigger(griglia: UrbanGrid, stato: StatoCitta)
+    }
+    RandomEvent <|.. CrisiEconomicaEvent
+    RandomEvent <|.. PioggiaDiMeteoritiEvent
+    RandomEvent <|.. PrimaveraEvent
+    RandomEvent <|.. GuerraEvent
+
+    %% ==========================================
+    %% PACKAGE: INFRASTRUCTURE (Persistence)
+    %% ==========================================
+    class PersistenceManager {
+        -objectMapper : ObjectMapper
+        -saveDirectory : Path
+        +PersistenceManager(directoryPath: String)
+        -inizializzaDirectory()
+        +salvaPartita(datiPartita: SaveGameData, nomeFile: String)
+        +caricaPartita(nomeFile: String) SaveGameData
+        +impacchettaDati(stato: StatoCitta, griglia: UrbanGrid) SaveGameData
+        +ripristinaDati(dati: SaveGameData, stato: StatoCitta, griglia: UrbanGrid)
+    }
+
+    class SaveGameData {
+        -finanze : double
+        -popolazione : int
+        -felicita : int
+        -ecologia : int
+        -sicurezza : int
+        -sanita : int
+        -lavoro : int
+        -edifici : List~SavedEntityData~
+    }
+
+    class SavedEntityData {
+        -x : int
+        -y : int
+        -tipo : String
+        -livello : int
+    }
+
+    PersistenceManager ..> SaveGameData : creates/loads
+    SaveGameData "1" *-- "many" SavedEntityData : contains
+
+    %% ==========================================
+    %% PACKAGE: UI
+    %% ==========================================
+    class CityApp {
+        +start(primaryStage: Stage) void
+        +main(args: String[]) void$
+    }
+
+    class MappaGriglia {
+        -grigliaLogica : UrbanGrid
+        -engine : SimulationEngine
+        +MappaGriglia(g: UrbanGrid, e: SimulationEngine)
+        +rinfrescaMappaCompleta() void
+        -gestisciClickSinistro(e: UrbanEntity, cellaUI: StackPane) void
+        -mostraMenuContestuale(e: UrbanEntity, cX: int, cY: int, screenX: double, screenY: double) void
+        -aggiornaTexture(cellaUI: StackPane, entity: UrbanEntity) void
+    }
+
+    class TopBar {
+        -lblFinanze : Label
+        -lblPopolazione : Label
+        -lblFelicita : Label
+        -lblEcologia : Label
+        +aggiornaDati(stato: StatoCitta) void
+    }
+
+    class SideBar {
+        -griglia : UrbanGrid
+        -engine : SimulationEngine
+        +addButtonEdificio(nome: String, tipo: String, costo: int) void
+    }
+
+    class TimeBar {
+        -engine : SimulationEngine
+        -btnPlay : Button
+        -btnPause : Button
+        -btnSpeed : Button
+        +aggiornaTestoVelocita(speed: int) void
+    }
+
+    class PannelloControlliTempo {
+        -engine : SimulationEngine
+    }
+
+    class PannelloRisorse {
+        -barWater : ProgressBar
+        -barEnergy : ProgressBar
+        +aggiornaRisorse(griglia: UrbanGrid) void
+    }
+
+    class GestoreEventiUI {
+        +mostraPopupEvento(titolo: String, descrizione: String) void$
+    }
+
+    class MenuImpostazioni {
+        +apriMenu(engine: SimulationEngine, mappaVisiva: MappaGriglia, topBar: TopBar, stato: StatoCitta, logica: UrbanGrid) void$
+        -eseguiEsportazione(...) void
+        -eseguiImportazione(...) void
+        -eseguiReset(...) void
+    }
+
+    class TutorialPopup {
+        +mostraTutorial() void$
+    }
+
+    CityObserver <|.. TopBar
+    CityObserver <|.. PannelloRisorse
+    CityObserver <|.. MappaGriglia
+    CityObserver <|.. PannelloControlliTempo
+
+SimulationEngine ..> TickStats : uses
+    CityApp "1" *-- "1" SimulationEngine
+    CityApp "1" *-- "1" MappaGriglia
+    CityApp "1" *-- "1" TopBar
+    CityApp "1" *-- "1" SideBar
+    CityApp "1" *-- "1" TimeBar
+    CityApp "1" *-- "1" PannelloRisorse
+
+```

@@ -8,4 +8,6 @@ import citylogic.domain.state.StatoCitta;
  */
 public interface CityObserver {
     void onSimulationUpdated(StatoCitta stato);
+    default void onEventStarted(String eventName, String description) {}
+    default void onGameOver() {}
 }

@@ -8,6 +8,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import citylogic.domain.state.StatoCitta;
+import citylogic.domain.map.UrbanGrid;
+import citylogic.domain.map.Cell;
+import citylogic.domain.entities.UrbanEntity;
+import citylogic.domain.entities.UrbanEntityFactory;
 
 /**
  * Gestisce il salvataggio e il caricamento dello stato della simulazione su file JSON.
@@ -85,6 +93,72 @@ public class PersistenceManager {
         } catch (IOException e) {
             System.err.println("Errore durante il caricamento del salvataggio: " + e.getMessage());
             return null;
+        }
+    }
+
+    /**
+     * Crea un oggetto SaveGameData contenente lo stato economico e la posizione
+     * esatta di tutti gli edifici presenti sulla mappa.
+     */
+    public SaveGameData impacchettaDati(StatoCitta stato, UrbanGrid griglia) {
+        SaveGameData dati = new SaveGameData();
+
+        dati.setFinanze(stato.getFinanze());
+        dati.setPopolazione(stato.getPopolazione());
+        dati.setFelicita(stato.getFelicita());
+        dati.setEcologia(stato.getEcologia());
+        dati.setSicurezza(stato.getSicurezza());
+        dati.setSanita(stato.getSanita());
+        dati.setLavoro(stato.getLavoro());
+
+        List<SavedEntityData> listaEdifici = new ArrayList<>();
+        for (int x = 0; x < griglia.getWidth(); x++) {
+            for (int y = 0; y < griglia.getHeight(); y++) {
+                Cell cella = griglia.getCell(x, y);
+                if (cella.isOccupied()) {
+                    UrbanEntity entita = cella.getEntity();
+                    String tipoSemplice = entita.getClass().getSimpleName();
+                    int livello = entita.getDevelopmentLevel();
+                    listaEdifici.add(new SavedEntityData(x, y, tipoSemplice, livello));
+                }
+            }
+        }
+        dati.setEdifici(listaEdifici);
+
+        return dati;
+    }
+
+    /**
+     * Ripristina i parametri della simulazione e ricostruisce la griglia
+     * posizionando gli edifici memorizzati nel file JSON di salvataggio.
+     */
+    public void ripristinaDati(SaveGameData dati, StatoCitta stato, UrbanGrid griglia) {
+        if (dati == null) return;
+
+        stato.setFinanze(dati.getFinanze());
+        stato.setPopolazione(dati.getPopolazione());
+        stato.setFelicita(dati.getFelicita());
+        stato.setEcologia(dati.getEcologia());
+        stato.setSicurezza(dati.getSicurezza());
+        stato.setSanita(dati.getSanita());
+        stato.setLavoro(dati.getLavoro());
+
+        griglia.azzeraMappa();
+
+        if (dati.getEdifici() != null) {
+            for (SavedEntityData d : dati.getEdifici()) {
+                try {
+                    UrbanEntity nuovaEntita = UrbanEntityFactory.createEntity(d.getTipo());
+                    if (nuovaEntita != null) {
+                        for (int i = 1; i < d.getLivello(); i++) {
+                            nuovaEntita.upgradeLevel();
+                        }
+                        griglia.placeEntity(nuovaEntita, d.getX(), d.getY());
+                    }
+                } catch (Exception e) {
+                    System.err.println("Impossibile caricare l'edificio a (" + d.getX() + "," + d.getY() + "): " + e.getMessage());
+                }
+            }
         }
     }
 }

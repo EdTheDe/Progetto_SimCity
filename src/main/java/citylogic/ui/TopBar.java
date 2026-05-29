@@ -2,11 +2,8 @@ package citylogic.ui;
 
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.map.UrbanGrid;
-import citylogic.infrastructure.SaveGameData;
-import citylogic.infrastructure.PersistenceManager;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -17,32 +14,34 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import java.io.File;
 
 import citylogic.core.engine.SimulationEngine;
 import citylogic.core.strategy.PoliticaNeutrale;
 import citylogic.core.strategy.PoliticaAmbientale;
 import citylogic.core.strategy.PoliticaIndustriale;
 
-public class TopBar extends HBox {
+public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
 
-    private Label lblFinanze, lblPopolazione;
-    private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita;
+    private Label lblFinanze, lblPopolazione, lblTickets;
+    private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita, pbLavoro;
     private ChoiceBox<String> selettorePolitica;
     private SimulationEngine engine;
     
     private UrbanGrid logica;
     private StatoCitta stato;
     private MappaGriglia mappaVisiva;
+    private TimeBar timeBarRef;
+
+    public SimulationEngine getSimulationEngine() {
+        return engine;
+    }
 
     public TopBar() {
         setSpacing(20);
         setPadding(new Insets(15, 20, 15, 30)); 
         setStyle("-fx-background-color: transparent;");
         setAlignment(Pos.CENTER_LEFT);
+        setPickOnBounds(false);
 
         Button btnImpostazioni = new Button();
         try {
@@ -56,13 +55,21 @@ public class TopBar extends HBox {
         btnImpostazioni.setMinHeight(48);
         btnImpostazioni.setMaxHeight(48);
         btnImpostazioni.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 15; -fx-border-color: #bdc3c7; -fx-border-radius: 15; -fx-cursor: hand; -fx-padding: 0 15px;");
-        btnImpostazioni.setOnAction(e -> apriMenuImpostazioni());
+        
+        // Delega l'apertura alla nuova classe MenuImpostazioni
+        btnImpostazioni.setOnAction(e -> {
+            MenuImpostazioni menu = new MenuImpostazioni(logica, stato, mappaVisiva, engine, this, timeBarRef);
+            menu.mostra();
+        });
 
         lblFinanze = new Label();
         lblPopolazione = new Label();
         lblPopolazione.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
 
-        HBox contenitoreSinistra = new HBox(20, lblFinanze, lblPopolazione);
+        lblTickets = new Label();
+        lblTickets.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: black;");
+
+        HBox contenitoreSinistra = new HBox(20, lblFinanze, lblPopolazione, lblTickets);
         contenitoreSinistra.setMinHeight(48);
         contenitoreSinistra.setMaxHeight(48);
         contenitoreSinistra.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 0 20; -fx-background-radius: 15; -fx-border-color: #bdc3c7; -fx-border-radius: 15;");
@@ -89,13 +96,15 @@ public class TopBar extends HBox {
         pbSanita = new ProgressBar(0);
         pbEcologia = new ProgressBar(0);
         pbFelicita = new ProgressBar(0);
+        pbLavoro = new ProgressBar(0);
 
         HBox contenitoreDestra = new HBox(15, 
             selettorePolitica,
-            creaBarra("🛡️ Sicurezza", pbSicurezza, "-fx-accent: #3498db;"),
+            creaBarra("🚨 Sicurezza", pbSicurezza, "-fx-accent: #3498db;"),
             creaBarra("🏥 Sanità", pbSanita, "-fx-accent: #e74c3c;"),
             creaBarra("🌱 Ecologia", pbEcologia, "-fx-accent: #2ecc71;"),
-            creaBarra("😊 Felicità", pbFelicita, "-fx-accent: #f1c40f;")
+            creaBarra("😊 Felicità", pbFelicita, "-fx-accent: #f1c40f;"),
+            creaBarra("💼 Lavoro", pbLavoro, "-fx-accent: #9b59b6;")
         );
         contenitoreDestra.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-padding: 10 20; -fx-background-radius: 15; -fx-border-color: #bdc3c7; -fx-border-radius: 15;");
         contenitoreDestra.setAlignment(Pos.CENTER_LEFT);
@@ -103,10 +112,8 @@ public class TopBar extends HBox {
         getChildren().addAll(btnImpostazioni, contenitoreSinistra, spacer, contenitoreDestra);
     }
 
-    public void setSimulationEngine(SimulationEngine engine) {
-        this.engine = engine;
-    }
-
+    public void setSimulationEngine(SimulationEngine engine) { this.engine = engine; }
+    public void setTimeBar(TimeBar timeBar) { this.timeBarRef = timeBar; }
     public void setRiferimenti(UrbanGrid logica, StatoCitta stato, MappaGriglia mappaVisiva) {
         this.logica = logica;
         this.stato = stato;
@@ -123,110 +130,6 @@ public class TopBar extends HBox {
         return box;
     }
 
-    private void apriMenuImpostazioni() {
-        Stage popup = new Stage();
-        popup.initModality(Modality.APPLICATION_MODAL);
-        popup.setTitle("Impostazioni");
-
-        VBox layout = new VBox(15);
-        layout.setPadding(new Insets(25));
-        layout.setAlignment(Pos.CENTER);
-        layout.setStyle("-fx-background-color: #ecf0f1;");
-
-        Button btnImporta = creaBottoneMenu("📥 Importa Partita", "#3498db");
-        btnImporta.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Importa Salvataggio JSON");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File JSON", "*.json"));
-            File file = fileChooser.showOpenDialog(popup);
-            if (file != null && logica != null && stato != null) {
-                try {
-                    PersistenceManager pm = new PersistenceManager(file.getParent());
-
-                    // 1. Carica l'oggetto contenente lo stato del file JSON
-                    SaveGameData datiCaricati = pm.caricaPartita(file.getName().replace(".json", ""));
-
-                    // 2. CRUCIALE: Passa i dati al motore di gioco per ricostruire mappa ed entità
-                    engine.ripristinaDatiSalvataggio(datiCaricati);
-
-                    // 3. Rinfresca i componenti grafici della UI
-                    mappaVisiva.rinfrescaMappaCompleta();
-                    aggiornaDati(stato);
-                    popup.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        Button btnEsporta = creaBottoneMenu("📤 Esporta Partita", "#9b59b6");
-        btnEsporta.setOnAction(e -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle("Salva Partita");
-            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("File JSON", "*.json"));
-            File file = fileChooser.showSaveDialog(popup);
-            if (file != null && logica != null && stato != null) {
-                try {
-                    PersistenceManager pm = new PersistenceManager(file.getParent());
-
-                    // 1. Recupera l'oggetto SaveGameData dal motore (usando 'engine', non 'motore')
-                    citylogic.infrastructure.SaveGameData datiDaSalvare = engine.impacchettaDatiSalvataggio();
-
-                    // 2. Salva questo oggetto utilizzando 'pm' e usa il nome del file scelto dall'utente
-                    pm.salvaPartita(datiDaSalvare, file.getName().replace(".json", ""));
-                    popup.close();
-                } catch (Exception ex) {
-                    ex.printStackTrace();
-                }
-            }
-        });
-
-        // --- BLOCCO RICOMINCIA CORRETTO E BLINDATO ---
-        Button btnRicomincia = creaBottoneMenu("🔄 Ricomincia", "#f39c12");
-        btnRicomincia.setOnAction(e -> { 
-            if (logica != null && stato != null && mappaVisiva != null) {
-                
-                // 1. Pulizia millimetrica: rimuove ogni entità singolarmente assicurandosi di scaricare la memoria
-                for (int i = 0; i < logica.getWidth(); i++) {
-                    for (int j = 0; j < logica.getHeight(); j++) {
-                        logica.removeEntity(i, j);
-                    }
-                }
-                
-                // 2. Ripristino brutale dei valori al costruttore originale
-                stato.addFinanze(1000.0 - stato.getFinanze());
-                stato.setPopolazione(0);
-                stato.setFelicita(50.0);
-                stato.setEcologia(100.0);
-                stato.setLavoro(0.0);
-                stato.setSicurezza(0.0);
-                stato.setSanita(0.0);
-                
-                // 3. Ridisegno grafico
-                mappaVisiva.rinfrescaMappaCompleta();
-                aggiornaDati(stato);
-            }
-            popup.close(); 
-        });
-
-        Button btnEsci = creaBottoneMenu("❌ Esci", "#e74c3c");
-        btnEsci.setOnAction(e -> { System.exit(0); });
-
-        layout.getChildren().addAll(btnImporta, btnEsporta, btnRicomincia, btnEsci);
-
-        Scene scena = new Scene(layout, 320, 350);
-        popup.setScene(scena);
-        popup.setResizable(false);
-        popup.showAndWait();
-    }
-
-    private Button creaBottoneMenu(String testo, String colore) {
-        Button btn = new Button(testo);
-        btn.setMaxWidth(Double.MAX_VALUE);
-        btn.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-background-color: white; -fx-border-color: " + colore + "; -fx-border-width: 2px; -fx-border-radius: 8px; -fx-background-radius: 8px; -fx-padding: 12px; -fx-cursor: hand;");
-        return btn;
-    }
-
     public void aggiornaDati(StatoCitta stato) {
         if (stato.getFinanze() < 0) {
             lblFinanze.setText(String.format("💰 -$%.2f", Math.abs(stato.getFinanze())));
@@ -236,9 +139,35 @@ public class TopBar extends HBox {
             lblFinanze.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"); 
         }
         lblPopolazione.setText("👥 " + stato.getPopolazione());
+        
+        lblTickets.setText("🎫 " + stato.getTickets());
+        
         pbSicurezza.setProgress(stato.getSicurezza() / 100.0);
         pbSanita.setProgress(stato.getSanita() / 100.0);
         pbEcologia.setProgress(stato.getEcologia() / 100.0);
         pbFelicita.setProgress(stato.getFelicita() / 100.0);
+        pbLavoro.setProgress(stato.getLavoro() / 100.0);
+    }
+    
+    public void resetPolitica() {
+        if (selettorePolitica != null) {
+            selettorePolitica.setValue("⚪ Nessuna Politica");
+        }
+    }
+
+    @Override
+    public void onSimulationUpdated(StatoCitta stato) {
+        aggiornaDati(stato);
+    }
+
+    @Override
+    public void onEventStarted(String eventName, String description) {
+        javafx.stage.Window window = (this.getScene() != null) ? this.getScene().getWindow() : null;
+        GestoreEventiUI.mostraEvento(eventName, description, timeBarRef, window);
+    }
+
+    @Override
+    public void onGameOver() {
+        GestoreEventiUI.mostraGameOver();
     }
 }
