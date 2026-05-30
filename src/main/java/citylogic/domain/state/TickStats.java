@@ -1,8 +1,8 @@
 package citylogic.domain.state;
 
 /**
- * Raccoglie le metriche accumulate durante un songolo tick
- * da tutti gli edifici della griglia.
+ * Accumulatore temporaneo per i valori del singolo tick.
+ * Usato per aggiornare lo StatoCitta a fine ciclo.
  */
 public class TickStats {
     private int capacitaAbitativa = 0;
@@ -11,11 +11,9 @@ public class TickStats {
     private double redditoCommerciale = 0.0;
     private int puntiSicurezza = 0;
     private int puntiSanita = 0;
-
-    // 1. Aggiungi la nuova variabile per la felicità
     private int puntiFelicita = 0;
     
-    // Nuove variabili per Acqua, Energia e Industrie
+    // Bilancio delle infrastrutture di rete
     private double acquaFornita = 0;
     private double acquaRichiesta = 0;
     private double energiaFornita = 0;
@@ -29,7 +27,6 @@ public class TickStats {
     public void addPuntiSicurezza(int v) { this.puntiSicurezza += v; }
     public void addPuntiSanita(int v) { this.puntiSanita += v; }
 
-    // 2. Aggiungi il metodo richiesto da School.java
     public void addPuntiFelicita(int v) { this.puntiFelicita += v; }
 
     public void addAcquaFornita(double v) { this.acquaFornita += v; }
@@ -44,8 +41,6 @@ public class TickStats {
     public double getRedditoCommerciale() { return redditoCommerciale; }
     public int getPuntiSicurezza() { return puntiSicurezza; }
     public int getPuntiSanita() { return puntiSanita; }
-
-    // 3. Aggiungi il getter per coerenza
     public int getPuntiFelicita() { return puntiFelicita; }
 
     public double getAcquaFornita() { return acquaFornita; }

@@ -3,6 +3,10 @@ package citylogic.core.events;
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 
+/**
+ * Evento recessione.
+ * Abbassa le finanze, il lavoro e la sicurezza.
+ */
 public class CrisiEconomicaEvent extends RandomEvent {
 
     public CrisiEconomicaEvent() {

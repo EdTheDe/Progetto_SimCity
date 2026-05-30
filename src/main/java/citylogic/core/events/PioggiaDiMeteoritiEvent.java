@@ -8,6 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * Distrugge edifici casuali all'attivazione e abbassa felicità e sicurezza.
+ */
 public class PioggiaDiMeteoritiEvent extends RandomEvent {
     
     public PioggiaDiMeteoritiEvent(StatoCitta stato, UrbanGrid griglia) {

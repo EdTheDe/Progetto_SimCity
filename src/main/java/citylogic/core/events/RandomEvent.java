@@ -3,6 +3,10 @@ package citylogic.core.events;
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 
+/**
+ * Classe base per gli eventi casuali (disastri, bonus, ecc.).
+ * Gestisce la durata in tick dell'evento.
+ */
 public abstract class RandomEvent {
     protected int remainingTicks;
     protected String name;

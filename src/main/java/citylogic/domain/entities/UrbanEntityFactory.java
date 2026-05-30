@@ -33,22 +33,22 @@ public class UrbanEntityFactory {
             // --- INFRASTRUTTURE DI RETE ---
             case "powerplant":
                 // Costo, Mantenimento, Energia immessa
-                return new PowerPlant(500.0, 30.0, 100);
+                return new PowerPlant(500.0, 10.0, 100);
             case "waterplant":
                 // Costo, Mantenimento, Acqua immessa
-                return new WaterPlant(400.0, 25.0, 100);
+                return new WaterPlant(400.0, 10.0, 100);
 
             // --- SERVIZI STATALI ---
             case "police":
             case "policestation": // Aggiunto per compatibilità con il caricamento da file JSON
                 // Costo, Mantenimento, Capacità sicurezza
-                return new PoliceStation(300.0, 15.0, 50);
+                return new PoliceStation(300.0, 5.0, 50);
             case "school":
                 // Costo, Mantenimento, Capacità istruzione
-                return new School(250.0, 15.0, 40);
+                return new School(250.0, 5.0, 40);
             case "firestation":
                 // Costo, Mantenimento, Capacità pompieri
-                return new FireStation(350.0, 15.0, 50);
+                return new FireStation(350.0, 5.0, 50);
 
             // --- VIABILITÀ ---
             case "road":
@@ -57,11 +57,11 @@ public class UrbanEntityFactory {
             // Ospedale
             case "hospital":
                 // Costo di piazzamento, Mantenimento, Capacità sanità erogata
-                return new Hospital(600.0, 20.0, 60);
+                return new Hospital(600.0, 10.0, 60);
             // --- ECOLOGIA E PARCHI ---
             case "greenarea":
                 // Costo, Mantenimento, Riduzione inquinamento
-                return new GreenArea(50.0, 10.0, -30);
+                return new GreenArea(50.0, 5.0, -30);
             default:
                 throw new IllegalArgumentException("Unknown entity type: " + type);
         }

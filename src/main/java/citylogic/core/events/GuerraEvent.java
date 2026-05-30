@@ -3,6 +3,10 @@ package citylogic.core.events;
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 
+/**
+ * Evento conflitto armato.
+ * Riduce la sicurezza, la felicità e la popolazione del 10%.
+ */
 public class GuerraEvent extends RandomEvent {
 
     public GuerraEvent() {

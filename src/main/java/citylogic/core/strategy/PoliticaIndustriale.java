@@ -3,6 +3,10 @@ package citylogic.core.strategy;
 import citylogic.domain.state.StatoCitta;
 import citylogic.domain.state.TickStats;
 
+/**
+ * Applica la politica industriale.
+ * Aumenta introiti e occupazione a discapito dell'ecologia in base alle industrie.
+ */
 public class PoliticaIndustriale implements PoliticaStrategy {
     @Override
     public void applicaModificatori(StatoCitta stato, TickStats stats) {
@@ -11,6 +15,6 @@ public class PoliticaIndustriale implements PoliticaStrategy {
         // Incrementa posti di lavoro e introiti a scapito dell'ambiente urbano in proporzione alle industrie
         stato.setLavoro(stato.getLavoro() + (5.0 * numIndustrie));
         stato.setEcologia(stato.getEcologia() - (5.0 * numIndustrie));
-        stato.addFinanze(50.0 * numIndustrie); // Introiti derivati da sgravi e incentivi di produzione
+        stato.addFinanze(50.0 * numIndustrie);
     }
 }

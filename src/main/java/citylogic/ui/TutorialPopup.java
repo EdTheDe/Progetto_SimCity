@@ -35,9 +35,15 @@ public class TutorialPopup {
             "Servizi Pubblici:\n\n" +
             "Stazioni di Polizia e Caserme dei Pompieri: Garantiscono la sicurezza e proteggono le zone dai disastri.\n\n" +
             "Ospedali e Scuole: Forniscono salute e istruzione, supportando lo sviluppo della città.\n\n" +
-            "Aree Verdi: Mitigano l'impatto dell'inquinamento e migliorano le condizioni di vita.\n" +
-            "Tutti gli edifici richiedono costi di mantenimento costanti che vengono sottratti dal tuo Denaro.\n\n" +
+            "Nota sui Servizi Pubblici: Ogni edificio, per funzionare correttamente, ha bisogno di essere coperto da almeno un Ospedale, una Centrale di Polizia e una Caserma dei Pompieri nel raggio di 7 caselle (il raggio d'azione aumenta migliorando di livello i servizi).\n\n" +
+            "Aree Verdi: Mitigano l'impatto dell'inquinamento e migliorano le condizioni di vita.\n\n" +
+            "Costi di Mantenimento: Tutti gli edifici, eccezion fatta per le strade, richiedono costi di mantenimento costanti che vengono sottratti dal tuo Denaro ad ogni tick di simulazione.\n\n" +
+            "Politiche Cittadine: Dal menu in alto puoi selezionare tre diverse Politiche:\n" +
+            " - Politica Neutrale: Nessun bonus o malus applicato, la città segue il suo andamento normale.\n" +
+            " - Politica Ambientale: Riduce l'inquinamento (aumentando l'Ecologia) in base al numero di industrie attive, ma comporta un costo monetario aggiuntivo e riduce leggermente i posti di lavoro.\n" +
+            " - Politica Industriale: Genera ingenti incassi economici e aumenta l'occupazione per ogni industria attiva, ma penalizza pesantemente l'Ecologia urbana.\n\n" +
             "Felicità: Indica la qualità della vita complessiva. Questo valore sale se i cittadini hanno lavoro, copertura dei servizi (come sanità e istruzione) e aree verdi. Scende drasticamente a causa dell'inquinamento, della mancanza di acqua o elettricità. Attenzione! Bassi livelli di Felicità garantiscono introiti minori, quindi stai attento ai bisogni dei tuoi cittadini\n\n" +
+            "Migliorare e Demolire: Puoi potenziare o distruggere gli edifici esistenti. Assicurati prima di aver deselezionato lo shop, poi fai clic con il tasto sinistro sull'edificio desiderato per aprire il menu delle azioni.\n\n" +
             "Sconfitta: La partita termina con il game over se il tuo Denaro scende sotto lo zero per piu di 5 tick."
         );
         lblTesto.setWrapText(true);

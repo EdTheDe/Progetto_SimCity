@@ -1,20 +1,31 @@
 package citylogic.domain.state;
 
+/**
+ * Mantiene i dati e i parametri attuali della città.
+ * Aggiornato ad ogni tick.
+ */
 public class StatoCitta {
     private int popolazione;
     private double finanze;
-    private double felicita;  // 0-100
-    private double ecologia;  // 0-100
-    private double lavoro;    // 0-100
-    private double sicurezza; // 0-100
-    private double sanita;    // 0-100
+    
+    // Metriche percentuali (0.0 - 100.0) che determinano la qualità della vita
+    private double felicita;
+    private double ecologia;
+    private double lavoro;
+    private double sicurezza;
+    private double sanita;
+    
+    // Gestione risorse primarie di rete
     private double acquaFornita;
     private double acquaRichiesta;
     private double energiaFornita;
     private double energiaRichiesta;
+    
     private int tickets;
 
-
+    /**
+     * Inizializza lo stato con i parametri di partenza.
+     */
     public StatoCitta() {
         this.popolazione = 0;
         this.finanze = 4500.0;
@@ -39,15 +50,20 @@ public class StatoCitta {
     public void setLavoro(double v) { this.lavoro = clamp(v); }
     public void setSicurezza(double v) { this.sicurezza = clamp(v); }
     public void setSanita(double v) { this.sanita = clamp(v); }
-
+    /**
+     * Forza un valore nel range percentuale 0-100.
+     */
     private double clamp(double value) {
         return Math.max(0.0, Math.min(100.0, value));
     }
 
+    /**
+     * Resetta i valori per una nuova partita o un caricamento.
+     */
     public void reset() {
         this.popolazione = 0;
         this.finanze = 4500.0;
-        this.felicita = 50.0; // Ricorda che puoi mettere 0.0 se vuoi che non parta a metà
+        this.felicita = 50.0; 
         this.ecologia = 100.0;
         this.lavoro = 0.0;
         this.sicurezza = 0.0;
@@ -78,6 +94,9 @@ public class StatoCitta {
         this.finanze = finanze;
     }
     
+    /**
+     * Passa al tick successivo.
+     */
     public void addTicket() { 
         this.tickets++; 
     }

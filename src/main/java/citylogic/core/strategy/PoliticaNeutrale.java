@@ -4,6 +4,9 @@ import citylogic.domain.state.StatoCitta;
 
 import citylogic.domain.state.TickStats;
 
+/**
+ * Politica predefinita. Non applica modificatori.
+ */
 public class PoliticaNeutrale implements PoliticaStrategy {
     @Override
     public void applicaModificatori(StatoCitta stato, TickStats stats) {

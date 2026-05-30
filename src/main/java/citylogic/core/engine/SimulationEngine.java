@@ -22,6 +22,10 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Random;
 
+/**
+ * Motore principale della simulazione.
+ * Gestisce l'aggiornamento dello stato in base agli edifici e alle politiche.
+ */
 public class SimulationEngine {
     private StatoCitta stato;
     private UrbanGrid griglia;
@@ -35,28 +39,33 @@ public class SimulationEngine {
     public SimulationEngine(StatoCitta stato, UrbanGrid griglia) {
         this.stato = stato;
         this.griglia = griglia;
+        // La città parte sempre senza malus o bonus aggiuntivi
         this.politicaAttiva = new PoliticaNeutrale();
         this.observers = new ArrayList<>();
         this.random = new Random();
         this.activeEvent = null;
     }
 
+    // Registra un componente in ascolto (es. UI)
     public void addObserver(CityObserver observer) {
         if (!observers.contains(observer)) {
             observers.add(observer);
         }
     }
 
+    // Rimuove un componente dalla lista degli aggiornamenti
     public void removeObserver(CityObserver observer) {
         observers.remove(observer);
     }
 
+    // Forza l'aggiornamento immediato di tutti gli observer
     public void forceNotifyObservers() {
         for (CityObserver observer : observers) {
             observer.onSimulationUpdated(stato);
         }
     }
 
+    // Cambia politica. Il controllo != null evita crash al tick successivo
     public void setPoliticaAttiva(PoliticaStrategy nuovaPolitica) {
         if (nuovaPolitica != null) {
             this.politicaAttiva = nuovaPolitica;
@@ -71,6 +80,10 @@ public class SimulationEngine {
         return griglia.getActiveEntities();
     }
 
+    /**
+     * Aggiorna la simulazione di un tick.
+     * Calcola entrate, popolazioni, modificatori ed eventi.
+     */
     public void tick() {
         TickStats stats = new TickStats();
 
@@ -100,6 +113,7 @@ public class SimulationEngine {
         double modFelicita = calcolaModificatoreFelicita();
 
         // 2. Gestione Dinamica Popolazione
+        // Se c'è spazio, la popolazione cresce in base alla felicità corrente
         if (stato.getPopolazione() < stats.getCapacitaAbitativa()) {
             int crescita = (int) Math.ceil((stats.getCapacitaAbitativa() - stato.getPopolazione()) * 0.2 * modFelicita);
             stato.setPopolazione(stato.getPopolazione() + Math.max(1, crescita));
@@ -110,6 +124,7 @@ public class SimulationEngine {
         int popAttiva = Math.max(1, stato.getPopolazione()); // Evita divisioni per 0
 
         // 3. Ricalcolo Metriche di Base
+        // Pesa i punti forniti dagli edifici sulla popolazione reale
         stato.setLavoro(((double) stats.getPostiLavoro() / popAttiva) * 100.0);
         stato.setSicurezza((((double) stats.getPuntiSicurezza() * modFelicita) / popAttiva) * 100.0);
         stato.setSanita((((double) stats.getPuntiSanita() * modFelicita) / popAttiva) * 100.0);
