@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: citylogic.domain.map.UrbanGridTest
+-------------------------------------------------------------------------------
+Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.029 s -- in citylogic.domain.map.UrbanGridTest
