@@ -10,10 +10,20 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Gestisce e genera il popup tutorial introduttivo sulle regole di gioco,
+ * mostrato solitamente all'avvio dell'applicazione o dopo un azzeramento della mappa.
+ */
 public class TutorialPopup {
 
+    /**
+     * Assembla a schermo una finestra modale con le spiegazioni dettagliate sui servizi,
+     * coperture minime, felicità e game over. La finestra impedisce l'interazione 
+     * sottostante fino a quando l'utente non la chiude col pulsante "Inizia a Giocare".
+     */
     public static void mostraTutorial() {
         Stage popup = new Stage();
+        // Blocca interamente l'input con la finestra madre, forzando l'utente a leggere o ignorare deliberatamente prima di continuare
         popup.initModality(Modality.APPLICATION_MODAL);
         popup.setTitle("Benvenuto Sindaco! - Tutorial");
 

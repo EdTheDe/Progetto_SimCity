@@ -4,14 +4,95 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="" />
+    <list default="true" id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Documento_System_Test_Citylogic.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/createdFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/maven-status/maven-compiler-plugin/testCompile/default-testCompile/inputFiles.lst" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/css/apache-maven-fluido-2.0.0-M9.min.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/css/print.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/css/site.css" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/fonts/glyphicons-halflings-regular.eot" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/fonts/glyphicons-halflings-regular.svg" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/fonts/glyphicons-halflings-regular.ttf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/fonts/glyphicons-halflings-regular.woff" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/accessories-text-editor.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/add.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/apache-maven-project-2.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/application-certificate.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/contact-new.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/document-properties.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/drive-harddisk.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/fix.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/icon_error_sml.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/icon_help_sml.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/icon_info_sml.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/icon_success_sml.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/icon_warning_sml.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/image-x-generic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/internet-web-browser.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/logos/build-by-maven-black.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/logos/build-by-maven-white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/logos/maven-feather.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/network-server.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/package-x-generic.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/profiles/pre-release.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/profiles/retired.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/profiles/sandbox.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/remove.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/rss.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/update.gif" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/images/window-new.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/img/glyphicons-halflings-white.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/img/glyphicons-halflings.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/js/apache-maven-fluido-2.0.0-M9.min.js" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/reports/surefire.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.engine.SimulationEngineTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.engine.SimulationEngineTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.strategy.PoliticaStrategyTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.strategy.PoliticaStrategyTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.validation.BuilderValidatorTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.core.validation.BuilderValidatorTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.entities.UrbanEntityFactoryTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.entities.UrbanEntityFactoryTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.entities.UrbanEntityTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.entities.UrbanEntityTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.map.UrbanGridTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.map.UrbanGridTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.state.StatoCittaTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.domain.state.StatoCittaTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.infrastructure.PersistenceManagerTest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/TEST-citylogic.infrastructure.PersistenceManagerTest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.core.engine.SimulationEngineTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.core.engine.SimulationEngineTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.core.validation.BuilderValidatorTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.core.validation.BuilderValidatorTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.entities.UrbanEntityFactoryTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.entities.UrbanEntityFactoryTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.entities.UrbanEntityTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.entities.UrbanEntityTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.map.UrbanGridTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.map.UrbanGridTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.state.StatoCittaTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.domain.state.StatoCittaTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.infrastructure.PersistenceManagerTest.txt" beforeDir="false" afterPath="$PROJECT_DIR$/Progetto_SimCity/target/surefire-reports/citylogic.infrastructure.PersistenceManagerTest.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/SimCity Java Edition - Manuale.pdf" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/BuilderValidator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/BuilderValidator.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/CostruzioneException.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/core/validation/CostruzioneException.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/PersistenceManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SaveGameData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SaveGameData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SavedEntityData.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/infrastructure/SavedEntityData.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/AssetManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/AssetManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/CityApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/CityApp.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/GestoreEventiUI.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/GestoreEventiUI.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/MappaGriglia.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/MappaGriglia.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/MenuImpostazioni.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/MenuImpostazioni.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloControlliTempo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloControlliTempo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloNotifiche.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloNotifiche.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloRisorse.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/PannelloRisorse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/SideBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/SideBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/TimeBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/TimeBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/TopBar.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/citylogic/ui/TutorialPopup.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/citylogic/ui/TutorialPopup.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/core/validation/BuilderValidatorTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/core/validation/BuilderValidatorTest.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test/java/citylogic/infrastructure/PersistenceManagerTest.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/citylogic/infrastructure/PersistenceManagerTest.java" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="112" />
+    <option name="cachedIndexableFilesCount" value="468" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -36,26 +117,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;Test-e-aggiornamento-ui-con-observer&quot;,
-    &quot;junie.onboarding.icon.badge.shown&quot;: &quot;true&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;to.speed.mode.migration.done&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "com.intellij.ml.llm.matterhorn.ej.ui.settings.DefaultModelSelectionForGA.v1": "true",
+    "git-widget-placeholder": "main",
+    "junie.onboarding.icon.badge.shown": "true",
+    "kotlin-language-version-configured": "true",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "to.speed.mode.migration.done": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="0a759a4f-09c6-4594-9f56-d035b0af699f" name="Changes" comment="" />
@@ -66,6 +147,7 @@
       <workItem from="1779557566948" duration="62000" />
       <workItem from="1779812459659" duration="4249000" />
       <workItem from="1779872316750" duration="5042000" />
+      <workItem from="1780322809144" duration="787000" />
     </task>
     <servers />
   </component>

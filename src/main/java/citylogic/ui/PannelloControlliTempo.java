@@ -14,6 +14,9 @@ import javafx.scene.layout.VBox;
 import javafx.util.Duration;
 import javafx.util.StringConverter;
 
+/**
+ * Box contenente i controlli visivi e logici per avanzare nel tempo o gestirne la velocità.
+ */
 public class PannelloControlliTempo extends VBox {
 
     private final Timeline simulazioneAuto;
@@ -21,6 +24,15 @@ public class PannelloControlliTempo extends VBox {
     private final Slider sliderVelocita;
     private final Button btnAzioneTempo;
 
+    /**
+     * Costruisce lo slider per il tempo, istanzia il game loop di JavaFX (Timeline)
+     * e implementa la logica del player (Play, Stop, Skip).
+     *
+     * @param motore Il motore logico della simulazione responsabile del conteggio.
+     * @param topBar Riferimento all'header per aggiornarne i valori.
+     * @param mappa  Riferimento alla mappa da forzare per il render grafico.
+     * @param stato  Classe dati dello stato di simulazione complessivo.
+     */
     public PannelloControlliTempo(SimulationEngine motore, TopBar topBar, MappaGriglia mappa, StatoCitta stato) {
         setSpacing(10);
         setPadding(new Insets(10));
@@ -55,6 +67,7 @@ public class PannelloControlliTempo extends VBox {
         btnAzioneTempo.setMaxWidth(Double.MAX_VALUE);
         btnAzioneTempo.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-background-color: #ecf0f1; -fx-cursor: hand;");
 
+		// Loop  avanzamento dei tick che viene eseguito matematicamente ad ogni secondo 
         simulazioneAuto = new Timeline(new KeyFrame(Duration.seconds(1), ev -> {
             int tickMultiplier = (int) sliderVelocita.getValue();
             for (int i = 0; i < tickMultiplier; i++) {
@@ -65,6 +78,7 @@ public class PannelloControlliTempo extends VBox {
         }));
         simulazioneAuto.setCycleCount(Animation.INDEFINITE);
 
+		// Ascolatore slider che estisce automaticamente le transizioni Pause/Play 
         sliderVelocita.valueProperty().addListener((obs, oldVal, newVal) -> {
             if (newVal.intValue() > 1) {
                 simulazioneAuto.play();
@@ -90,6 +104,11 @@ public class PannelloControlliTempo extends VBox {
         getChildren().addAll(lblTempo, sliderVelocita, btnAzioneTempo);
     }
 
+    /**
+     * Mette in pausa la Timeline di JavaFX e resetta la dicitura del bottone a modalità skip manuale.
+     *
+     * @param btn Il bottone d'azione del tempo da ripristinare stilisticamente.
+     */
     private void fermaSimulazione(Button btn) {
         simulazioneAuto.pause();
         inEsecuzione = false;
@@ -97,6 +116,9 @@ public class PannelloControlliTempo extends VBox {
         btn.setStyle("-fx-font-weight: bold; -fx-font-size: 13px; -fx-background-color: #ecf0f1; -fx-text-fill: black; -fx-cursor: hand;");
     }
 
+    /**
+     * Riporta lo slider temporale a velocità 1 e forza la messa in pausa dell'orologio interno.
+     */
     public void fermaEImpostaManuale() {
         sliderVelocita.setValue(1);
         fermaSimulazione(btnAzioneTempo);

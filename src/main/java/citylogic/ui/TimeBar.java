@@ -6,6 +6,10 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.layout.VBox;
 
+/**
+ * Controller-Contenitore che funge da blocco in basso a destra dello schermo.
+ * Istanzia ed orchestra l'aggiornamento dei widget legati al tempo, alle notifiche e alle risorse.
+ */
 public class TimeBar extends VBox implements citylogic.core.engine.CityObserver {
 
     private final PannelloNotifiche pannelloNotifiche;
@@ -13,6 +17,14 @@ public class TimeBar extends VBox implements citylogic.core.engine.CityObserver 
     private final PannelloControlliTempo pannelloTempo;
     private final SimulationEngine motore;
 
+    /**
+     * Assegna il posizionamento dei layout delegati, unificando le informazioni sensibili in una colonna.
+     *
+     * @param motore Il gestore della logica temporale.
+     * @param topBar Barra superiore da costringere agli update.
+     * @param mappa  Mappa centrale da ripristinare o forzare al refresh.
+     * @param stato  Il modello dei dati in cui pescare i numeri.
+     */
     public TimeBar(SimulationEngine motore, TopBar topBar, MappaGriglia mappa, StatoCitta stato) {
         this.motore = motore;
         
@@ -24,7 +36,6 @@ public class TimeBar extends VBox implements citylogic.core.engine.CityObserver 
         setAlignment(Pos.BOTTOM_RIGHT);
         setPickOnBounds(false);
 
-        // Istanziazione delle classi delegate
         pannelloNotifiche = new PannelloNotifiche();
         pannelloRisorse = new PannelloRisorse();
         pannelloTempo = new PannelloControlliTempo(motore, topBar, mappa, stato);
@@ -32,13 +43,23 @@ public class TimeBar extends VBox implements citylogic.core.engine.CityObserver 
         getChildren().addAll(pannelloNotifiche, pannelloRisorse, pannelloTempo);
     }
 
+    /**
+     * Espone al mondo esterno (come pop-up e menu di sistema) la facoltà di spegnere 
+     * lo scorrere logico del timer agendo sul sotto-modulo preposto.
+     */
     public void fermaEImpostaManuale() {
         pannelloTempo.fermaEImpostaManuale();
     }
 
+    /**
+     * Intercetta l'avvenuta esecuzione di un tick per informare i riquadri inferiori a cambiare valori.
+     *
+     * @param stato Lo stato modificato pronto ad essere letto.
+     */
     @Override
     public void onSimulationUpdated(StatoCitta stato) {
-        // Delega l'aggiornamento visivo ai rispettivi pannelli
+		
+		// Implementazione dell'interfaccia Observer: smista il task del refresh grafico ai sotto-pannelli responsabili
         pannelloRisorse.aggiornaRisorse(stato);
         pannelloNotifiche.aggiornaNotifiche(motore);
     }

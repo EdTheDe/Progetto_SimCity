@@ -10,16 +10,20 @@ import citylogic.domain.entities.Hospital;
 import java.util.List;
 
 /**
- * Validatore modulare responsabile di garantire il rispetto delle regole del dominio.
- * Rispetta l'Open/Closed Principle: nuove regole possono essere aggiunte agilmente.
+ * Validatore modulare responsabile di garantire il rispetto delle regole del dominio di gioco.
+ * Progettato per rispettare l'Open/Closed Principle (facile aggiungere nuove regole senza modificare le vecchie).
  */
 public class BuilderValidator {
 
+    // Lista contenente tutte le regole che devono essere superate
     private final List<RegolaCostruzione> regole;
 
-    // MODIFICA: Ora riceve la griglia in modo da poter scansionare i dintorni
+    /**
+     * Costruttore: riceve la griglia in modo che le regole possano esplorare la mappa.
+     */
     public BuilderValidator(UrbanGrid griglia) {
-        // Registrazione delle regole attive nel motore
+        // Registrazione delle regole attive.
+        // NOTA: RegolaCollegamentoServizi non è inserita qui di default nel codice originale.
         this.regole = List.of(
                 new RegolaSpazioLibero(),
                 new RegolaFondiSufficienti()
@@ -27,7 +31,7 @@ public class BuilderValidator {
     }
 
     /**
-     * Esegue tutte le validazioni necessarie prima di autorizzare la costruzione.
+     * Cicla tutte le regole. Se una fallisce, interrompe il ciclo lanciando l'eccezione.
      */
     public void validaCostruzione(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
         for (RegolaCostruzione regola : regole) {
@@ -38,10 +42,16 @@ public class BuilderValidator {
 
 // --- INTERFACCIA E IMPLEMENTAZIONI DELLE REGOLE ---
 
+/**
+ * Interfaccia comune per tutte le regole di costruzione.
+ */
 interface RegolaCostruzione {
     void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException;
 }
 
+/**
+ * Verifica che la cella di destinazione non contenga già un edificio.
+ */
 class RegolaSpazioLibero implements RegolaCostruzione {
     @Override
     public void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
@@ -51,6 +61,9 @@ class RegolaSpazioLibero implements RegolaCostruzione {
     }
 }
 
+/**
+ * Verifica che la cassa della città abbia abbastanza soldi per coprire il costo.
+ */
 class RegolaFondiSufficienti implements RegolaCostruzione {
     @Override
     public void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
@@ -63,7 +76,9 @@ class RegolaFondiSufficienti implements RegolaCostruzione {
     }
 }
 
-// NUOVA REGOLA
+/**
+ * Regola complessa: verifica che un'area sia coperta da Polizia, Pompieri e Ospedale.
+ */
 class RegolaCollegamentoServizi implements RegolaCostruzione {
     private final UrbanGrid griglia;
     private final int raggioCopertura;
@@ -75,11 +90,12 @@ class RegolaCollegamentoServizi implements RegolaCostruzione {
 
     @Override
     public void valida(UrbanEntity entita, Cell cella, StatoCitta stato) throws CostruzioneException {
-        // I servizi pubblici non possono richiedere se stessi per essere costruiti, altrimenti bloccheremmo il gioco
+        // Eccezione alla regola: per costruire i servizi stessi non serve averli già
         if (entita instanceof PoliceStation || entita instanceof FireStation || entita instanceof Hospital) {
             return;
         }
 
+        // Flag di copertura
         boolean polizia = false;
         boolean pompieri = false;
         boolean ospedale = false;
@@ -87,13 +103,14 @@ class RegolaCollegamentoServizi implements RegolaCostruzione {
         int x = cella.getX();
         int y = cella.getY();
 
-        // Calcoliamo i limiti della scansione per evitare errori "Out of Bounds" sui bordi della mappa
+        // Calcoliamo i limiti del rettangolo di scansione.
+        // L'uso di Math.max e Math.min protegge dai famigerati errori "Array Index Out Of Bounds" ai bordi della griglia.
         int minX = Math.max(0, x - raggioCopertura);
         int maxX = Math.min(griglia.getWidth() - 1, x + raggioCopertura);
         int minY = Math.max(0, y - raggioCopertura);
         int maxY = Math.min(griglia.getHeight() - 1, y + raggioCopertura);
 
-        // Scansione delle celle circostanti
+        // Scansione di ogni cella vicina
         for (int i = minX; i <= maxX; i++) {
             for (int j = minY; j <= maxY; j++) {
                 UrbanEntity e = griglia.getCell(i, j).getEntity();
@@ -105,7 +122,7 @@ class RegolaCollegamentoServizi implements RegolaCostruzione {
             }
         }
 
-        // Verifica finale: se manca un servizio lanciamo la tua CostruzioneException
+        // Verifica dei risultati: lancia l'eccezione alla prima mancanza riscontrata
         if (!polizia) {
             throw new CostruzioneException("Costruzione bloccata: l'area non è coperta da una Centrale di Polizia.");
         }

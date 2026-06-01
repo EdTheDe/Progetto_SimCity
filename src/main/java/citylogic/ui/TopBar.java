@@ -20,6 +20,10 @@ import citylogic.core.strategy.PoliticaNeutrale;
 import citylogic.core.strategy.PoliticaAmbientale;
 import citylogic.core.strategy.PoliticaIndustriale;
 
+/**
+ * Barra superiore preposta alla visualizzazione delle statistiche macroeconomiche 
+ * (Finanze e Popolazione) e all'intercettazione degli eventi critici per far comparire gli alert a schermo.
+ */
 public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
 
     private Label lblFinanze, lblPopolazione, lblTickets;
@@ -32,10 +36,18 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
     private MappaGriglia mappaVisiva;
     private TimeBar timeBarRef;
 
+    /**
+     * Ritorna il motore di simulazione.
+     *
+     * @return SimulatinEngine logico corrente agganciato alla barra.
+     */
     public SimulationEngine getSimulationEngine() {
         return engine;
     }
 
+    /**
+     * Instanzia i gruppi HBox posizionandoli ai lati opposti per gestire l'Header del programma.
+     */
     public TopBar() {
         setSpacing(20);
         setPadding(new Insets(15, 20, 15, 30)); 
@@ -56,7 +68,6 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
         btnImpostazioni.setMaxHeight(48);
         btnImpostazioni.setStyle("-fx-background-color: rgba(255, 255, 255, 0.9); -fx-background-radius: 15; -fx-border-color: #bdc3c7; -fx-border-radius: 15; -fx-cursor: hand; -fx-padding: 0 15px;");
         
-        // Delega l'apertura alla nuova classe MenuImpostazioni
         btnImpostazioni.setOnAction(e -> {
             MenuImpostazioni menu = new MenuImpostazioni(logica, stato, mappaVisiva, engine, this, timeBarRef);
             menu.mostra();
@@ -82,7 +93,7 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
         selettorePolitica.getItems().addAll("⚪ Nessuna Politica", "🟢 Tassa Ambientale", "🏭 Sviluppo Industriale");
         selettorePolitica.setValue("⚪ Nessuna Politica"); 
         selettorePolitica.setStyle("-fx-font-weight: bold; -fx-background-color: white; -fx-background-radius: 12; -fx-border-color: #bdc3c7; -fx-border-radius: 12; -fx-padding: 2px 10px;");
-
+		// Pattern Strategy che cambia immediatamente la classe strategica del motore alle variazioni sul widget
         selettorePolitica.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (engine == null) return;
             switch (newValue) {
@@ -112,14 +123,41 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
         getChildren().addAll(btnImpostazioni, contenitoreSinistra, spacer, contenitoreDestra);
     }
 
+    /**
+     * Imposta il motore di gioco attivo.
+     *
+     * @param engine Reference al cuore della simulazione.
+     */
     public void setSimulationEngine(SimulationEngine engine) { this.engine = engine; }
+    
+    /**
+     * Collega logica e interfaccia permettendo al blocco top di mettere in pausa la TimeBar in caso di reset o caricamento.
+     *
+     * @param timeBar Reference al modulo che governa lo slider tempo.
+     */
     public void setTimeBar(TimeBar timeBar) { this.timeBarRef = timeBar; }
+    
+    /**
+     * Raccoglie gli oggetti indispensabili per i reset operati dal menu ingranaggio.
+     *
+     * @param logica      Modello dei dati a griglia.
+     * @param stato       Dati statistici in memoria.
+     * @param mappaVisiva Quadro di gioco frontale.
+     */
     public void setRiferimenti(UrbanGrid logica, StatoCitta stato, MappaGriglia mappaVisiva) {
         this.logica = logica;
         this.stato = stato;
         this.mappaVisiva = mappaVisiva;
     }
 
+    /**
+     * Assembla ed incapsula un blocco testo+barra in verticale.
+     *
+     * @param nome   L'etichetta associata al concetto (es. 'Lavoro', 'Sanità').
+     * @param bar    L'oggetto ProgressBar da colorare e restituire appeso.
+     * @param colore Direttiva CSS dedicata a quel progress bar.
+     * @return       Il VBox finale già formattato.
+     */
     private VBox creaBarra(String nome, ProgressBar bar, String colore) {
         Label lbl = new Label(nome);
         lbl.setStyle("-fx-font-size: 12px; -fx-font-weight: bold;");
@@ -130,6 +168,12 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
         return box;
     }
 
+    /**
+     * Funzione dedicata a cambiare il solo testo dell'header al variare dei calcoli economici.
+     * Gestisce dinamicamente anche il colore rosso se i fondi vanno in negativo.
+     *
+     * @param stato Il modello StatoCitta da leggere.
+     */
     public void aggiornaDati(StatoCitta stato) {
         if (stato.getFinanze() < 0) {
             lblFinanze.setText(String.format("💰 -$%.2f", Math.abs(stato.getFinanze())));
@@ -149,23 +193,42 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
         pbLavoro.setProgress(stato.getLavoro() / 100.0);
     }
     
+    /**
+     * Riporta silenziosamente a default il menu grafico delle politiche cittadine.
+     * Attivato principalmente dopo i ripristini e importazioni dei salvataggi.
+     */
     public void resetPolitica() {
         if (selettorePolitica != null) {
             selettorePolitica.setValue("⚪ Nessuna Politica");
         }
     }
 
+    /**
+     * Intercetta la notifica broadcast ad Observer e aggiorna la striscia testi superiori.
+     *
+     * @param stato Lo stato contenente i nuovi valori ricalcolati dal tick.
+     */
     @Override
     public void onSimulationUpdated(StatoCitta stato) {
         aggiornaDati(stato);
     }
 
+    /**
+     * Riceve un avviso di un evento imprevisto dal cuore logico della città
+     * per visualizzarne titolo e contenuto grafico al centro dello schermo.
+     *
+     * @param eventName   L'intestazione superiore del pannello avviso.
+     * @param description Il corpo testuale da recapitare all'utente.
+     */
     @Override
     public void onEventStarted(String eventName, String description) {
         javafx.stage.Window window = (this.getScene() != null) ? this.getScene().getWindow() : null;
         GestoreEventiUI.mostraEvento(eventName, description, timeBarRef, window);
     }
 
+    /**
+     * Segnala alla UI che le condizioni di fallimento per la partita si sono realizzate.
+     */
     @Override
     public void onGameOver() {
         GestoreEventiUI.mostraGameOver();

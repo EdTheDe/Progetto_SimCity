@@ -7,6 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.layout.VBox;
 
+/**
+ * Pannello preposto al monitoraggio visivo dei valori critici di input/output
+ * (come la fornitura idrica e la rete elettrica).
+ */
 public class PannelloRisorse extends VBox {
 
     private final ProgressBar pbAcqua;
@@ -14,6 +18,9 @@ public class PannelloRisorse extends VBox {
     private final ProgressBar pbEnergia;
     private final Label lblEnergia;
 
+    /**
+     * Assembla la struttura con barra e testo per le sezioni energetiche e idriche della città.
+     */
     public PannelloRisorse() {
         setSpacing(8);
         setPadding(new Insets(10));
@@ -47,6 +54,12 @@ public class PannelloRisorse extends VBox {
         getChildren().addAll(waterBox, powerBox);
     }
 
+    /**
+     * Esegue il ricalcolo percentuale tra l'unità domandata dalla rete e la produzione generata,
+     * tingendo le barre di rosso se il deficit minaccia il funzionamento corretto degli edifici.
+     *
+     * @param stato Contenitore dei dati statici aggiornati.
+     */
     public void aggiornaRisorse(StatoCitta stato) {
         double wFornita = stato.getAcquaFornita();
         double wRichiesta = stato.getAcquaRichiesta();

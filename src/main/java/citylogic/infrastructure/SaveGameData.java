@@ -3,7 +3,12 @@ package citylogic.infrastructure;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contenitore principale (Root Object) del file di salvataggio JSON.
+ * Raccoglie tutte le statistiche e l'elenco di tutti gli edifici presenti.
+ */
 public class SaveGameData {
+    // Statistiche generali della città
     private double finanze;
     private int popolazione;
     private double felicita;
@@ -11,12 +16,16 @@ public class SaveGameData {
     private double sicurezza;
     private double sanita;
     private double lavoro;
+
+    // Lista contenente le posizioni e i tipi di tutti gli edifici costruiti
     private List<SavedEntityData> edifici;
 
     public SaveGameData() {
+        // Inizializza la lista per evitare che Jackson o la logica di gioco incontrino fastidiosi NullPointerException
         this.edifici = new ArrayList<>();
     }
 
+    // Getters e Setters per ogni proprietà
     public double getFinanze() { return finanze; }
     public void setFinanze(double finanze) { this.finanze = finanze; }
 

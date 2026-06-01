@@ -10,10 +10,18 @@ import javafx.scene.layout.VBox;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Pannello grafico destinato alla visualizzazione dei log di sistema e 
+ * dei messaggi per avvisare l'utente delle entità che non stanno funzionando regolarmente.
+ */
 public class PannelloNotifiche extends VBox {
 
     private final Label lblNotifiche;
 
+    /**
+     * Configura il box e l'area scrollabile per permettere la lettura 
+     * di liste lunghe senza invadere l'area di gioco limitrofa.
+     */
     public PannelloNotifiche() {
         setSpacing(5);
         setPadding(new Insets(10));
@@ -41,7 +49,15 @@ public class PannelloNotifiche extends VBox {
         getChildren().addAll(lblNotifTitle, scrollNotif);
     }
 
+    /**
+     * Ricerca tra gli edifici attivi del motore eventuali stati negativi (inattività per mancanza
+     * risorse o strade) e li stampa formattati all'interno dell'etichetta scorrevole.
+     *
+     * @param motore Il motore di simulazione per poter ispezionare le entità piazzate.
+     */
     public void aggiornaNotifiche(SimulationEngine motore) {
+		
+		// Collezione Set utilizzata per accorpare i messaggi identici 
         Set<String> problemi = new HashSet<>();
         for (UrbanEntity e : motore.getActiveEntities()) {
             String motivo = motore.getMotivoInattivita(e);

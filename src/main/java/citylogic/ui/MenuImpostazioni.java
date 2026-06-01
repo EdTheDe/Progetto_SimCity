@@ -15,6 +15,10 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.File;
 
+/**
+ * Controller per il menu delle impostazioni che gestisce il salvataggio,
+ * il caricamento, il reset e l'uscita dalla sessione di gioco.
+ */
 public class MenuImpostazioni {
 
     private final UrbanGrid logica;
@@ -24,6 +28,16 @@ public class MenuImpostazioni {
     private final TopBar topBar;
     private final TimeBar timeBarRef;
 
+    /**
+     * Costruttore che inizializza le dipendenze necessarie per operare sui dati di gioco.
+     *
+     * @param logica      Il modello della griglia urbana.
+     * @param stato       Lo stato dei fondi e della città.
+     * @param mappaVisiva Il componente di renderizzazione grafica.
+     * @param engine      Il motore della simulazione.
+     * @param topBar      La barra superiore per l'aggiornamento dei widget.
+     * @param timeBarRef  Il gestore del tempo per indurre le pause in fase di configurazione.
+     */
     public MenuImpostazioni(UrbanGrid logica, StatoCitta stato, MappaGriglia mappaVisiva, SimulationEngine engine, TopBar topBar, TimeBar timeBarRef) {
         this.logica = logica;
         this.stato = stato;
@@ -33,6 +47,9 @@ public class MenuImpostazioni {
         this.timeBarRef = timeBarRef;
     }
 
+    /**
+     * Instanzia l'interfaccia grafica del menu delle impostazioni in un pop-up modale.
+     */
     public void mostra() {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -52,7 +69,7 @@ public class MenuImpostazioni {
         Button btnRicomincia = creaBottone("🔄 Ricomincia", "#f39c12");
         btnRicomincia.setOnAction(e -> eseguiReset(popup));
 
-        Button btnEsci = creaBottone("❌ Esci", "#e74c3c");
+        Button btnEsci = creaBottone("X Esci", "#e74c3c");
         btnEsci.setOnAction(e -> System.exit(0));
 
         layout.getChildren().addAll(btnImporta, btnEsporta, btnRicomincia, btnEsci);
@@ -63,6 +80,13 @@ public class MenuImpostazioni {
         popup.showAndWait();
     }
 
+    /**
+     * Costruisce un bottone generico per il menu applicando stili costanti.
+     *
+     * @param testo  Il testo da mostrare sul bottone.
+     * @param colore Codice colore esadecimale per i bordi.
+     * @return       L'oggetto Button configurato.
+     */
     private Button creaBottone(String testo, String colore) {
         Button btn = new Button(testo);
         btn.setMaxWidth(Double.MAX_VALUE);
@@ -70,6 +94,11 @@ public class MenuImpostazioni {
         return btn;
     }
 
+    /**
+     * Gestisce la procedura per caricare i dati di una partita salvata dal disco (file JSON).
+     *
+     * @param popup Il riferimento alla finestra modale corrente per poterla chiudere a fine azione.
+     */
     private void eseguiImportazione(Stage popup) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Importa Salvataggio JSON");
@@ -77,6 +106,7 @@ public class MenuImpostazioni {
         File file = fileChooser.showOpenDialog(popup);
         if (file != null && logica != null && stato != null) {
             try {
+				// Inietta il path assoluto del FileChooser per far scrivere json nella directory corretta
                 PersistenceManager pm = new PersistenceManager(file.getParent());
                 SaveGameData datiCaricati = pm.caricaPartita(file.getName().replace(".json", ""));
                 pm.ripristinaDati(datiCaricati, stato, logica);
@@ -89,6 +119,11 @@ public class MenuImpostazioni {
         }
     }
 
+    /**
+     * Raccoglie i dati dello stato attuale e li salva in un file JSON.
+     *
+     * @param popup Il riferimento alla finestra modale corrente per poterla chiudere a fine azione.
+     */
     private void eseguiEsportazione(Stage popup) {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Salva Partita");
@@ -97,6 +132,8 @@ public class MenuImpostazioni {
         if (file != null && logica != null && stato != null) {
             try {
                 PersistenceManager pm = new PersistenceManager(file.getParent());
+                
+                // Chiama il metodo di serializzazione che parsa le istanze OOP in oggetti SaveGameData
                 SaveGameData datiDaSalvare = pm.impacchettaDati(stato, logica);
                 pm.salvaPartita(datiDaSalvare, file.getName().replace(".json", ""));
                 popup.close();
@@ -106,32 +143,40 @@ public class MenuImpostazioni {
         }
     }
 
+    /**
+     * Pulisce l'intera griglia della mappa, azzera le finanze e resetta i parametri politici e di tempo,
+     * riportando il gioco al suo stato vergine originale.
+     *
+     * @param popup Il riferimento alla finestra modale corrente.
+     */
     private void eseguiReset(Stage popup) {
         if (logica != null && stato != null && mappaVisiva != null) {
             if (timeBarRef != null) {
                 timeBarRef.fermaEImpostaManuale();
             }
+            
+            // Loop destruttivo che annulla il layer logico della grid
             for (int i = 0; i < logica.getWidth(); i++) {
                 for (int j = 0; j < logica.getHeight(); j++) {
                     logica.removeEntity(i, j);
                 }
             }
             
-            stato.reset(); // Azzera i ticket nel modello
+            stato.reset(); 
             
             mappaVisiva.rinfrescaMappaCompleta();
             
-            topBar.resetPolitica(); // Azzera la tendina visivamente e logisticamente
+            topBar.resetPolitica(); 
             
-            topBar.aggiornaDati(stato); // Aggiorna i testi a schermo
+            topBar.aggiornaDati(stato); 
             
             if (engine != null) {
+				// Costringe tutti i listener a rileggere i dati azzerati tramite il pattern Observer
                 engine.forceNotifyObservers();
             }
         }
         popup.close();
         
-        // Mostra il tutorial quando si ricomincia la partita
         TutorialPopup.mostraTutorial();
     }
 }
