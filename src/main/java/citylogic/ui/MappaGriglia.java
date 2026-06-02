@@ -90,9 +90,9 @@ public class MappaGriglia extends GridPane {
                     }
                     
                     if (!(e instanceof Road)) {
-                        visualizzatore.setFitWidth(CELL_SIZE * 1.5);
-                        visualizzatore.setFitHeight(CELL_SIZE * 1.5);
-                        visualizzatore.setTranslateY(-CELL_SIZE * 0.25);
+                        visualizzatore.setFitWidth(CELL_SIZE * 1.25);
+                        visualizzatore.setFitHeight(CELL_SIZE * 1.25);
+                        visualizzatore.setTranslateY(-CELL_SIZE * 0.125);
                         visualizzatore.setPreserveRatio(true);
                     } else {
                         visualizzatore.setFitWidth(CELL_SIZE);
