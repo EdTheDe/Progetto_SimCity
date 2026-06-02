@@ -1,0 +1,185 @@
+
+CRITERI DI ACCETTAZIONE - PROGETTO CITYLOGIC
+(Formato BDD: Dato / Quando / Allora)
+
+=======================================================================
+KAN-4: Inizializzazione della Griglia
+=======================================================================
+AC 4.1 - Dimensionamento corretto:
+- DATO l'avvio di una nuova partita logica
+- QUANDO l'oggetto UrbanGrid viene istanziato
+- ALLORA la matrice interna deve essere allocata con dimensioni esatte di 16 righe per 24 colonne (384 celle totali).
+
+AC 4.2 - Disponibilità delle celle:
+- DATA una UrbanGrid appena istanziat
+- QUANDO si interroga lo stato di una qualsiasi coordinata (x, y) all'interno dei limiti
+- ALLORA la cella deve risultare vuota (isOccupied() == false) e idonea alla costruzione di nuove entità.
+
+=======================================================================
+KAN-9: Validazione della Costruzione
+=======================================================================
+AC 9.1 - Prevenzione sovrascrittura:
+- DATA una cella in coordinata (x,y) che contiene già un'entità (es. Road o Residential)
+- QUANDO il BuilderValidator riceve una richiesta di piazzamento in (x,y)
+- ALLORA il sistema deve sollevare una eccezione (CostruzioneException) con codice di errore relativo allo spazio occupato.
+- E la struttura della griglia non deve subire mutazioni.
+
+AC 9.2 - Controllo della capienza del budget:
+- DATO un budget cittadino attuale pari a F (es. 100) e un edificio con costo di piazzamento C (es. 200) dove C > F
+- QUANDO si tenta di invocare la costruzione dell'edificio
+- ALLORA il sistema deve sollevare un'eccezione per fondi insufficienti.
+- E il budget cittadino deve rimanere invariato al valore F.
+
+=======================================================================
+KAN-23: Struttura Metriche di Base
+=======================================================================
+AC 23.1 - Integrità dei parametri:
+- DATO l'oggetto StatoCitta
+- QUANDO viene istanziato
+- ALLORA deve inizializzare e rendere accessibili i parametri: Finanze, Popolazione, Felicità, Lavoro, Sicurezza, Sanità, Ecologia a valori di default predefiniti.
+
+AC 23.2 - Calcolo della Felicità:
+- DATO uno StatoCitta con parametri modificati a seguito di un Tick
+- QUANDO viene invocato il calcolo delle dinamiche globali
+- ALLORA il valore di Felicità deve essere matematicamente rideterminato dalla media di (Ecologia + Lavoro + Sicurezza + Sanità) dedotte le penalità (malus fisso per ogni parametro sotto la soglia del 60%).
+
+=======================================================================
+KAN-6: Aree Residenziali e Commerciali
+=======================================================================
+AC 6.1 - Deduzione costo:
+- DATO un budget sufficiente
+- QUANDO si piazza un'area Residenziale o Commerciale
+- ALLORA il budget viene decurtato esattamente dell'attributo costo dell'entità specifica.
+
+AC 6.2 - Contributo statistico (Residenziale):
+- DATO un edificio Residenziale attivo in griglia
+- QUANDO viene processato il ciclo tick() nel SimulationEngine
+- ALLORA il parametro CapacitaAbitativa in TickStats deve incrementarsi in misura pari al valore fornito dall'edificio.
+
+AC 6.3 - Contributo statistico (Commerciale):
+- DATO un edificio Commerciale attivo in griglia
+- QUANDO viene processato il ciclo tick() nel SimulationEngine
+- ALLORA il parametro RedditoCommerciale in TickStats deve incrementarsi in base al livello di sviluppo dell'edificio commerciale.
+
+=======================================================================
+KAN-7: Aree Industriali (Fabbriche)
+=======================================================================
+AC 7.1 - Impatto economico e occupazionale:
+- DATA una Fabbrica piazzata e attiva
+- QUANDO viene eseguito il tick()
+- ALLORA i postiLavoro in TickStats devono aumentare proporzionalmente al livello della fabbrica.
+
+AC 7.2 - Impatto inquinante:
+- DATA la stessa Fabbrica
+- QUANDO viene eseguito il tick()
+- ALLORA i puntiInquinamento devono subire un incremento fisso, che al termine del ciclo tick() ridurrà matematicamente il parametro globale Ecologia.
+
+=======================================================================
+KAN-21: Avanzamento di Livello Edifici
+=======================================================================
+AC 21.1 - Moltiplicatore di output:
+- DATO un edificio che supporta la meccanica di livello (es. Commerciale Livello 1) e i suoi output base
+- QUANDO l'attributo livello viene incrementato (es. Livello 2)
+- ALLORA al tick() successivo, i valori iniettati in TickStats (reddito, inquinamento, etc.) devono essere pari all'output base applicato a uno scalare matematico dipendente dal nuovo livello.
+
+=======================================================================
+KAN-29: Aree Verdi
+=======================================================================
+AC 29.1 - Mitigazione dell'inquinamento:
+- DATA una zona verde posizionata in griglia
+- QUANDO il SimulationEngine elabora i contributi del tick
+- ALLORA l'edificio deve registrare i suoi valori in puntiNatura dentro TickStats.
+- E nel calcolo finale del parametro Ecologia, l'impatto della natura deve sommare algebricamente e contrastare l'impatto dell'inquinamento totale.
+
+=======================================================================
+KAN-24 & 25: Servizi e Funzionamento (Requisiti di Rete)
+=======================================================================
+AC 24.1 - Vincolo di inattività:
+- DATO un edificio che richiede connettività stradale o energetica
+- QUANDO il sistema di pathfinding o adiacenza rileva l'assenza di collegamento alle rispettive infrastrutture (Road, PowerPlant)
+- ALLORA il metodo isFunctioning() dell'edificio deve ritornare False.
+- E durante il tick(), l'edificio non deve invocare applicaContributo() su TickStats.
+
+=======================================================================
+KAN-8: Capacità dei Servizi di Supporto
+=======================================================================
+AC 8.1 - Limite strutturale:
+- DATI N edifici di supporto (es. Ospedali) che garantiscono un servizio massimo per una popolazione limite C
+- QUANDO la popolazione attuale P supera la capacità C
+- ALLORA il parametro globale derivato (Sanità) deve subire una penalità percentuale o frazionaria proporzionale al deficit (C / P).
+
+
+=======================================================================
+KAN-10: Elaborazione del Ciclo (Tick)
+=======================================================================
+AC 10.1 - Performance di iterazione:
+- DATA una griglia parzialmente piena
+- QUANDO SimulationEngine.tick() viene chiamato
+- ALLORA il ciclo for deve processare unicamente la lista delle celle occupate (getActiveEntities()) ignorando le celle vuote.
+
+AC 10.2 - Azzeramento del report:
+- DATO il termine di un tick()
+- QUANDO ne inizia uno nuovo
+- ALLORA l'oggetto TickStats deve essere re-istanziato a zero per non accumulare i punteggi grezzi del mese precedente, ricalcolando le proporzioni sui parametri di StatoCitta.
+
+=======================================================================
+KAN-16 & 17: Pattern Strategy per le Politiche
+=======================================================================
+AC 16.1 - Tassa Ambientale:
+- DATA l'iniezione della classe PoliticaAmbientale nel SimulationEngine
+- QUANDO il tick() termina il bilancio proporzionale
+- ALLORA il parametro Ecologia di StatoCitta riceve un boost positivo esplicito (+X), il Lavoro subisce un malus (-Y), e le Finanze subiscono un costo fisso di transizione (-Z).
+
+AC 17.1 - Espansione Industriale:
+- DATA l'iniezione della classe PoliticaIndustriale
+- QUANDO il tick() termina
+- ALLORA il parametro Lavoro ottiene un bonus (+X), le Finanze ricevono introiti di detassazione (+Y), ma l'Ecologia subisce un malus pesante (-Z).
+
+=======================================================================
+KAN-27: Eventi Randomici Straordinari
+=======================================================================
+AC 27.1 - Trigger probabilistico:
+- DATO il completamento di un tick()
+- QUANDO il generatore di numeri pseudocasuali colpisce la soglia predefinita
+- ALLORA un oggetto Evento viene applicato allo StatoCitta.
+
+AC 27.2 - Durata e persistenza:
+- DATO un Evento con durata impostata a 3 tick
+- QUANDO scorrono i tick successivi
+- ALLORA i modificatori dell'evento continuano ad essere applicati (o decadere) fino all'esaurimento del contatore interno all'evento.
+
+=======================================================================
+KAN-18: Persistenza Dati (JSON)
+=======================================================================
+AC 18.1 - Serializzazione:
+- DATO uno stato della partita in corso (StatoCitta valorizzato e UrbanGrid popolata)
+- QUANDO si invoca il PersistenceManager.save()
+- ALLORA deve essere scritto un file locale in formato JSON sintatticamente valido contenente lo snapshot esatto delle istanze.
+
+AC 18.2 - Deserializzazione:
+- DATO un file JSON di salvataggio integro
+- QUANDO si invoca PersistenceManager.load()
+- ALLORA il sistema deve istanziare un nuovo SimulationEngine i cui parametri di StatoCitta e la disposizione in UrbanGrid combacino al 100% con il file letto.
+
+=======================================================================
+KAN-28: Regole di Crescita/Decrescita Demografica
+=======================================================================
+AC 28.1 - Decrescita per insoddisfazione:
+- DATO uno StatoCitta dove l'Ecologia o la Sanità scendono sotto la soglia di vivibilità (es. 60%)
+- QUANDO viene calcolata la dinamica della Popolazione a fine tick()
+- ALLORA la popolazione deve diminuire matematicamente.
+
+AC 28.2 - Attrattiva:
+- DATO uno StatoCitta con parametri alti e Popolazione attuale strettamente minore della CapacitaAbitativa totale
+- QUANDO viene eseguito il tick()
+- ALLORA la Popolazione aumenta di una percentuale (es. 20%) calcolata sul divario tra capacità e popolazione attuale, scalata dal moltiplicatore di Felicità.
+
+=======================================================================
+KAN-20: Integrazione MVC / Observer Pattern
+=======================================================================
+AC 20.1 - Disaccoppiamento e Notifica:
+- DATO il dominio di gioco e le classi della UI (TopBar, MappaGriglia)
+- QUANDO il dominio esegue mutazioni o termina il tick()
+- ALLORA il dominio non deve contenere reference diretti a classi JavaFX/Swing, ma deve invocare il metodo notifyObservers() (o listener) per far scattare l'aggiornamento automatico e asincrono delle barre di progresso a schermo.
+
+
