@@ -1,0 +1,131 @@
+classDiagram
+
+class Citta {
+  nome
+}
+
+class StatoCitta {
+  Finanze
+  Popolazione
+  Felicità
+  Lavoro
+  Sicurezza
+  Sanità
+  Ecologia
+
+}
+
+class PoliticaCittadina {
+  nome
+  attiva
+  costo
+}
+
+class GrigliaUrbana {
+  dimensione
+}
+
+class EventoSpeciale {
+  tipo evento
+  durata
+  intensita
+}
+
+class Cella {
+  coordinate
+  occupata
+}
+
+class EntitaUrbana {
+  costo piazzamento
+  livello
+}
+
+class Edificio {
+  fabbisogno energetico
+  fabbisogno idrico
+}
+
+class Infrastruttura {
+  capacita massima edificio
+  costo mantenimento
+}
+
+class Residenziale {
+  capacita abitativa
+}
+
+class Industriale {
+  produzione inquinamento base
+  produzione Lavoro
+}
+
+class Commerciale {
+  generazione reddito base
+}
+
+class EdificioElettrico {
+}
+
+class EdificioIdrico {
+}
+
+class Strada {
+}
+
+class Statale {
+}
+
+class Polizia {
+    capacita poliziotti
+}
+
+class Scuola {
+  capacita studenti
+}
+
+class Pompieri {
+  capacita pompieri
+}
+
+class ReteElettrica {
+  carico attuale
+}
+
+class ReteIdrica {
+  pressione attuale
+}
+
+Citta "1" *-- "1" StatoCitta : possiede
+Citta "1" o-- "*" PoliticaCittadina : applica
+Citta "1" *-- "1" GrigliaUrbana : formata da
+Citta "1" o-- "*" EventoSpeciale : subisce
+
+GrigliaUrbana "1" *-- "*" Cella : suddivisa in
+Cella "1" --> "0..1" EntitaUrbana : ospita fisicamente
+
+
+EntitaUrbana <|-- Edificio
+EntitaUrbana <|-- Strada
+EntitaUrbana <|-- Infrastruttura
+
+Edificio <|-- Residenziale
+Edificio <|-- Industriale
+Edificio <|-- Commerciale
+
+Infrastruttura <|-- EdificioElettrico
+Infrastruttura <|-- EdificioIdrico
+Infrastruttura <|-- Statale
+
+Statale <|-- Polizia
+Statale <|-- Scuola
+Statale <|-- Pompieri
+
+EdificioElettrico "1" --> "1" ReteElettrica : immette energia in
+EdificioIdrico "1" --> "1" ReteIdrica : immette acqua in
+
+Edificio "*" --> "1" ReteElettrica : consuma energia da
+Edificio "*" --> "1" ReteIdrica : consuma acqua da
+
+Statale --> StatoCitta : influisce in
+Edificio --> StatoCitta: influisce in

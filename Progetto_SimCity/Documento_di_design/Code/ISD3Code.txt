@@ -1,0 +1,41 @@
+sequenceDiagram
+    autonumber
+    participant Menu as MenuImpostazioni (UI)
+    participant PM as PersistenceManager
+    participant DTO as SaveGameData
+    participant Factory as UrbanEntityFactory
+    participant Engine as SimulationEngine
+    participant Grid as UrbanGrid
+
+    alt Flusso di Salvataggio
+        Menu->>PM: impacchettaDati(stato, griglia)
+        activate PM
+        PM->>DTO: new SaveGameData(...)
+        PM->>Grid: Itera entità per estrarre DTO
+        PM-->>Menu: SaveGameData
+        deactivate PM
+        
+        Menu->>PM: salvaPartita(SaveGameData, percorso)
+        PM->>PM: serializza in JSON su disco
+        PM-->>Menu: void (Successo)
+        
+    else Flusso di Caricamento
+        Menu->>PM: caricaPartita(percorso)
+        activate PM
+        PM->>PM: deserializza JSON
+        PM-->>Menu: SaveGameData
+        deactivate PM
+        
+        Menu->>PM: ripristinaDati(SaveGameData, stato, griglia)
+        activate PM
+        PM->>Grid: azzeraMappa()
+        loop Per ogni SavedEntityData nel DTO
+            PM->>Factory: createEntity(tipo)
+            Factory-->>PM: UrbanEntity (istanza base)
+            PM->>Grid: placeEntity(entita, x, y)
+        end
+        deactivate PM
+        
+        Menu->>Engine: forceNotifyObservers()
+        Engine->>Menu: onCityUpdate(...) (Aggiorna tutta la UI)
+    end
