@@ -176,15 +176,15 @@ public class TopBar extends HBox implements citylogic.core.engine.CityObserver {
      */
     public void aggiornaDati(StatoCitta stato) {
         if (stato.getFinanze() < 0) {
-            lblFinanze.setText(String.format("💰 -$%.2f", Math.abs(stato.getFinanze())));
+            lblFinanze.setText(String.format("-$%.2f", Math.abs(stato.getFinanze())));
             lblFinanze.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #e74c3c;"); 
         } else {
-            lblFinanze.setText(String.format("💰 $%.2f", stato.getFinanze()));
+            lblFinanze.setText(String.format("$%.2f", stato.getFinanze()));
             lblFinanze.setStyle("-fx-font-size: 16px; -fx-font-weight: bold; -fx-text-fill: #27ae60;"); 
         }
-        lblPopolazione.setText("👥 " + stato.getPopolazione());
+        lblPopolazione.setText("Pop: " + stato.getPopolazione());
         
-        lblTickets.setText("🎫 " + stato.getTickets());
+        lblTickets.setText("Tick: " + stato.getTickets());
         
         pbSicurezza.setProgress(stato.getSicurezza() / 100.0);
         pbSanita.setProgress(stato.getSanita() / 100.0);
