@@ -1,7 +1,3 @@
-
-CRITERI DI ACCETTAZIONE - PROGETTO CITYLOGIC
-(Formato BDD: Dato / Quando / Allora)
-
 =======================================================================
 KAN-4: Inizializzazione della Griglia
 =======================================================================
