@@ -13,7 +13,9 @@ Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestion
 ## 3. AMBIENTI DI ESECUZIONE E VINCOLI TECNICI
 * **Linguaggio:** Java.
 * **Versione Java:** JDK 17 o superiore.
-* **Architettura:** Pattern Boundary-Control-Entity (BCE) per la separazione dei layer.
+* **Architettura:** Separazione per Livelli (MVC): Il codice è diviso in Domain (Dati e Regole), Core 
+(Motore), UI (Grafica) e Infrastructure (Salvataggi). Ogni pacchetto è isolato per 
+mantenere il codice ordinato. 
 * **Pattern GoF:** Strategy (Politiche), Factory (Edifici), Observer (Aggiornamento UI).
 
 ## 4. LOGICA DI CALCOLO (BUSINESS RULES)
