@@ -6,7 +6,7 @@ Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestion
 ## 2. ISTRUZIONI SU COME INSTALLARE E LANCIARE IL SOFTWARE
 * **Requisiti:** Maven installato e configurato nel PATH di sistema.
 * **Installazione:**
-* 1.Installare git sul proprio pc (Andare sulla pagina di download del sito ufficiale: 
+* 1. Installare git sul proprio pc (Andare sulla pagina di download del sito ufficiale: 
 git-scm.com/download/win) 
 * 2. Clonare la repository da GitHub.
 * 3. Aprire il terminale nella directory radice del progetto.
