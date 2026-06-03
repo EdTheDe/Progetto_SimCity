@@ -8,7 +8,7 @@ Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestion
 * **Installazione:** 1. Clonare la repository da GitHub.
   2. Aprire il terminale nella directory radice del progetto.
   3. Eseguire `mvn clean install` per risolvere le dipendenze e compilare.
-* **Lancio:** Eseguire `mvn exec:java -Dexec.mainClass="com.citylogic.Main"`.
+* **Lancio:** Eseguire `mvn javafx:run"`.
 
 ## 3. AMBIENTI DI ESECUZIONE E VINCOLI TECNICI
 * **Linguaggio:** Java.
