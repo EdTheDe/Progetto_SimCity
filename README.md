@@ -8,7 +8,7 @@ Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestion
 * **Installazione:** 1. Clonare la repository da GitHub.
   2. Aprire il terminale nella directory radice del progetto.
   3. Eseguire `mvn clean install` per risolvere le dipendenze e compilare.
-* **Lancio:** Eseguire `mvn javafx:run"`.
+* **Lancio:** Eseguire `mvn javafx:run "`.
 
 ## 3. AMBIENTI DI ESECUZIONE E VINCOLI TECNICI
 * **Linguaggio:** Java.
@@ -30,7 +30,7 @@ Ogni cella della griglia logica segue rigorosamente tre stati di transizione:
 * **DEVELOPING:** L'edificio è stato posizionato sulla mappa ma non soddisfa i requisiti di validità del `BuilderValidator`. La struttura resta inattiva (senza generare tasse o bonus) se:
   1. Manca il collegamento stradale diretto.
   2. Si trova fuori dal raggio di copertura delle reti idriche o elettriche.
-  3. *Vincolo Edifici Statali:* Manca la copertura di una stazione dei Pompieri, di un posto di Polizia o di un Ospedale entro un raggio d'azione minimo di 7 celle.
+  3. *Vincolo Edifici Statali:* Manca la copertura di una stazione dei Pompieri, di un posto di Polizia o di un Ospedale entro un raggio d'azione 
   4. *Ripristino da Disastri:* Strutture colpite da eventi catastrofici (es. Pioggia di Meteoriti) perdono i requisiti di validità e regrediscono automaticamente in questo stato fino alla ricostruzione delle reti di servizio.
 * **ACTIVE:** L'edificio è connesso correttamente a tutte le infrastrutture e ai servizi di raggio, genera tasse e influenza le metriche globali.
 
