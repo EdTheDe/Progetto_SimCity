@@ -5,15 +5,19 @@ Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestion
 
 ## 2. ISTRUZIONI SU COME INSTALLARE E LANCIARE IL SOFTWARE
 * **Requisiti:** Maven installato e configurato nel PATH di sistema.
-* **Installazione:** 1. Clonare la repository da GitHub.
-  2. Aprire il terminale nella directory radice del progetto.
-  3. Eseguire `mvn clean install` per risolvere le dipendenze e compilare.
+* **Installazione:** 1.Installare git sul proprio pc (Andare sulla pagina di download del sito ufficiale: 
+git-scm.com/download/win) 
+  2. Clonare la repository da GitHub.
+  3. Aprire il terminale nella directory radice del progetto.
+  4. Eseguire `mvn clean install` per risolvere le dipendenze e compilare.
 * **Lancio:** Eseguire `mvn javafx:run "`.
 
 ## 3. AMBIENTI DI ESECUZIONE E VINCOLI TECNICI
 * **Linguaggio:** Java.
 * **Versione Java:** JDK 17 o superiore.
-* **Architettura:** Pattern Boundary-Control-Entity (BCE) per la separazione dei layer.
+* **Architettura:** Separazione per Livelli (MVC): Il codice è diviso in Domain (Dati e Regole), Core 
+(Motore), UI (Grafica) e Infrastructure (Salvataggi). Ogni pacchetto è isolato per 
+mantenere il codice ordinato
 * **Pattern GoF:** Strategy (Politiche), Factory (Edifici), Observer (Aggiornamento UI).
 
 ## 4. LOGICA DI CALCOLO (BUSINESS RULES)
