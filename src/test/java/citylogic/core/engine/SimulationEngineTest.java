@@ -53,7 +53,7 @@ public class SimulationEngineTest {
 
     @Test
     void testRandomEventsPersistence() {
-        // AC 27.2: Isolamento del test sugli eventi
+        // AC 50.2: Isolamento del test sugli eventi
         StatoCitta stato = new StatoCitta();
         
         PrimaveraEvent event = new PrimaveraEvent(); // dura 4 tick, aumenta felicita di 20
@@ -70,7 +70,7 @@ public class SimulationEngineTest {
 
     @Test
     void testDemographicGrowthWithFullCoverage() {
-        // AC 28.2 - STRESS TEST REALE: Creiamo una mini-città per superare i severi vincoli di checkCoverage
+        // AC 51.2 - STRESS TEST REALE: Creiamo una mini-città per superare i severi vincoli di checkCoverage
         StatoCitta stato = new StatoCitta();
         UrbanGrid grid = new UrbanGrid(10, 10);
         SimulationEngine engine = new SimulationEngine(stato, grid);

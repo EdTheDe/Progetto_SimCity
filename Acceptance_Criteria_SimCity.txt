@@ -88,13 +88,13 @@ AC 29.1 - Mitigazione dell'inquinamento:
 - E nel calcolo finale del parametro Ecologia, l'impatto della natura deve sommare algebricamente e contrastare l'impatto dell'inquinamento totale.
 
 =======================================================================
-KAN-24 & 25: Servizi e Funzionamento (Requisiti di Rete)
+KAN-24: Servizi e Funzionamento (Requisiti di Rete)
 =======================================================================
-AC 24.1 - Vincolo di inattività:
-- DATO un edificio che richiede connettività stradale o energetica
-- QUANDO il sistema di pathfinding o adiacenza rileva l'assenza di collegamento alle rispettive infrastrutture (Road, PowerPlant)
-- ALLORA il metodo isFunctioning() dell'edificio deve ritornare False.
-- E durante il tick(), l'edificio non deve invocare applicaContributo() su TickStats.
+AC 24.1 - Vincolo di inattività e Raggio di Copertura:
+- DATO un edificio che richiede servizi di base (strada, acqua, elettricità, polizia, pompieri, ospedale)
+- QUANDO il sistema verifica la sua copertura (checkCoverage)
+- ALLORA l'edificio deve avere una strada adiacente e acqua/luce globale sufficiente.
+- E deve trovarsi entro un raggio d'azione specifico (es. 7 celle al livello 1, calcolato a griglia) da una caserma di polizia, una dei pompieri e un ospedale attivi. Altrimenti l'edificio risulta inattivo.
 
 =======================================================================
 KAN-8: Capacità dei Servizi di Supporto
@@ -132,14 +132,14 @@ AC 17.1 - Espansione Industriale:
 - ALLORA il parametro Lavoro ottiene un bonus (+X), le Finanze ricevono introiti di detassazione (+Y), ma l'Ecologia subisce un malus pesante (-Z).
 
 =======================================================================
-KAN-27: Eventi Randomici Straordinari
+KAN-50: Eventi Randomici Straordinari
 =======================================================================
-AC 27.1 - Trigger probabilistico:
+AC 50.1 - Trigger probabilistico:
 - DATO il completamento di un tick()
 - QUANDO il generatore di numeri pseudocasuali colpisce la soglia predefinita
 - ALLORA un oggetto Evento viene applicato allo StatoCitta.
 
-AC 27.2 - Durata e persistenza:
+AC 50.2 - Durata e persistenza:
 - DATO un Evento con durata impostata a 3 tick
 - QUANDO scorrono i tick successivi
 - ALLORA i modificatori dell'evento continuano ad essere applicati (o decadere) fino all'esaurimento del contatore interno all'evento.
@@ -158,17 +158,17 @@ AC 18.2 - Deserializzazione:
 - ALLORA il sistema deve istanziare un nuovo SimulationEngine i cui parametri di StatoCitta e la disposizione in UrbanGrid combacino al 100% con il file letto.
 
 =======================================================================
-KAN-28: Regole di Crescita/Decrescita Demografica
+KAN-51: Regole di Crescita Demografica
 =======================================================================
-AC 28.1 - Decrescita per insoddisfazione:
-- DATO uno StatoCitta dove l'Ecologia o la Sanità scendono sotto la soglia di vivibilità (es. 60%)
-- QUANDO viene calcolata la dinamica della Popolazione a fine tick()
-- ALLORA la popolazione deve diminuire matematicamente.
+AC 51.1 - Crescita vincolata da spazio e felicità:
+- DATO uno StatoCitta con parametri registrati a fine tick
+- QUANDO viene calcolata la dinamica della Popolazione
+- ALLORA la popolazione deve aumentare in modo proporzionale allo spazio abitativo libero (Capacità Abitativa - Popolazione), scalata positivamente o negativamente dal moltiplicatore di Felicità (e indirettamente dal Lavoro, che influisce sulla felicità).
 
-AC 28.2 - Attrattiva:
-- DATO uno StatoCitta con parametri alti e Popolazione attuale strettamente minore della CapacitaAbitativa totale
-- QUANDO viene eseguito il tick()
-- ALLORA la Popolazione aumenta di una percentuale (es. 20%) calcolata sul divario tra capacità e popolazione attuale, scalata dal moltiplicatore di Felicità.
+AC 51.2 - Tettonica Demografica (Esodo):
+- DATO uno StatoCitta in cui la Popolazione supera la Capacità Abitativa
+- QUANDO il tick() viene elaborato
+- ALLORA la Popolazione eccedente deve abbandonare la città, livellandosi al valore esatto della Capacità Abitativa.
 
 =======================================================================
 KAN-20: Integrazione MVC / Observer Pattern
@@ -178,4 +178,35 @@ AC 20.1 - Disaccoppiamento e Notifica:
 - QUANDO il dominio esegue mutazioni o termina il tick()
 - ALLORA il dominio non deve contenere reference diretti a classi JavaFX/Swing, ma deve invocare il metodo notifyObservers() (o listener) per far scattare l'aggiornamento automatico e asincrono delle barre di progresso a schermo.
 
+=======================================================================
+KAN-52: Sconfitta / Game Over
+=======================================================================
+AC 52.1 - Innesco Bancarotta:
+- DATO uno StatoCitta le cui finanze scendono sotto lo 0.0
+- QUANDO questo deficit viene mantenuto ininterrottamente per più di 5 Tick consecutivi
+- ALLORA il SimulationEngine deve notificare agli observer l'evento di Game Over (onGameOver) bloccando le interazioni.
 
+=======================================================================
+KAN-53: Costi di Mantenimento delle Infrastrutture
+=======================================================================
+AC 53.1 - Detrazione periodica:
+- DATO un insieme di edifici piazzati sulla UrbanGrid
+- QUANDO viene processato un nuovo tick()
+- ALLORA la somma dei costi di mantenimento predefiniti (maintenanceCost) di tutti gli edifici deve essere dedotta dalle finanze cittadine correnti.
+
+=======================================================================
+KAN-30: Distruzione Edifici (Bulldozer)
+=======================================================================
+AC 30.1 - Ripristino della cella:
+- DATO un edificio precedentemente piazzato in coordinata (x, y)
+- QUANDO il giocatore ne invoca la distruzione
+- ALLORA l'edificio deve essere rimosso dalla UrbanGrid, liberando la cella per future costruzioni.
+- E l'azione non deve rimborsare né sottrarre ulteriormente denaro dalle finanze cittadine.
+
+=======================================================================
+KAN-31: Ispezione Motivo di Inattività
+=======================================================================
+AC 31.1 - Rilevamento errore:
+- DATO un edificio piazzato che risulta inattivo (isFunctioning() == false) dopo un tick()
+- QUANDO l'utente ispeziona l'edificio tramite la UI
+- ALLORA il sistema deve poter restituire una stringa testuale o un codice che descriva la causa esatta dell'inattività (es. "Manca Elettricità", "Non connesso a una strada", "Lontano dalla Polizia").
