@@ -90,8 +90,27 @@ public class BuilderValidatorTest {
         Cell bordo = grid.getCell(0, 0); // (0,0) è un angolo, la scansione a sinistra (-x) andrebbe fuori mappa
         Residential nuovaEntity = new Residential(100.0, 10.0, 10.0, 50);
 
-        // Deve gestire bene i confini e scansionare solo ciò che rientra tra [0, max]
-        assertDoesNotThrow(() -> validator.validaCostruzione(nuovaEntity, bordo, stato),
-                "Il validatore deve gestire correttamente le celle ai bordi (0,0) senza andare in crash per ArrayOutOfBounds");
+        // Instanziamo direttamente la classe interna per assicurarci che venga coperta dal test (anche se non inserita di default)
+        RegolaCollegamentoServizi regola = new RegolaCollegamentoServizi(grid, 5);
+        assertDoesNotThrow(() -> regola.valida(nuovaEntity, bordo, stato),
+                "Il validatore interno deve gestire correttamente le celle ai bordi (0,0) senza andare in crash per ArrayOutOfBounds");
+    }
+
+    @Test
+    void testRegolaCollegamentoServizi_FallimentoServizioMancante() {
+        UrbanGrid grid = createTestGrid();
+        StatoCitta stato = new StatoCitta();
+        
+        // Manca l'Ospedale!
+        grid.placeEntity(new PoliceStation(500, 10, 50), 0, 1);
+        grid.placeEntity(new FireStation(500, 10, 50), 1, 0);
+        
+        Cell cella = grid.getCell(0, 0);
+        Residential nuovaEntity = new Residential(100.0, 10.0, 10.0, 50);
+        
+        RegolaCollegamentoServizi regola = new RegolaCollegamentoServizi(grid, 5);
+        
+        CostruzioneException thrown = assertThrows(CostruzioneException.class, () -> regola.valida(nuovaEntity, cella, stato));
+        assertTrue(thrown.getMessage().contains("Ospedale"), "Deve bloccare se manca l'ospedale");
     }
 }

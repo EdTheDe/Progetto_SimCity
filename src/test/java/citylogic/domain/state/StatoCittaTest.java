@@ -33,6 +33,15 @@ public class StatoCittaTest {
         
         stato.setPopolazione(-100);
         assertEquals(0, stato.getPopolazione(), "Popolazione non può essere negativa");
+        
+        stato.setLavoro(200.0);
+        assertEquals(100.0, stato.getLavoro(), "Lavoro shouldn't exceed 100");
+        
+        stato.setSicurezza(-10.0);
+        assertEquals(0.0, stato.getSicurezza(), "Sicurezza shouldn't be below 0");
+        
+        stato.setSanita(50.0);
+        assertEquals(50.0, stato.getSanita(), "Sanita should be set correctly within range");
     }
 
     // --- STRESS TEST AGGIUNTI ---

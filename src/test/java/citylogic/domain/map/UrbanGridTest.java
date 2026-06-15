@@ -26,7 +26,7 @@ public class UrbanGridTest {
 
     @Test
     void testRemoveEntity() {
-        // AC 10.1 / KAN-10
+        // AC 30.1 / KAN-30: Distruzione Edifici (Bulldozer) e ripristino cella
         UrbanGrid grid = new UrbanGrid(10, 10);
         Residential res = new Residential(100.0, 10.0, 10.0, 50);
         

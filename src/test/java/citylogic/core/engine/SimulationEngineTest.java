@@ -131,4 +131,105 @@ public class SimulationEngineTest {
         
         assertTrue(gameOverTriggered[0], "La UI (Observer) deve ricevere l'evento onGameOver() dopo 5 tick consecutivi con fondi negativi");
     }
+
+    @Test
+    void testGameOverReset() {
+        // AC 52.1 - Verifica che il contatore bancarotta si resetti se si torna in positivo
+        StatoCitta stato = new StatoCitta();
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        SimulationEngine engine = new SimulationEngine(stato, grid);
+        
+        final boolean[] gameOverTriggered = {false};
+        engine.addObserver(new CityObserver() {
+            @Override
+            public void onSimulationUpdated(StatoCitta stato) {}
+            @Override
+            public void onGameOver() { gameOverTriggered[0] = true; }
+        });
+        
+        stato.setFinanze(-100.0);
+        for(int i = 0; i < 4; i++) engine.tick(); // 4 ticks in rosso
+        
+        stato.setFinanze(500.0); // Salvataggio all'ultimo tick
+        engine.tick(); // Tick in verde (resetta)
+        
+        stato.setFinanze(-100.0);
+        for(int i = 0; i < 3; i++) engine.tick(); // 3 ticks in rosso
+        
+        assertFalse(gameOverTriggered[0], "Il Game Over non deve triggerare se la serie di 5 tick viene interrotta");
+    }
+
+    @Test
+    void testDemographicExodus() {
+        // AC 51.2 - Tettonica Demografica (Esodo)
+        StatoCitta stato = new StatoCitta();
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        SimulationEngine engine = new SimulationEngine(stato, grid);
+        
+        // Impostiamo una popolazione molto superiore alla capacità
+        stato.setPopolazione(1000); 
+        // Nessun edificio residenziale = 0 capacità
+        
+        engine.tick();
+        
+        assertEquals(0, stato.getPopolazione(), "La popolazione in eccesso deve abbandonare istantaneamente la città se non c'è capacità");
+    }
+
+    @Test
+    void testMaintenanceCosts() {
+        // AC 53.1 - Detrazione periodica dei costi di mantenimento
+        StatoCitta stato = new StatoCitta();
+        stato.setFinanze(1000.0);
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        
+        grid.placeEntity(new PoliceStation(100, 15, 50), 0, 0); // Costo: 15
+        grid.placeEntity(new Hospital(100, 20, 50), 1, 0); // Costo: 20
+        // Mettiamo le strade
+        grid.placeEntity(new Road(5.0), 0, 1);
+        grid.placeEntity(new Road(5.0), 1, 1);
+        
+        SimulationEngine engine = new SimulationEngine(stato, grid);
+        engine.tick(); // Road ha manutenzione? Road ha solo costo di piazzamento nel costruttore standard, assumiamo 0 o quello che è.
+        // Se Police e Hospital costano 15+20=35
+        // Il bilancio dovrebbe scendere. Verifichiamo che sia sceso di almeno 35 (potrebbe esserci la strada)
+        assertTrue(stato.getFinanze() <= 1000.0 - 35.0, "I costi di mantenimento devono essere detratti");
+    }
+
+    @Test
+    void testInactivityReason() {
+        // AC 31.1 - Rilevamento errore di inattività
+        StatoCitta stato = new StatoCitta();
+        UrbanGrid grid = new UrbanGrid(10, 10);
+        SimulationEngine engine = new SimulationEngine(stato, grid);
+        
+        Residential res = new Residential(100, 10, 10, 50);
+        grid.placeEntity(res, 5, 5);
+        
+        String motivo = engine.getMotivoInattivita(res);
+        assertTrue(motivo.contains("Nessun collegamento stradale"), "Deve segnalare mancanza di strada: " + motivo);
+        
+        grid.placeEntity(new Road(5), 5, 6); // Aggiunta strada
+        motivo = engine.getMotivoInattivita(res);
+        assertTrue(motivo.contains("Manca Polizia") && motivo.contains("Manca Ospedale"), "Deve segnalare mancanza di servizi: " + motivo);
+    }
+    
+    @Test
+    void testCoverageRadiusLimit() {
+        // AC 24.1 - Verifica raggio di copertura stretto
+        StatoCitta stato = new StatoCitta();
+        UrbanGrid grid = new UrbanGrid(20, 20);
+        SimulationEngine engine = new SimulationEngine(stato, grid);
+        
+        // Livello 1 -> Raggio 5 + (1*2) = 7. Mettiamo la polizia a distanza 10
+        grid.placeEntity(new PoliceStation(100, 10, 50), 0, 0);
+        grid.placeEntity(new FireStation(100, 10, 50), 0, 1);
+        grid.placeEntity(new Hospital(100, 10, 50), 0, 2);
+        
+        // Piazzo la casa a distanza X=10, fuori raggio
+        Residential res = new Residential(100, 10, 10, 50);
+        grid.placeEntity(res, 10, 0);
+        grid.placeEntity(new Road(5), 10, 1); // Strada vicina alla casa
+        
+        assertFalse(engine.checkCoverage(res), "La casa deve risultare NON coperta perché i servizi sono fuori raggio (>7)");
+    }
 }
