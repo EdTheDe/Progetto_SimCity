@@ -1,59 +1,90 @@
-# MANUALE DI PROGETTO DEFINITIVO: CITYLOGIC
+# Citylogic Simulator
 
-## 1. DESCRIZIONE AD ALTO LIVELLO DEL PROGETTO
-Citylogic è un simulatore urbano gestionale rule-based incentrato sulla gestione strategica della crescita urbana. Il software permette di pianificare una città su una griglia logica fissa di **24x16** (pari a un totale di **384 celle**). L'obiettivo è ottimizzare 7 metriche chiave: Finanze, Popolazione, Felicità, Lavoro, Sicurezza, Sanità ed Ecologia. L'avanzamento è scandito da un sistema a turni discreti (Tick) che ricalcola l'intero ecosistema.
+Citylogic è un simulatore urbano gestionale rule-based, sviluppato in Java, incentrato sulla pianificazione strategica e la crescita della città. Il giocatore costruisce insediamenti, gestisce le infrastrutture, attiva politiche cittadine e fa avanzare la simulazione attraverso turni discreti (Tick).
 
-## 2. ISTRUZIONI SU COME INSTALLARE E LANCIARE IL SOFTWARE
-* **Requisiti:** Maven installato e configurato nel PATH di sistema.
-* **Installazione:**
-* 1. Installare git sul proprio pc (Andare sulla pagina di download del sito ufficiale: 
-git-scm.com/download/win) 
-* 2. Clonare la repository da GitHub.
-* 3. Aprire il terminale nella directory radice del progetto.
-* 4. Eseguire `mvn clean install` per risolvere le dipendenze e compilare.
-* **Lancio:** Eseguire `mvn javafx:run "`.
+L'obiettivo è bilanciare 7 metriche chiave (Finanze, Popolazione, Felicità, Lavoro, Sicurezza, Sanità ed Ecologia) su una griglia urbana fissa, rispondendo dinamicamente alle esigenze dei cittadini e agli eventi casuali.
 
-## 3. AMBIENTI DI ESECUZIONE E VINCOLI TECNICI
-* **Linguaggio:** Java.
-* **Versione Java:** JDK 17 o superiore.
-* **Architettura:** Separazione per Livelli (MVC): Il codice è diviso in Domain (Dati e Regole), Core 
-(Motore), UI (Grafica) e Infrastructure (Salvataggi). Ogni pacchetto è isolato per 
-mantenere il codice ordinato
-* **Pattern GoF:** Strategy (Politiche), Factory (Edifici), Observer (Aggiornamento UI).
+## Il Progetto in Sintesi
 
-## 4. LOGICA DI CALCOLO (BUSINESS RULES)
-Il Simulation Engine applica le seguenti formule ad ogni Tick per determinare l'andamento della città:
-* **Entrate:** `(ZoneCommerciali * 10 + ZoneIndustriali * 15) * MoltiplicatorePolicy`
-* **Ecologia:** `ValoreBase - (ZoneIndustriali * 5) + (Parchi * 3)`
-* **Sanità:** `(Ospedali / PopolazioneTotale) * 100 - (Inquinamento * 0.5)`
-* **Sicurezza:** `(StazioniPolizia / PopolazioneTotale) * 100 - (ZoneIndustriali * 0.2)`
-* **Felicità:** `(Occupazione * 0.5) + (Parchi * 1.2) - (Inquinamento * 2.0) + (Sanità * 0.4) + (Sicurezza * 0.4)`
+- Costruisci e gestisci una griglia cittadina fissa di **24 x 16** (384 celle totali).
+- Posiziona Zone Residenziali, Commerciali e Industriali per attirare abitanti ed espandere l'economia.
+- Bilancia e fornisci servizi di base vitali: Strade, Ospedali, Caserme di Polizia e Pompieri, Centrali Elettriche e Acquedotti.
+- Fai avanzare il tempo tramite *Tick*; ogni tick elabora i costi di mantenimento, la produzione di inquinamento, la crescita demografica, il gettito fiscale e gli eventi casuali.
+- Usa lo strumento Distruggi per distruggere edifici sulla griglia urbana.
+- Salva e ricarica le tue partite interamente tramite file JSON locali.
 
-## 5. MACCHINA A STATI DEGLI EDIFICI (LIFE CYCLE)
-Ogni cella della griglia logica segue rigorosamente tre stati di transizione:
-* **EMPTY:** Cella disponibile per la costruzione.
-* **DEVELOPING:** L'edificio è stato posizionato sulla mappa ma non soddisfa i requisiti di validità del `BuilderValidator`. La struttura resta inattiva (senza generare tasse o bonus) se:
-  1. Manca il collegamento stradale diretto.
-  2. Si trova fuori dal raggio di copertura delle reti idriche o elettriche.
-  3. *Vincolo Edifici Statali:* Manca la copertura di una stazione dei Pompieri, di un posto di Polizia o di un Ospedale entro un raggio d'azione 
-  4. *Ripristino da Disastri:* Strutture colpite da eventi catastrofici (es. Pioggia di Meteoriti) perdono i requisiti di validità e regrediscono automaticamente in questo stato fino alla ricostruzione delle reti di servizio.
-* **ACTIVE:** L'edificio è connesso correttamente a tutte le infrastrutture e ai servizi di raggio, genera tasse e influenza le metriche globali.
+## Gameplay Loop
 
-## 6. PRINCIPALI FUNZIONI E LIBRERIE RIUTILIZZATE
-* **Jackson/Gson:** Serializzazione JSON per il `PersistenceManager`.
-* **JavaFX:** Gestione della dashboard grafica, delle reti sui pannelli di destra e degli eventi UI.
-* **JUnit 5:** Suite di test automatici per la validazione della logica di dominio.
+1. **Inizia una nuova partita** o carica un salvataggio esistente.
+2. **Piazza i servizi essenziali** e collegali tramite le Strade per garantire copertura idrica, elettrica e di sicurezza.
+3. **Costruisci edifici e zone**. Se un edificio appena piazzato non ha i requisiti necessari, rimarrà in uno stato di *Developing* (Inattivo) finché non verrà coperto dai servizi.
+4. **Avanza di un Tick** per processare il mese: incassa le tasse, paga le spese di mantenimento delle infrastrutture e osserva i cambiamenti.
+5. **Leggi l'HUD e i Pannelli**: monitora costantemente le 7 metriche globali, il livello di felicità e ispeziona gli edifici inattivi per capirne il motivo.
+6. **Reagisci agli imprevisti**: gestisci eventi casuali (Guerre, Piogge di Meteoriti, Crisi Economiche) e attiva *Politiche Cittadine* (es. Tassa Ambientale) per alterare strategicamente le regole del gioco.
 
-## 7. INDICAZIONE DI PRINCIPALI API ESTERNE UTILIZZATE
-Il software è standalone. Non utilizza API REST esterne. La persistenza dei dati (Salvataggio/Caricamento) avviene tramite l'accesso diretto al FileSystem locale in formato JSON.
+## Eseguire in Locale
 
-## 8. STRUMENTI AI UTILIZZATI
-Supporto del modello Gemini per:
-* **Analisi Requisiti:** Definizione di 17 User Stories (KAN-4 a KAN-27).
-* **Coding:** Verifica attraverso i test delle funzioni e aiuti generali nella stesura del codice.
+Strumenti richiesti:
+- Java 17 JDK (o superiore)
+- Maven 3.8+
 
-## 9. GLOSSARIO TECNICO (UBIQUITOUS LANGUAGE)
-* **TICK:** L'unità di tempo minima che scatena il ricalcolo delle metriche.
-* **INFRASTRUTTURA:** Elementi di rete (tubi, cavi, strade) necessari al funzionamento delle Zone.
-* **POLICY:** Strategia di calcolo globale (es. Politica Ambientale) che altera i parametri a runtime tramite pattern Strategy.
-* **METRICA:** Indicatore numerico dello stato di salute della città (es. Ecologia).
+Dalla root del repository (cartella principale del progetto), apri il terminale ed esegui:
+
+```bash
+mvn clean install
+mvn javafx:run
+```
+
+Comandi utili per lo sviluppo e il testing:
+```bash
+mvn clean test         # esegue l'intera suite di unit test (JUnit 5)
+mvn clean package      # compila, esegue i test e pacchettizza l'applicativo
+```
+
+### Dipendenze e Librerie
+- **JavaFX:** Per il rendering dell'interfaccia grafica, l'input del mouse e l'aggiornamento della dashboard.
+- **Jackson/Gson:** Per la serializzazione e deserializzazione locale in formato JSON (Persistence).
+- **JUnit 5:** Per la validazione rigorosa della logica di dominio (System & Unit Testing).
+*(Nota: Il software è completamente standalone e non fa uso di API REST o servizi cloud esterni).*
+
+## Architettura e Logica delle Cartelle
+
+Il progetto rispetta una separazione rigorosa MVC (Model-View-Controller) ed è organizzato nei seguenti package principali:
+
+| Cartella / Package | Responsabilità |
+|--------|----------------|
+| `citylogic.domain` | **(Model)** Logica di dominio pura. Contiene lo `StatoCitta`, la griglia `UrbanGrid`, e tutte le entità (`Building`, `Residential`, ecc.). Non contiene alcuna dipendenza grafica. |
+| `citylogic.core` | **(Controller/Engine)** Motore del gioco. Contiene il `SimulationEngine` che processa i Tick, il `BuilderValidator` per le regole di costruzione, la gestione degli eventi e le strategie politiche. |
+| `citylogic.infrastructure` | **(Persistence)** Gestisce il salvataggio e il caricamento del file JSON interfacciandosi con il filesystem locale. |
+| `citylogic.ui` | **(View)** Layer JavaFX. Contiene le finestre, la HUD, i bottoni e si aggiorna ascoltando il dominio tramite l'Observer Pattern. |
+
+## Comandi di Gioco
+
+Le interazioni non avvengono tramite console, ma interamente attraverso l'HUD di JavaFX e il click del mouse sulla griglia.
+
+| Comando | Come eseguirlo | Comportamento |
+|---------|---------------|------------------|
+| **Costruire un edificio** | Seleziona il tipo di zona o infrastruttura dall'apposito pannello di controllo laterale, quindi fai click sinistro su una cella libera della griglia centrale. | Piazza l'edificio selezionato e deduce immediatamente il costo dal budget. L'azione viene rigettata se la cella è già occupata o se i fondi cittadini sono insufficienti. |
+| **Strumento Distruggi** | Seleziona l'opzione "Distruggi" dal pannello di controllo e fai click sinistro sull'edificio da abbattere. | Rimuove permanentemente la struttura, liberando la cella per nuove costruzioni. L'azione non restituisce denaro; i residenti o i lavoratori associati vengono persi all'istante (Esodo). |
+| **Avanzare di Tick** | Clicca il pulsante principale "Next Tick" situato nella dashboard temporale in alto. | Manda avanti la simulazione di uno step. Il motore ricalcola tasse, spese, flussi di popolazione e applica gli effetti attivi delle Policy e degli Eventi Casuali. |
+| **Attivare Politiche** | Seleziona e clicca su una Policy (es. "Tassa Ambientale" o "Espansione Industriale") dal pannello dedicato. | Cambia dinamicamente le formule matematiche di gettito e inquinamento tramite il Pattern Strategy per tutti i tick a venire, finché la policy rimane in vigore. |
+| **Salvare la Partita** | Apri il menu delle opzioni (o premi l'apposito pulsante) e inserisci/conferma il salvataggio. | Scrive un file JSON locale che funge da snapshot esatto della mappa di gioco (`UrbanGrid`) e dello stato globale dei parametri (`StatoCitta`). |
+| **Caricare la Partita** | Clicca sull'opzione di caricamento dal menu principale e seleziona il file JSON di salvataggio. | Ripristina interamente lo stato di gioco, ricostruendo le reti infrastrutturali e sovrascrivendo l'avanzamento. |
+
+## Strumenti AI Utilizzati
+
+Durante l'intero ciclo di vita dello sviluppo del software, i modelli avanzati di Intelligenza Artificiale (Gemini e l'agente autonomo Antigravity) sono stati impiegati in maniera strutturata per potenziare la produttività e supportare lo sviluppo, in particolare nelle seguenti aree:
+- **Design Architetturale:** Supporto nell'ideazione di soluzioni di codice pulite tramite Design Pattern (MVC, Strategy, Factory, Observer) per garantire la corretta segregazione dei livelli (isolamento del Domain Model).
+- **Test Automation & Quality Assurance:** Co-progettazione e stesura materiale di una rigorosa suite di unit e system testing tramite JUnit 5. Sono stati generati ed ottimizzati oltre 45 test case per stressare il motore di simulazione, testare eccezioni, e assicurare la compliance con tutte le *Acceptance Criteria*.
+
+## Glossario Tecnico
+
+- **TICK:** L'unità di tempo discreta che scatena il ricalcolo dell'intero motore di simulazione e l'aggiornamento simultaneo della UI.
+- **INFRASTRUTTURA / SERVIZI:** Elementi essenziali (strade, ospedali, pompieri, centrali idriche ed elettriche) necessari affinché un edificio passi allo stato di attività utile. Ospedali, Pompieri e Polizia impongono un **Raggio di Copertura** limitato nella griglia (es. 7 celle massime calcolate secondo le distanze di Chebyshev).
+- **STATO DEVELOPING:** Un edificio appena posizionato, ma a cui mancano i requisiti fondamentali di rete. Non genera tasse, non offre posti di lavoro né bonus ecologici/sanitari finché i servizi non lo raggiungono fisicamente.
+- **STATO ACTIVE:** L'edificio è pienamente operativo e coperto. Contribuisce attivamente al pool di risorse di `TickStats` e alle dinamiche cittadine.
+- **POLICY:** Strategia di calcolo globale (es. Politica Industriale o Ambientale) che altera pesantemente le costanti matematiche del gioco a runtime utilizzando il pattern architetturale Strategy.
+- **METRICA:** Indicatore numerico percentuale (0-100) o assoluto dello stato della città visualizzato nella dashboard (Ecologia, Popolazione, Sicurezza, Lavoro, Finanze, Sanità, Felicità).
+- **URBAN GRID:** La matrice logica bidimensionale che rappresenta il suolo cittadino e gestisce lo spazio (celle occupate e libere) della simulazione.
+- **SIMULATION ENGINE:** Il "motore" nascosto del gioco che orchestra le chiamate di business logic ogni qual volta viene richiesto il progresso del tempo (Tick).
+- **BUILDER VALIDATOR:** Modulo di controllo che verifica, prima del posizionamento effettivo, che la costruzione non violi le regole economiche (es. bancarotta) o topologiche (es. collisione con altri edifici).
