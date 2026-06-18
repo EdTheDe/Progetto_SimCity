@@ -22,7 +22,7 @@ L'obiettivo è bilanciare 7 metriche chiave (Finanze, Popolazione, Felicità, La
 5. **Leggi l'HUD e i Pannelli**: monitora costantemente le 7 metriche globali, il livello di felicità. Ispeziona gli edifici guardando il pannello di destra per capirne lo stato.
 6. **Reagisci agli imprevisti**: gestisci eventi casuali (Guerre, Piogge di Meteoriti, Crisi Economiche) e attiva *Politiche Cittadine* (es. Tassa Ambientale) per alterare strategicamente le regole del gioco.
 
-## 📖 Documentazione e Manuale
+## Documentazione e Manuale
 
 Per le istruzioni dettagliate su **come installare e avviare il gioco**, la spiegazione minuziosa dell'**interfaccia e dei comandi**, il glossario e i dettagli sui pattern architetturali utilizzati, ti invitiamo a leggere il **[Manuale Utente completo](manuale_utente.md)**.
 

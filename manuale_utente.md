@@ -12,13 +12,13 @@ L'obiettivo del giocatore (l'amministratore cittadino) è ottimizzare in modo si
 
 | Metrica | Descrizione |
 |---|---|
-| 💰 **Finanze** | Il bilancio economico e la cassa municipale a disposizione per le costruzioni. |
-| 👥 **Popolazione** | Il numero totale di abitanti residenti attualmente in città. |
-| 😊 **Felicità** | Il livello di soddisfazione globale, influenzato da tasse, natura e servizi. |
-| 💼 **Lavoro** | Il tasso di occupazione generale offerto dalle zone commerciali e industriali. |
-| 🛡️ **Sicurezza** | La protezione garantita dalla copertura delle centrali di Polizia e Pompieri. |
-| 🏥 **Sanità** | L'efficienza del sistema medico (Ospedali) rispetto alla popolazione totale. |
-| 🌲 **Ecologia** | L'impatto ambientale delle scelte urbanistiche (Industrie vs Parchi). |
+| **Finanze** | Il bilancio economico e la cassa municipale a disposizione per le costruzioni. |
+| **Popolazione** | Il numero totale di abitanti residenti attualmente in città. |
+| **Felicità** | Il livello di soddisfazione globale, influenzato da tasse, natura e servizi. |
+| **Lavoro** | Il tasso di occupazione generale offerto dalle zone commerciali e industriali. |
+| **Sicurezza** | La protezione garantita dalla copertura delle centrali di Polizia e Pompieri. |
+| **Sanità** | L'efficienza del sistema medico (Ospedali) rispetto alla popolazione totale. |
+| **Ecologia** | L'impatto ambientale delle scelte urbanistiche (Industrie vs Parchi). |
 
 ---
 
@@ -101,10 +101,10 @@ L'architettura grafica (realizzata in JavaFX) è suddivisa in aree funzionali sp
 
 ### Aree Funzionali dell'Interfaccia
 * **Mappa Centrale (Urban Grid):** Area interattiva di 24x16 quadrati. Ogni cella costituisce un'unità atomica che può ospitare una singola strada o un singolo edificio, e cambia il proprio sprite visivo in base allo stato (`Inattivo` o `ACTIVE`).
-* **TopBar (Barra di Stato Superiore):** Una dashboard che mostra in tempo reale l'andamento quantitativo dei parametri vitali: Fondi, Popolazione e Tick corrente. Integra le barre di caricamento colorate per visualizzare istantaneamente le percentuali di Felicità, Sicurezza, Sanità, Lavoro ed Ecologia.
+* **TopBar (Barra di Stato Superiore):** Una dashboard che mostra in tempo reale l'andamento quantitativo dei parametri vitali: Fondi, Popolazione e Tick corrente. Integra le barre di caricamento colorate per visualizzare istantaneamente le percentuali di Felicità, Sicurezza, Sanità, Lavoro ed Ecologia. Permette inoltre di cambiare politica cittadina tramite un menu dedicato
 * **SideBar (Strumenti di Costruzione):** Un pannello sulla sinistra che raccoglie i bottoni raggruppati per l'edificazione. Qui si selezionano le Zone (Residenziali, Commerciali, Industriali), i Servizi Pubblici (Ospedali, Polizia, Pompieri) e le Infrastrutture (Strade, Parchi, Centrali Elettriche, Impianti Idrici).
 * **Pannelli di Destra (Reti):** Sezione di analisi numerica dedicata in via esclusiva al monitoraggio delle risorse infrastrutturali. Visualizza le unità di capacità erogata e il carico richiesto attualmente dalla Rete Elettrica e dalla Rete Idrica della città.
-* **Pannello Notifiche e Controlli Temporali:** Situato in basso o in aree designate, raccoglie i controlli temporali del motore fisico (per l'avanzamento dei Tick in modalità manuale o automatica) e un monitor a scorrimento per notifiche critiche (es. "Fondi insufficienti").
+* **Pannello Notifiche e Controlli Temporali:** Situato in basso a destra, raccoglie i controlli temporali del motore fisico (per l'avanzamento dei Tick in modalità manuale o automatica) e un monitor a scorrimento per notifiche sullo stato di attività degli edifici.
 
 ### Griglia dei Comandi Eseguibili
 
@@ -114,10 +114,10 @@ La seguente tabella riassume tutte le operazioni e interazioni disponibili duran
 |---|---|---|
 | **Costruire Edifici / Zone** | Clicca il pulsante corrispondente nella *SideBar* di sinistra, quindi fai click sinistro su una cella libera della *Mappa Centrale*. | Conferma il posizionamento e scala immediatamente il prezzo dal bilancio delle *Finanze*. Fallisce bloccando l'azione se la cella è già in uso. |
 | **Avanzare di Livello** | Seleziona l'edificio sulla mappa e clicca sull'opzione di upgrade nel pannello di controllo. | Consuma fondi per aumentare il livello di sviluppo della struttura (fino al cap di livello 5), moltiplicando i bonus e il gettito fiscale offerto. |
-| **Strumento Distruggi (Demolizione)** | Seleziona l'edificio, clicca sulla scheda "Gestione", e usa il pulsante "Demolisci". | Libera permanentemente la cella. Non vi è alcun rimborso spese e si perde istantaneamente la capacità infrastrutturale (causando eventuali *Esodi* demografici). |
-| **Avanzare Manualmente (Skip)** | Clicca sul pulsante **"Avanti Turno"** situato nella plancia di comando temporale. | Invia un comando al `SimulationEngine` che porta il tempo avanti di un mese (Tick). Incassa le tasse, paga le spese, e applica tutte le regole biologiche. |
-| **Avanzamento Automatico** | Fai scorrere il pallino sul cursore apposito posizionandolo su velocità **1x, 2x o 4x**. Portalo sullo zero per mettere in Pausa. | Il gioco calcolerà nuovi Tick in background senza ulteriori input dell'utente. Ottimo per attendere l'accumulo passivo di tasse nel tempo. |
-| **Ispezionare Inattività** | Seleziona l'edificio e controlla la scheda "Stato" nel pannello di destra. | Mostrerà un report specifico sull'eventuale inattività (es. *"Manca Elettricità"*, *"Manca Ospedale"*) e il livello attuale di sviluppo (Lv. 1-5). |
+| **Strumento Distruggi (Demolizione)** | Seleziona l'edificio e usa il pulsante "Demolisci". | Libera permanentemente la cella. Non vi è alcun rimborso spese e si perde istantaneamente la capacità infrastrutturale (causando eventuali *Esodi* demografici). |
+| **Avanzare Manualmente (Skip)** | Clicca sul pulsante **"Skip"** situato nella plancia di comando temporale. | Invia un comando al `SimulationEngine` che porta il tempo avanti di un mese (Tick). Incassa le tasse, paga le spese, e applica tutte le regole biologiche. |
+| **Avanzamento Automatico** | Fai scorrere il pallino sul cursore apposito posizionandolo su velocità **1x, 2x o 4x**. Portalo sullo zero per mettere in Pausa. | Il gioco calcolerà nuovi Tick in background senza ulteriori input dell'utente.|
+| **Ispezionare Inattività** | Controlla la scheda "Stato" nel pannello di destra. | Mostrerà un report specifico sull'eventuale inattività (es. *"Manca Elettricità"*, *"Manca Ospedale"*)|
 | **Attivare Politiche** | Seleziona una Policy dal menù contestuale delle politiche (es. "Tassa Ambientale" o "Espansione Industriale"). | Carica istantaneamente la politica tramite lo *Strategy Pattern*. La mossa altererà drasticamente (in positivo o negativo) le equazioni di crescita dal prossimo Tick. |
 | **Salvare Partita** | Apri il menù "Gestione Partita" e clicca **"Esporta Stato"**. | Scrive lo snapshot completo e persistente della griglia e dei numeri attuali su un file JSON. |
 | **Caricare Partita** | Apri il menù "Gestione Partita" e clicca **"Importa Stato"** selezionando il file. | Ricostruisce la matrice di gioco distruggendo il progresso corrente e sostituendolo integralmente col file. |
@@ -140,7 +140,7 @@ Ogni cella non è semplicemente "disegnata", ma segue una rigida logica di conva
 3. **Stato ACTIVE (Operativo):** Raggiunti i requisiti, l'edificio si sblocca, produce gli effetti desiderati e partecipa al calcolo fiscale del Tick. Qualora vengano distrutte (o manchino) infrastrutture di supporto in futuro, lo stato regredisce a *Inattivo*.
 
 ### 4.2 Motore di Simulazione e Formule Logiche
-La simulazione respira attraverso la funzione `tick()` del `SimulationEngine`. Quando invocato, questo ricalcola dinamicamente le metriche per l'aggiornamento della UI:
+La simulazione funziona attraverso la funzione `tick()` del `SimulationEngine`. Quando invocato, questo ricalcola dinamicamente le metriche per l'aggiornamento della UI:
 
 * **Entrate Economiche:** `(ZoneCommerciali * 10 + ZoneIndustriali * 15) * MoltiplicatorePolicy`
 * **Punteggio Ecologia:** `ValoreBase - (ZoneIndustriali * 5) + (Parchi * 3)`
@@ -151,15 +151,47 @@ La simulazione respira attraverso la funzione `tick()` del `SimulationEngine`. Q
 Come dimostrato dalle equazioni centrali, la **Sanità** e la **Sicurezza** non sono fini a sé stesse, ma alterano il bilanciamento ultimo della Felicità, costringendo l'utente a calibrare le proprie ambizioni espansionistiche.
 
 ### 4.3 Gestione delle Politiche ed Eventi Casuali
-The loop iterativo di base può essere modificato radicalmente in corsa:
-* **Politiche (Scelta Strategica):** Modificando la "costituzione cittadina", il calcolo di default viene sovrascritto. Ad esempio, dichiarando una *Politica Industriale*, l'algoritmo moltiplicherà in modo esponenziale i rendimenti del lavoro e i profitti commerciali, demolendo tuttavia il calcolatore ecologico.
-* **Eventi Casuali (Imprevisti RNG):** Ad ogni spunta di Tick, il generatore pseudocasuale può alterare forzatamente lo stato del mondo: abbattendo entrate tramite una temporanea *Crisi Economica*, oppure colpendo fisicamente gli edifici tramite un *Disastro Meteoritico*, che li riporta allo stato *Inattivo*.
+Il loop iterativo di base può essere modificato radicalmente in corsa dall'adozione di specifiche **Politiche** cittadine o dal verificarsi di **Eventi Casuali**. Di seguito le tabelle dettagliate con le esatte ripercussioni matematiche sul motore di gioco.
+
+#### Politiche (Scelta Strategica)
+Le Politiche si attivano a scelta del giocatore e sovrascrivono il calcolo di default sfruttando il Pattern Strategy. 
+
+| Politica | Comportamento Esatto |
+|---|---|
+| **Politica Neutrale** | Nessun modificatore. La simulazione segue l'andamento base delle infrastrutture. |
+| **Politica Industriale** | Incrementa i posti di **Lavoro** (+5.0) e le **Finanze** (+50.0) per ogni singola industria attiva. Tuttavia riduce l'**Ecologia** (-5.0) per ogni industria attiva. |
+| **Politica Ambientale** | Aumenta l'**Ecologia** della città (+10.0 fissi, più +5.0 per ogni industria). Tuttavia penalizza il **Lavoro** (-8.0 fissi) e riduce le **Finanze** (-20.0 per ogni industria attiva). |
+
+#### Eventi Casuali (Imprevisti RNG)
+Generati dal motore del gioco, alterano temporaneamente o permanentemente lo stato della griglia e delle metriche in base ai cicli di vita stabiliti dall'evento.
+
+| Evento Casuale | Durata | Effetti Esatti sul Sistema |
+|---|---|---|
+| **Crisi Economica** | 3 Tick | Causa una gravissima recessione: sottrae **-500.0** dalle Finanze, abbassa drasticamente il **Lavoro** (-30.0) e peggiora la **Sicurezza** (-25.0) ad ogni Tick. |
+| **Guerra** | 2 Tick | Conflitto armato: la **Sicurezza** crolla (-40.0), la **Felicità** scende (-30.0) e la **Popolazione diminuisce fisicamente del 10%** ad ogni Tick. |
+| **Pioggia di Meteoriti** | 2 Tick | Rimuove in modo permanente e casuale **da 1 a 3 edifici** dalla mappa (cancellandoli). Riduce inoltre la **Felicità** (-15.0) e la **Sicurezza** (-15.0). |
+| **Primavera** | 4 Tick | Evento stagionale positivo: genera un boom della **Felicità** (+20.0) e aumenta l'**Ecologia** (+15.0) ad ogni Tick in cui è attivo. |
 
 ---
 
 ## 5. Architettura Tecnica e Persistenza dei Dati
 
-L'ingegnerizzazione del codice non è stata realizzata su strati confusi, ma si poggia su architetture standard e *Design Pattern* del gruppo GoF (Gang of Four). 
+L'ingegnerizzazione del codice non è stata realizzata su strati confusi, ma si poggia su architetture standard e *Design Pattern* del gruppo GoF (Gang of Four). Il progetto è organizzato all'interno di `src/main/java/citylogic` con la seguente alberatura:
+
+```text
+citylogic/
+├── domain/         # (Model) Logica pura e indipendente dalla grafica
+│   ├── entities/   #   Classi per edifici, zone e infrastrutture
+│   ├── map/        #   Gestione della griglia cittadina (UrbanGrid)
+│   └── state/      #   Risorse e statistiche globali (StatoCitta)
+├── core/           # (Controller) Il motore e le regole del gioco
+│   ├── engine/     #   Il SimulationEngine che orchestra il passaggio dei Tick
+│   ├── validation/ #   Il BuilderValidator per i vincoli di posizionamento
+│   ├── events/     #   Generazione eventi imprevisti e RNG
+│   └── strategy/   #   Implementazione delle Politiche (Strategy Pattern)
+├── infrastructure/ # (Persistence) Gestione I/O per i salvataggi locali in JSON
+└── ui/             # (View) Interfaccia in JavaFX, aggiornata via Observer Pattern
+```
 
 ### Pattern Architetturale: MVC (Model-View-Controller)
 Il codice sorgente si distanzia dall'implementazione BCE pura menzionata in precedenti versioni sperimentali e si stabilizza sul pattern MVC per un forte e garantito disaccoppiamento:
@@ -169,9 +201,9 @@ Il codice sorgente si distanzia dall'implementazione BCE pura menzionata in prec
 
 ### Design Pattern Operativi
 Per assicurare estensibilità e manutenibilità al codice, sono state integrate le seguenti scelte implementative:
-* **Strategy Pattern:** Usato per isolare la gestione delle Politiche Cittadine e degli Eventi Casuali. Questo pattern garantisce di poter iniettare algoritmi differenti di calcolo a runtime (es. `PoliticaAmbientaleStrategy` o eventi imprevisti) senza modificare o intasare l'engine con istruzioni *if/else* infinite.
-* **Factory Pattern:** Delega la responsabilità per l'istanziazione centralizzata delle varie tipologie strutturali (es. classe `UrbanEntityFactory`). Serve a snellire e nascondere la complessità di creazione quando l'utente richiede di "costruire" un nuovo blocco sulla mappa.
-* **Observer Pattern:** Cruciale per la dinamica MVC. Ogni volta che il `SimulationEngine` esegue un Tick terminando le sue operazioni matematiche, avverte in modo asincrono la View (mediante notifica Observer) della necessità di "ridisegnare" le bare delle statistiche, mantenendo i due layer slegati.
+* **Strategy Pattern:** Usato per isolare la gestione delle Politiche Cittadine e degli Eventi Casuali. Questo pattern garantisce di poter iniettare algoritmi differenti di calcolo a runtime senza modificare l'engine.
+* **Factory Pattern:** Delega la responsabilità per l'istanziazione centralizzata delle varie tipologie strutturali (es. classe `UrbanEntityFactory`).
+* **Observer Pattern:** Ogni volta che il `SimulationEngine` esegue un Tick terminando le sue operazioni matematiche, avverte in modo asincrono la View (mediante notifica Observer) della necessità di "ridisegnare" le bare delle statistiche, mantenendo i due layer slegati.
 
 ### Gestione Dati e Persistenza
 L'architettura garantisce l'astrazione del filesystem al `PersistenceManager`. Sfruttando la libreria Jackson (o Gson), le istanze fisiche e astratte (oggetti griglia, monete e turni passati) subiscono una serializzazione complessa che li trasforma in blocchi testo nativi del formato standard **JSON**. Ciò permette il caricamento della simulazione ricreando il mondo di gioco intero con un tasso di regressione nullo (100% fedeltà dallo snapshot salvato). Fra le proprietà persistite sono presenti gli stati `Active/Inattivo` delle varie celle.
@@ -183,7 +215,6 @@ L'architettura garantisce l'astrazione del filesystem al `PersistenceManager`. S
 L'ambiente di sviluppo raccomandato e impiegato per la stesura materiale del progetto è **Visual Studio Code (VS Code)**, in virtù della sua integrazione avanzata delle estensioni Maven for Java e Java Debugger.
 
 In tutte le fasi critiche del ciclo di vita del software sono stati integrati assistenti *Large Language Model (LLM)*, specificamente **Google Gemini** affiancato dall'agente autonomo **Antigravity**. Essi hanno fornito un supporto metodico e determinante principalmente in questi rami d'azione:
-* **Quality Assurance (Test Automation):** Gemini e Antigravity hanno coadiuvato la formulazione di parametri matematici ostili, ingegnerizzando una solidissima suite JUnit 5 di oltre 45 Unit e System Test. L'AI ha scoperto edge case occulti (divisione per zero, ricalcoli difettosi dei range) e testato i limiti architetturali.
+* **Quality Assurance (Test Automation):** Gemini e Antigravity hanno coadiuvato la formulazione di parametri matematici ostili, ingegnerizzando una solida suite JUnit 5 di oltre 45 Unit e System Test. L'AI ha scoperto edge case occulti (divisione per zero, ricalcoli difettosi dei range) e testato i limiti architetturali.
 * **Requirement Engineering (BDD):** Entrambi gli strumenti hanno supportato lo stesura di rigorose *Acceptance Criteria* (BDD) basate sulle originarie *User Stories* dell'applicativo, aiutando a tracciare la documentazione funzionale fino all'ultimo *commit* del codice.
-* **Refactoring e Pattern Check:** Revisioni repentine sul codice sorgente volte all'implementazione pulita dell'architettura MVC, assicurandosi che lo strato di View JavaFX non inquinasse le librerie puramente logiche interne al dominio.
-* **Visualizzazione del Design:** Supporto avanzato alla traduzione logica delle relazioni di classe in formato diagrammatico *Mermaid UML*, producendo documentazione grafica istantanea e chiara.
+* **Refactoring e Pattern Check:** Revisioni sul codice sorgente volte all'implementazione pulita dell'architettura MVC
