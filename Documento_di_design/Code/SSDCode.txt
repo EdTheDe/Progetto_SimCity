@@ -7,51 +7,66 @@ sequenceDiagram
     Note over Utente,Sistema: Fase 1: Gestione della Città
     
     Utente->>Sistema: selezionaEdificioDaCostruire(tipo)
-    Utente->>Sistema: posizionaEdificio(x, y)
-    alt Costruzione non valida (es. fondi insufficienti, spazio occupato)
-        Sistema-->>Utente: mostraErrore(motivo)
-    else Costruzione valida
-        Sistema-->>Utente: aggiornaMappaEFinanze()
-    end
-
-    Utente->>Sistema: miglioraEdificio(x, y)
-    alt Requisiti di miglioramento soddisfatti
-        Sistema-->>Utente: aggiornaLivelloETexture()
-    else
-        Sistema-->>Utente: mostraErrore(motivo)
-    end
+    Sistema-->>Utente: memorizzaSelezioneEMostraFeedback(cursore)
     
-    Utente->>Sistema: demolisciEdificio(x, y)
-    Sistema-->>Utente: rimuoviEdificioDallaMappa()
+    Utente->>Sistema: cliccaCellaMappa(x, y)
+    alt Costruzione non valida (spazio occupato, fondi, ecc.)
+        Sistema-->>Utente: lanciaEccezioneEImpedisceAzione()
+    else Costruzione valida
+        Sistema-->>Utente: deduciFondiAggiungiEdificioEAggiornaMappa()
+    end
 
+    Utente->>Sistema: clickSecondarioCella(x, y)
+    Sistema-->>Utente: mostraMenuContestuale(Migliora, Demolisci)
+    
+    alt Azione: Miglioramento
+        Utente->>Sistema: selezionaMigliora()
+        alt Requisiti soddisfatti
+            Sistema-->>Utente: deduceFondiEAggiornaLivelloETexture()
+        else Requisiti mancanti
+            Sistema-->>Utente: lanciaEccezioneEImpedisceAzione()
+        end
+    else Azione: Demolizione
+        Utente->>Sistema: selezionaDemolisci()
+        Sistema-->>Utente: rimuoviEdificioLiberaCellaEAggiornaMappa()
+    end
+
+    Utente->>Sistema: espandiMenuPolitiche()
+    Sistema-->>Utente: mostraListaPolitiche()
     Utente->>Sistema: impostaPoliticaCittadina(nuovaPolitica)
-    Sistema-->>Utente: confermaCambioPolitica()
+    Sistema-->>Utente: ricalcolaModificatoriEAggiornaUI()
 
     %% --- SIMULAZIONE E TEMPO ---
     Note over Utente,Sistema: Fase 2: Controllo del Tempo e Simulazione
     
-    Utente->>Sistema: impostaVelocitaTempo(moltiplicatore)
-    Utente->>Sistema: avviaSimulazione()
+    Utente->>Sistema: interagisciConPannelloTempo(velocita/play/pausa)
+    Sistema-->>Utente: alteraFramerateTimeline()
     
     loop Ciclo di Simulazione Continuo (Tick)
-        Sistema-->>Utente: aggiornaStatisticheGlobali(finanze, popolazione, felicità)
+        Sistema-->>Utente: calcolaDeltaEAggiornaStatisticheGlobali()
+        Sistema-->>Utente: aggiornaVisualizzazioneStatoEdifici(segnalaInattivita)
         
-        opt Evento Casuale o Rischio Game Over
-            Sistema-->>Utente: mostraNotificaImportante(messaggio)
+        opt Rilevato Evento Casuale (Disastro/Bonus)
+            Sistema-->>Utente: mettiInPausaEMostraPopupEvento(dettagli)
+            Utente->>Sistema: acknowledgeEvento(conferma)
+            Sistema-->>Utente: applicaMalusERiprendiSimulazione()
         end
     end
-    
-    Utente->>Sistema: mettiInPausa()
-    Sistema-->>Utente: sospendeAvanzamentoTempo()
 
     %% --- PERSISTENZA ---
-    Note over Utente,Sistema: Fase 3: Persistenza (Menu)
+    Note over Utente,Sistema: Fase 3: Persistenza (Menu Impostazioni)
+    
+    Utente->>Sistema: apriMenuImpostazioni()
+    Sistema-->>Utente: mostraPopupImpostazioni()
     
     alt Salvataggio Partita
-        Utente->>Sistema: richiedeSalvataggio(nomePartita)
-        Sistema-->>Utente: confermaSalvataggioRiuscito()
+        Utente->>Sistema: cliccaEsportaSalvataggio()
+        Sistema-->>Utente: apreDialogSceltaDestinazione()
+        Utente->>Sistema: confermaPercorsoENomeFile()
+        Sistema-->>Utente: serializzaStatoENotificaCompletamento()
     else Caricamento Partita
-        Utente->>Sistema: richiedeCaricamento(filePartita)
-        Sistema-->>Utente: ripristinaMappaEStatistiche()
+        Utente->>Sistema: cliccaImportaCaricamento()
+        Sistema-->>Utente: metteInPausaEApreDialogSceltaFile()
+        Utente->>Sistema: selezionaFileJSON()
+        Sistema-->>Utente: pulisceGrigliaCaricaDatiERigeneraMappa()
     end
-
