@@ -1,0 +1,63 @@
+classDiagram
+class Cell {
+      coordinateSpaziali
+      verificaDisponibilita()
+      assegnaStruttura()
+  }
+  
+  class UrbanGrid {
+      dimensioni
+  }
+  
+  class StatoCitta {
+      metriche
+      aggiornaParametri()
+      interrogaStato()
+  }
+  
+  class UrbanEntity {
+      costoFisso
+      livelloSviluppo
+      coordinate
+      eseguiCicloVitale()
+      avanzaDiLivello()
+  }
+  
+  class Building {
+      fabbisognoRisorse
+      calcolaConsumi()
+  }
+  
+  class Infrastructure {
+      spesaMantenimento
+      capacitaErogazioneMassima
+      calcolaCostiEdErogazione()
+  }
+  
+  class StateBuilding {
+      erogaServizioPubblico()
+  }
+  
+  class Politica {
+      aggiornaMetriche()
+  }
+  
+  class RandomEvent {
+      identificativoEvento
+      durataResidua
+      applicaImpatto()
+  }
+  
+  %% EREDITARIETA'
+  Building --|> UrbanEntity
+  Infrastructure --|> UrbanEntity
+  StateBuilding --|> Infrastructure
+  
+    %% ASSOCIAZIONI E CARDINALITA'
+  UrbanEntity "*" --> "1" StatoCitta : Influenza
+  UrbanGrid "1" --> "*" Cell : Contiene
+  Cell "1" --> "0..1" UrbanEntity : Ospita
+  
+  %% DIPENDENZE
+  Politica "1" --> "1" StatoCitta : Altera
+  RandomEvent "1" --> "*" StatoCitta : Altera

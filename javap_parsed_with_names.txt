@@ -1,0 +1,555 @@
+1 - AssetManager (Class)
+   - Variabili d'istanza:
+      private static final Map<String, Image> imageCache
+      private static final double CELL_SIZE
+   - Metodi:
+      public static Image ottieniImmagine(UrbanEntity e, int x, int y, UrbanGrid grigliaLogica)
+
+2 - BuilderValidator (Class)
+   - Variabili d'istanza:
+      private final List<RegolaCostruzione> regole
+   - Metodi:
+      public BuilderValidator(UrbanGrid griglia)
+      public void validaCostruzione(UrbanEntity entita, Cell cella, StatoCitta stato)
+
+3 - Building (Abstract Class)
+   - Variabili d'istanza:
+      private double energyDemand
+      private double waterDemand
+   - Metodi:
+      public Building(double placementCost, double energyDemand, double waterDemand)
+      public double getEnergyDemand()
+      public double getWaterDemand()
+
+4 - Cell (Class)
+   - Variabili d'istanza:
+      private final int x
+      private final int y
+      private UrbanEntity entity
+   - Metodi:
+      public Cell(int x, int y)
+      public int getX()
+      public int getY()
+      public boolean isOccupied()
+      public UrbanEntity getEntity()
+      public void setEntity(UrbanEntity entity)
+      public void clearEntity()
+
+5 - CityApp (Class)
+   - Variabili d'istanza:
+      private StatoCitta statoCitta
+      private UrbanGrid grigliaLogica
+      private BuilderValidator validatore
+      private SimulationEngine motore
+   - Metodi:
+      public static void main(String[] args)
+
+6 - CityObserver (Interface)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      package-private void onSimulationUpdated(StatoCitta stato)
+      default void onEventStarted(String eventName, String description)
+      default void onGameOver()
+
+7 - Commercial (Class)
+   - Variabili d'istanza:
+      private double baseIncome
+   - Metodi:
+      public Commercial(double placementCost, double energyDemand, double waterDemand, double baseIncome)
+      public double getBaseIncome()
+
+8 - CostruzioneException (Exception)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public CostruzioneException(String message)
+
+9 - CrisiEconomicaEvent (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public CrisiEconomicaEvent()
+
+10 - FireStation (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public FireStation(double placementCost, double baseMaintenanceCost, int baseFirefightingCapacity)
+
+11 - GestoreEventiUI (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public static void mostraEvento(String eventName, String description, TimeBar timeBarRef, javafx.stage.Window owner)
+      public static void mostraGameOver()
+
+12 - GreenArea (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public GreenArea(double placementCost, double baseMaintenanceCost, int basePollutionReduction)
+      public int getPollutionReduction()
+
+13 - GuerraEvent (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public GuerraEvent()
+
+14 - Hospital (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public Hospital(double placementCost, double baseMaintenanceCost, int baseHealthCapacity)
+
+15 - Industrial (Class)
+   - Variabili d'istanza:
+      private double basePollution
+      private int baseJobsProduced
+   - Metodi:
+      public Industrial(double placementCost, double energyDemand, double waterDemand, double basePollution, int baseJobsProduced)
+      public double getBasePollution()
+      public int getJobsProduced()
+
+16 - Infrastructure (Abstract Class)
+   - Variabili d'istanza:
+      private final double baseMaintenanceCost
+      private final int baseMaxCapacity
+   - Metodi:
+      public Infrastructure(double placementCost, double baseMaintenanceCost, int baseMaxCapacity)
+      public double getMaintenanceCost()
+      public int getMaxCapacity()
+
+17 - MappaGriglia (Class)
+   - Variabili d'istanza:
+      private final UrbanGrid grigliaLogica
+      private final BuilderValidator validatore
+      private final StatoCitta statoCitta
+      private final TopBar topBarRef
+      private static final double CELL_SIZE
+      private String tipoEdificioSelezionato
+   - Metodi:
+      public MappaGriglia(UrbanGrid logica, BuilderValidator val, StatoCitta stato, TopBar topBar)
+      public void setTipoEdificioSelezionato(String tipo)
+      public void rinfrescaMappaCompleta()
+      private void mostraMenuContestuale(Cell cella, StackPane nodoVisivo, int x, int y, double screenX, double screenY)
+
+18 - MenuImpostazioni (Class)
+   - Variabili d'istanza:
+      private final UrbanGrid logica
+      private final StatoCitta stato
+      private final MappaGriglia mappaVisiva
+      private final SimulationEngine engine
+      private final TopBar topBar
+      private final TimeBar timeBarRef
+   - Metodi:
+      public MenuImpostazioni(UrbanGrid logica, StatoCitta stato, MappaGriglia mappaVisiva, SimulationEngine engine, TopBar topBar, TimeBar timeBarRef)
+      public void mostra()
+      private Button creaBottone(String testo, String colore)
+      private void eseguiImportazione(Stage popup)
+      private void eseguiEsportazione(Stage popup)
+      private void eseguiReset(Stage popup)
+
+19 - PannelloControlliTempo (Class)
+   - Variabili d'istanza:
+      private final Timeline simulazioneAuto
+      private boolean inEsecuzione
+      private final Slider sliderVelocita
+      private final Button btnAzioneTempo
+   - Metodi:
+      public PannelloControlliTempo(SimulationEngine motore, TopBar topBar, MappaGriglia mappa, StatoCitta stato)
+      private void fermaSimulazione(Button btn)
+      public void fermaEImpostaManuale()
+
+20 - PannelloNotifiche (Class)
+   - Variabili d'istanza:
+      private final Label lblNotifiche
+   - Metodi:
+      public PannelloNotifiche()
+      public void aggiornaNotifiche(SimulationEngine motore)
+
+21 - PannelloRisorse (Class)
+   - Variabili d'istanza:
+      private final ProgressBar pbAcqua
+      private final Label lblAcqua
+      private final ProgressBar pbEnergia
+      private final Label lblEnergia
+   - Metodi:
+      public PannelloRisorse()
+      public void aggiornaRisorse(StatoCitta stato)
+
+22 - PersistenceManager (Class)
+   - Variabili d'istanza:
+      private final ObjectMapper objectMapper
+      private final Path saveDirectory
+   - Metodi:
+      public PersistenceManager(String directoryPath)
+      private void inizializzaDirectory()
+      public void salvaPartita(SaveGameData datiPartita, String nomeFile)
+      public SaveGameData caricaPartita(String nomeFile)
+      public SaveGameData loadGame(String absolutePath)
+      public SaveGameData impacchettaDati(StatoCitta stato, UrbanGrid griglia)
+      public void ripristinaDati(SaveGameData dati, StatoCitta stato, UrbanGrid griglia)
+
+23 - PioggiaDiMeteoritiEvent (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public PioggiaDiMeteoritiEvent(StatoCitta stato, UrbanGrid griglia)
+      private void distruggiEdifici(StatoCitta stato, UrbanGrid griglia)
+
+24 - PoliceStation (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public PoliceStation(double placementCost, double baseMaintenanceCost, int baseSecurityCapacity)
+
+25 - PoliticaAmbientale (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      (Nessun metodo)
+
+26 - PoliticaIndustriale (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      (Nessun metodo)
+
+27 - PoliticaNeutrale (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      (Nessun metodo)
+
+28 - PoliticaStrategy (Interface)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      package-private void applicaModificatori(StatoCitta stato, TickStats stats)
+
+29 - PowerPlant (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public PowerPlant(double placementCost, double baseMaintenanceCost, int baseEnergyOutput)
+      public int getEnergyOutput()
+
+30 - PrimaveraEvent (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public PrimaveraEvent()
+
+31 - RandomEvent (Abstract Class)
+   - Variabili d'istanza:
+      protected int remainingTicks
+      protected String name
+   - Metodi:
+      public RandomEvent(String name, int durationTicks)
+      public String getName()
+      public int getRemainingTicks()
+      public void decrementTick()
+      public boolean isExpired()
+      public abstract void applyModifiers(StatoCitta stato, TickStats stats)
+
+32 - RegolaCollegamentoServizi (Class)
+   - Variabili d'istanza:
+      private final UrbanGrid griglia
+      private final int raggioCopertura
+   - Metodi:
+      public RegolaCollegamentoServizi(UrbanGrid griglia, int raggioCopertura)
+
+33 - RegolaCostruzione (Interface)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      package-private void valida(UrbanEntity entita, Cell cella, StatoCitta stato)
+
+34 - RegolaFondiSufficienti (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      (Nessun metodo)
+
+35 - RegolaSpazioLibero (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      (Nessun metodo)
+
+36 - Residential (Class)
+   - Variabili d'istanza:
+      private int baseHousingCapacity
+   - Metodi:
+      public Residential(double placementCost, double energyDemand, double waterDemand, int baseHousingCapacity)
+      public int getHousingCapacity()
+
+37 - Road (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public Road(double placementCost)
+
+38 - SaveGameData (Class)
+   - Variabili d'istanza:
+      private double finanze
+      private int popolazione
+      private double felicita
+      private double ecologia
+      private double sicurezza
+      private double sanita
+      private double lavoro
+      private List<SavedEntityData> edifici
+   - Metodi:
+      public SaveGameData()
+      public double getFinanze()
+      public void setFinanze(double finanze)
+      public int getPopolazione()
+      public void setPopolazione(int popolazione)
+      public double getFelicita()
+      public void setFelicita(double felicita)
+      public double getEcologia()
+      public void setEcologia(double ecologia)
+      public double getSicurezza()
+      public void setSicurezza(double sicurezza)
+      public double getSanita()
+      public void setSanita(double sanita)
+      public double getLavoro()
+      public void setLavoro(double lavoro)
+      public List<SavedEntityData> getEdifici()
+      public void setEdifici(List<SavedEntityData> edifici)
+
+39 - SavedEntityData (Class)
+   - Variabili d'istanza:
+      private int x
+      private int y
+      private String tipo
+      private int livello
+   - Metodi:
+      public SavedEntityData()
+      public SavedEntityData(int x, int y, String tipo, int livello)
+      public int getX()
+      public void setX(int x)
+      public int getY()
+      public void setY(int y)
+      public String getTipo()
+      public void setTipo(String tipo)
+      public int getLivello()
+      public void setLivello(int livello)
+
+40 - School (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public School(double placementCost, double baseMaintenanceCost, int baseEducationCapacity)
+
+41 - SideBar (Class)
+   - Variabili d'istanza:
+      private Button pulsanteAttivo
+      private String stilePrecedente
+   - Metodi:
+      public SideBar(MappaGriglia mappa)
+      private void addButtonEdificio(MappaGriglia mappa, String etichetta, int costo, String tipo, String colore)
+
+42 - SimulationEngine (Class)
+   - Variabili d'istanza:
+      private StatoCitta stato
+      private UrbanGrid griglia
+      private PoliticaStrategy politicaAttiva
+      private List<CityObserver> observers
+      private RandomEvent activeEvent
+      private Random random
+      private int ticksInNegativeFunds
+   - Metodi:
+      public SimulationEngine(StatoCitta stato, UrbanGrid griglia)
+      public void addObserver(CityObserver observer)
+      public void removeObserver(CityObserver observer)
+      public void forceNotifyObservers()
+      public void setPoliticaAttiva(PoliticaStrategy nuovaPolitica)
+      public PoliticaStrategy getPoliticaAttiva()
+      public List<UrbanEntity> getActiveEntities()
+      public void tick()
+      private void gestisciEventi(TickStats stats)
+      public boolean checkCoverage(UrbanEntity entity)
+      public String getMotivoInattivita(UrbanEntity entity)
+      private void applicaDinamicheGlobali()
+      private double calcolaModificatoreFelicita()
+
+43 - StateBuilding (Abstract Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public StateBuilding(double placementCost, double baseMaintenanceCost, int baseMaxCapacity)
+
+44 - StatoCitta (Class)
+   - Variabili d'istanza:
+      private int popolazione
+      private double finanze
+      private double felicita
+      private double ecologia
+      private double lavoro
+      private double sicurezza
+      private double sanita
+      private double acquaFornita
+      private double acquaRichiesta
+      private double energiaFornita
+      private double energiaRichiesta
+      private int tickets
+   - Metodi:
+      public StatoCitta()
+      public void addFinanze(double delta)
+      public void setPopolazione(int pop)
+      public void setAcquaFornita(double v)
+      public void setAcquaRichiesta(double v)
+      public void setEnergiaFornita(double v)
+      public void setEnergiaRichiesta(double v)
+      public void setFelicita(double v)
+      public void setEcologia(double v)
+      public void setLavoro(double v)
+      public void setSicurezza(double v)
+      public void setSanita(double v)
+      private double clamp(double value)
+      public void reset()
+      public int getPopolazione()
+      public double getFinanze()
+      public double getFelicita()
+      public double getEcologia()
+      public double getLavoro()
+      public double getSicurezza()
+      public double getSanita()
+      public double getAcquaFornita()
+      public double getAcquaRichiesta()
+      public double getEnergiaFornita()
+      public double getEnergiaRichiesta()
+      public int getTickets()
+      public void setFinanze(double finanze)
+      public void addTicket()
+
+45 - TickStats (Class)
+   - Variabili d'istanza:
+      private int capacitaAbitativa
+      private int postiLavoro
+      private int puntiInquinamento
+      private double redditoCommerciale
+      private int puntiSicurezza
+      private int puntiSanita
+      private int puntiFelicita
+      private double acquaFornita
+      private double acquaRichiesta
+      private double energiaFornita
+      private double energiaRichiesta
+      private int industrieAttive
+   - Metodi:
+      public void addCapacitaAbitativa(int v)
+      public void addPostiLavoro(int v)
+      public void addPuntiInquinamento(int v)
+      public void addRedditoCommerciale(double v)
+      public void addPuntiSicurezza(int v)
+      public void addPuntiSanita(int v)
+      public void addPuntiFelicita(int v)
+      public void addAcquaFornita(double v)
+      public void addAcquaRichiesta(double v)
+      public void addEnergiaFornita(double v)
+      public void addEnergiaRichiesta(double v)
+      public void addIndustriaAttiva()
+      public int getCapacitaAbitativa()
+      public int getPostiLavoro()
+      public int getPuntiInquinamento()
+      public double getRedditoCommerciale()
+      public int getPuntiSicurezza()
+      public int getPuntiSanita()
+      public int getPuntiFelicita()
+      public double getAcquaFornita()
+      public double getAcquaRichiesta()
+      public double getEnergiaFornita()
+      public double getEnergiaRichiesta()
+      public int getIndustrieAttive()
+
+46 - TimeBar (Class)
+   - Variabili d'istanza:
+      private final PannelloNotifiche pannelloNotifiche
+      private final PannelloRisorse pannelloRisorse
+      private final PannelloControlliTempo pannelloTempo
+      private final SimulationEngine motore
+   - Metodi:
+      public TimeBar(SimulationEngine motore, TopBar topBar, MappaGriglia mappa, StatoCitta stato)
+      public void fermaEImpostaManuale()
+
+47 - TopBar (Class)
+   - Variabili d'istanza:
+      private Label lblFinanze, lblPopolazione, lblTickets
+      private ProgressBar pbSicurezza, pbSanita, pbEcologia, pbFelicita, pbLavoro
+      private ChoiceBox<String> selettorePolitica
+      private SimulationEngine engine
+      private UrbanGrid logica
+      private StatoCitta stato
+      private MappaGriglia mappaVisiva
+      private TimeBar timeBarRef
+   - Metodi:
+      public SimulationEngine getSimulationEngine()
+      public TopBar()
+      public void setSimulationEngine(SimulationEngine engine)
+      public void setTimeBar(TimeBar timeBar)
+      public void setRiferimenti(UrbanGrid logica, StatoCitta stato, MappaGriglia mappaVisiva)
+      private VBox creaBarra(String nome, ProgressBar bar, String colore)
+      public void aggiornaDati(StatoCitta stato)
+      public void resetPolitica()
+
+48 - TutorialPopup (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public static void mostraTutorial()
+
+49 - UrbanEntity (Abstract Class)
+   - Variabili d'istanza:
+      private final double placementCost
+      private int developmentLevel
+      private int x
+      private int y
+   - Metodi:
+      public UrbanEntity(double placementCost)
+      public int getX()
+      public void setX(int x)
+      public int getY()
+      public void setY(int y)
+      public double getPlacementCost()
+      public int getDevelopmentLevel()
+      public void upgradeLevel()
+      public boolean isFunctioning()
+      public void processTick(citylogic.domain.state.StatoCitta stato, citylogic.domain.state.TickStats stats)
+
+50 - UrbanEntityFactory (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public static UrbanEntity createEntity(String type)
+
+51 - UrbanGrid (Class)
+   - Variabili d'istanza:
+      private final int width
+      private final int height
+      private final Cell[][] grid
+      private List<UrbanEntity> activeEntities
+   - Metodi:
+      public UrbanGrid(int width, int height)
+      private void initializeGrid()
+      public void svuotaGriglia()
+      public int getWidth()
+      public int getHeight()
+      public boolean isWithinBounds(int x, int y)
+      public Cell getCell(int x, int y)
+      public List<UrbanEntity> getActiveEntities()
+      public void placeEntity(UrbanEntity entity, int x, int y)
+      public boolean removeEntity(int x, int y)
+      public boolean hasAdjacentRoad(int x, int y)
+      public void azzeraMappa()
+
+52 - WaterPlant (Class)
+   - Variabili d'istanza:
+      (Nessuna variabile d'istanza)
+   - Metodi:
+      public WaterPlant(double placementCost, double baseMaintenanceCost, int baseWaterOutput)
+      public int getWaterOutput()

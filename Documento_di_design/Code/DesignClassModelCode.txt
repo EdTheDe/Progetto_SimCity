@@ -1,4 +1,3 @@
-
 classDiagram
 
     %% ==========================================
@@ -22,21 +21,6 @@ classDiagram
     }
 
     %% ==========================================
-    %% PACKAGE: CORE.VALIDATION
-    %% ==========================================
-    class BuilderValidator {
-        -regole : List~RegolaCostruzione~
-        +BuilderValidator(griglia: UrbanGrid)
-        +validaCostruzione(entita: UrbanEntity, cella: Cell, stato: StatoCitta) void
-    }
-
-    class RegolaCostruzione {
-        <<interface>>
-        +valida(entita: UrbanEntity, cella: Cell, stato: StatoCitta) void
-    }
-    BuilderValidator "1" *-- "many" RegolaCostruzione : usa
-
-    %% ==========================================
     %% PACKAGE: DOMAIN.ENTITIES
     %% ==========================================
     class UrbanEntity {
@@ -57,39 +41,32 @@ classDiagram
         +getInactivityReason() String
         +setInactivityReason(reason: String)
         +upgradeLevel() void
-        +processTick() void
     }
 
     class Building {
         <<abstract>>
-        +processTick() void
     }
 
     class Infrastructure {
         <<abstract>>
-        +processTick() void
     }
 
     class StateBuilding {
         <<abstract>>
-        +processTick() void
     }
 
     %% Concrete Entities
     class Residential {
         +Residential()
         +upgradeLevel() void
-        +processTick() void
     }
     class Commercial {
         +Commercial()
         +upgradeLevel() void
-        +processTick() void
     }
     class Industrial {
         +Industrial()
         +upgradeLevel() void
-        +processTick() void
     }
 
     class Road {
@@ -97,37 +74,30 @@ classDiagram
     }
     class PowerPlant {
         +PowerPlant()
-        +processTick() void
     }
     class WaterPlant {
         +WaterPlant()
-        +processTick() void
     }
     class GreenArea {
         +GreenArea()
         +upgradeLevel() void
-        +processTick() void
     }
 
     class PoliceStation {
         +PoliceStation()
         +upgradeLevel() void
-        +processTick() void
     }
     class FireStation {
         +FireStation()
         +upgradeLevel() void
-        +processTick() void
     }
     class Hospital {
         +Hospital()
         +upgradeLevel() void
-        +processTick() void
     }
     class School {
         +School()
         +upgradeLevel() void
-        +processTick() void
     }
 
     %% Entity Relationships
@@ -153,7 +123,6 @@ classDiagram
         <<utility>>
         +createEntity(tipo: String) UrbanEntity$
     }
-    UrbanEntityFactory ..> UrbanEntity : creates
 
     %% ==========================================
     %% PACKAGE: DOMAIN.MAP
@@ -266,7 +235,6 @@ classDiagram
     SimulationEngine "1" *-- "1" StatoCitta
     SimulationEngine "1" o-- "1" PoliticaStrategy : applies
     SimulationEngine "1" o-- "many" CityObserver : notifies
-    SimulationEngine ..> RandomEvent : triggers
 
     %% Concrete Strategies
     class PoliticaAmbientale {
@@ -405,7 +373,6 @@ classDiagram
     CityObserver <|.. MappaGriglia
     CityObserver <|.. PannelloControlliTempo
 
-SimulationEngine ..> TickStats : uses
     CityApp "1" *-- "1" SimulationEngine
     CityApp "1" *-- "1" MappaGriglia
     CityApp "1" *-- "1" TopBar
@@ -413,4 +380,22 @@ SimulationEngine ..> TickStats : uses
     CityApp "1" *-- "1" TimeBar
     CityApp "1" *-- "1" PannelloRisorse
 
+    RandomEvent ..> StatoCitta : applyModifiers
+    RandomEvent ..> TickStats : applyModifiers
+    UrbanEntityFactory ..> UrbanEntity : createEntity
+    SimulationEngine ..> TickStats : gestisciEventi
+    UrbanEntity ..> TickStats : processTick
+    PoliticaStrategy ..> TickStats : applicaModificatori
+    PersistenceManager ..> SaveGameData : manipola DTO
+    PersistenceManager ..> StatoCitta : impacchetta/ripristina
+    PersistenceManager ..> UrbanGrid : impacchetta/ripristina
+    GestoreEventiUI ..> TimeBar : mostraEvento
+    MenuImpostazioni "1" o-- "1" UrbanGrid : -logica
+    MenuImpostazioni "1" o-- "1" StatoCitta : -stato
+    MenuImpostazioni "1" o-- "1" MappaGriglia : -mappaVisiva
+    MenuImpostazioni "1" o-- "1" SimulationEngine : -engine
+    MenuImpostazioni "1" o-- "1" TopBar : -topBar
+    MenuImpostazioni "1" o-- "1" TimeBar : -timeBarRef
+    MenuImpostazioni ..> TutorialPopup : mostraTutorial
+    CityApp ..> TutorialPopup : mostraTutorial
 ```
