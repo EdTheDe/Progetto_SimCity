@@ -179,41 +179,24 @@ Generati dal motore del gioco, alterano temporaneamente o permanentemente lo sta
 L'ingegnerizzazione del codice non è stata realizzata su strati confusi, ma si poggia su architetture standard e *Design Pattern* del gruppo GoF (Gang of Four). Il progetto è organizzato all'interno di `src/main/java/citylogic` con la seguente alberatura:
 
 ```text
-citylogic/
-├── core/                   # (Controller) Il motore e le regole del gioco
-│   ├── engine/             #   Orchestrazione del passaggio dei Tick
-│   │   └── SimulationEngine.java
-│   ├── events/             #   Generazione eventi imprevisti
-│   │   ├── CrisiEconomicaEvent.java, GuerraEvent.java, PioggiaDiMeteoritiEvent.java
-│   │   └── PrimaveraEvent.java, RandomEvent.java
-│   ├── strategy/           #   Implementazione delle Politiche (Strategy Pattern)
-│   │   ├── PoliticaAmbientale.java, PoliticaIndustriale.java, PoliticaNeutrale.java
-│   │   └── PoliticaStrategy.java
-│   └── validation/         #   Validazione regole di costruzione
-│       ├── BuilderValidator.java
-│       └── CostruzioneException.java
-├── domain/                 # (Model) Logica pura e indipendente dalla grafica
-│   ├── entities/           #   Gerarchia delle classi per gli edifici
-│   │   ├── UrbanEntity.java, UrbanEntityFactory.java, Building.java, Infrastructure.java...
-│   │   ├── Commercial.java, Industrial.java, Residential.java
-│   │   ├── PowerPlant.java, WaterPlant.java, Road.java, GreenArea.java
-│   │   └── PoliceStation.java, FireStation.java, Hospital.java, School.java
-│   ├── map/                #   Gestione della griglia cittadina spaziale
-│   │   ├── Cell.java
-│   │   └── UrbanGrid.java
-│   └── state/              #   Risorse e statistiche globali (DTO e Stato)
-│       ├── StatoCitta.java
-│       └── TickStats.java
-├── infrastructure/         # (Persistence) Gestione I/O per i salvataggi
-│   ├── PersistenceManager.java
-│   ├── SavedEntityData.java
-│   └── SaveGameData.java
-└── ui/                     # (View) Interfaccia in JavaFX (Observer Pattern)
-    ├── CityApp.java (Main)
-    ├── MappaGriglia.java, AssetManager.java
-    ├── TopBar.java, SideBar.java, TimeBar.java
-    ├── PannelloRisorse.java, PannelloNotifiche.java, PannelloControlliTempo.java
-    └── MenuImpostazioni.java, GestoreEventiUI.java, TutorialPopup.java
+SimCity/
+├── Documento_di_design/      # Documentazione UML e grafici
+│   ├── Code/                 #   Sorgenti in linguaggio Mermaid
+│   └── Immagini/             #   Esportazioni grafiche (Class, Domain, ISD, SSD)
+├── src/                      # Codice sorgente del simulatore
+│   ├── main/java/citylogic/  #   Codice di produzione (Architettura MVC)
+│   │   ├── core/             #     (Controller) Motore dei Tick, eventi, validazione e politiche
+│   │   ├── domain/           #     (Model) Entità urbane, stato cittadino e griglia logica
+│   │   ├── infrastructure/   #     (Persistence) Gestione salvataggi I/O in JSON
+│   │   └── ui/               #     (View) Interfaccia grafica in JavaFX (Observer)
+│   ├── main/resources/       #   Asset grafici (.png, .jpeg per le texture)
+│   └── test/java/citylogic/  #   Suite estesa di Unit Test (JUnit 5)
+├── Acceptance_Criteria_SimCity.txt # Criteri di Accettazione BDD
+├── manuale_utente.md         # Documentazione utente e architetturale dettagliata
+├── pom.xml                   # Configurazione Maven e dichiarazione dipendenze
+├── README.md                 # Presentazione sintetica del progetto
+├── system_test_report.md     # Report di Quality Assurance
+└── User Stories.csv          # Requisiti Agili iniziali del progetto
 ```
 
 ### Pattern Architetturale: MVC (Model-View-Controller)
