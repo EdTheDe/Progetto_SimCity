@@ -1,44 +1,67 @@
 sequenceDiagram
     autonumber
-    participant Thread as SimulationThread
-    participant Engine as SimulationEngine
-    participant Grid as UrbanGrid
-    participant Entity as UrbanEntity
-    participant Stato as StatoCitta
-    participant Politica as PoliticaStrategy
-    participant Event as RandomEvent
-    participant Obs as CityObserver (TopBar, etc.)
-
-    Thread->>Engine: run() loop
+    participant Timeline as PannelloControlliTempo
+    participant SimulationEngine
+    participant TickStats
+    participant UrbanGrid
+    participant UrbanEntity
+    participant PoliticaStrategy
+    participant RandomEvent
+    participant StatoCitta
+    participant TopBar
     
-    loop Ogni speedDelay millisecondi
-        Engine->>Engine: applicaTick()
-        activate Engine
+    %% 1. Innesco e Inizializzazione
+    Timeline->>SimulationEngine: tick()
+    Note right of SimulationEngine: Crea DTO vuoto
+    SimulationEngine->>TickStats: new TickStats()
+    
+    %% 2. Elaborazione Entità (Polimorfismo)
+    SimulationEngine->>UrbanGrid: getActiveEntities()
+    UrbanGrid-->>SimulationEngine: List~UrbanEntity~
+    
+    loop Per ogni UrbanEntity
+        SimulationEngine->>UrbanEntity: processTick(statoCitta, tickStats)
         
-        Engine->>Grid: Itera su tutte le Celle
-        activate Grid
-        Grid->>Entity: processTick()
-        Entity-->>Grid: calcolaTasse / Consumi
-        Grid-->>Engine: restituisce TickStats
-        deactivate Grid
+        %% Controllo requisiti minini
+        UrbanEntity->>StatoCitta: getEnergia/Acqua() [se applicabile]
+        StatoCitta-->>UrbanEntity: valori attuali
         
-        Engine->>Stato: aggiorna(TickStats)
-        
-        opt Se c'è una Politica attiva
-            Engine->>Politica: applica(stato, griglia)
-            Politica->>Stato: applicaBonusMalus()
+        alt Requisiti soddisfatti
+            Note right of UrbanEntity: Entità Operativa
+            UrbanEntity->>TickStats: addPuntiInquinamento/Lavoro/Reddito()
+        else Requisiti NON soddisfatti
+            Note right of UrbanEntity: Entità Inattiva
+            UrbanEntity->>UrbanEntity: imposta isFunctioning = false
         end
-        
-        opt Se scatta un evento casuale (bassa % o trigger)
-            Engine->>Event: trigger(griglia, stato)
-            Event->>Stato: infliggeDanni()
-            Engine->>Obs: onEventTriggered(titolo, desc)
-        end
-        
-        Engine->>Engine: calcolaParametriGlobali() (felicità, lavoro, ecc.)
-        
-        Engine->>Engine: notifyObservers()
-        Engine->>Obs: onCityUpdate(stato, griglia)
-        
-        deactivate Engine
+        UrbanEntity-->>SimulationEngine: completato
     end
+    
+    %% 3. Alterazione tramite Politiche
+    SimulationEngine->>PoliticaStrategy: applicaModificatori(statoCitta, tickStats)
+    PoliticaStrategy->>TickStats: getPuntiInquinamento/Reddito()
+    TickStats-->>PoliticaStrategy: valori parziali
+    PoliticaStrategy->>TickStats: applica modifiche matematiche al DTO
+    PoliticaStrategy-->>SimulationEngine: 
+    
+    %% 4. Eventi Straordinari
+    SimulationEngine->>SimulationEngine: gestisciEventi(tickStats)
+    opt Se c'è un activeEvent
+        SimulationEngine->>RandomEvent: applyModifiers(statoCitta, tickStats)
+        RandomEvent->>TickStats: altera valori DTO (es. malus)
+        RandomEvent-->>SimulationEngine: 
+        SimulationEngine->>RandomEvent: decrementTick()
+    end
+    
+    %% 5. Consolidamento nello Stato Globale
+    SimulationEngine->>SimulationEngine: applicaDinamicheGlobali()
+    SimulationEngine->>TickStats: estrae tutti i totali definitivi
+    TickStats-->>SimulationEngine: 
+    SimulationEngine->>StatoCitta: addFinanze(totale), setPopolazione() ecc.
+    SimulationEngine->>StatoCitta: addTicket()
+    
+    %% 6. Aggiornamento Interfaccia Grafica
+    SimulationEngine->>SimulationEngine: forceNotifyObservers()
+    SimulationEngine->>TopBar: onSimulationUpdated(statoCitta)
+    TopBar->>StatoCitta: getFinanze(), getFelicita(), getEnergia()...
+    StatoCitta-->>TopBar: metriche aggiornate
+    TopBar->>TopBar: aggiornaLabelsEProgressBar()

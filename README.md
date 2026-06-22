@@ -32,15 +32,38 @@ Il progetto rispetta una separazione rigorosa MVC (Model-View-Controller) ed è 
 
 ```text
 citylogic/
-├── domain/         # (Model) Logica pura e indipendente dalla grafica
-│   ├── entities/   #   Classi per edifici, zone e infrastrutture
-│   ├── map/        #   Gestione della griglia cittadina (UrbanGrid)
-│   └── state/      #   Risorse e statistiche globali (StatoCitta)
-├── core/           # (Controller) Il motore e le regole del gioco
-│   ├── engine/     #   Il SimulationEngine che orchestra il passaggio dei Tick
-│   ├── validation/ #   Il BuilderValidator per i vincoli di posizionamento
-│   ├── events/     #   Generazione eventi imprevisti e RNG
-│   └── strategy/   #   Implementazione delle Politiche (Strategy Pattern)
-├── infrastructure/ # (Persistence) Gestione I/O per i salvataggi locali in JSON
-└── ui/             # (View) Interfaccia in JavaFX, aggiornata via Observer Pattern
+├── core/                   # (Controller) Il motore e le regole del gioco
+│   ├── engine/             #   Orchestrazione del passaggio dei Tick
+│   │   └── SimulationEngine.java
+│   ├── events/             #   Generazione eventi imprevisti
+│   │   ├── CrisiEconomicaEvent.java, GuerraEvent.java, PioggiaDiMeteoritiEvent.java
+│   │   └── PrimaveraEvent.java, RandomEvent.java
+│   ├── strategy/           #   Implementazione delle Politiche (Strategy Pattern)
+│   │   ├── PoliticaAmbientale.java, PoliticaIndustriale.java, PoliticaNeutrale.java
+│   │   └── PoliticaStrategy.java
+│   └── validation/         #   Validazione regole di costruzione
+│       ├── BuilderValidator.java
+│       └── CostruzioneException.java
+├── domain/                 # (Model) Logica pura e indipendente dalla grafica
+│   ├── entities/           #   Gerarchia delle classi per gli edifici
+│   │   ├── UrbanEntity.java, UrbanEntityFactory.java, Building.java, Infrastructure.java...
+│   │   ├── Commercial.java, Industrial.java, Residential.java
+│   │   ├── PowerPlant.java, WaterPlant.java, Road.java, GreenArea.java
+│   │   └── PoliceStation.java, FireStation.java, Hospital.java, School.java
+│   ├── map/                #   Gestione della griglia cittadina spaziale
+│   │   ├── Cell.java
+│   │   └── UrbanGrid.java
+│   └── state/              #   Risorse e statistiche globali (DTO e Stato)
+│       ├── StatoCitta.java
+│       └── TickStats.java
+├── infrastructure/         # (Persistence) Gestione I/O per i salvataggi
+│   ├── PersistenceManager.java
+│   ├── SavedEntityData.java
+│   └── SaveGameData.java
+└── ui/                     # (View) Interfaccia in JavaFX (Observer Pattern)
+    ├── CityApp.java (Main)
+    ├── MappaGriglia.java, AssetManager.java
+    ├── TopBar.java, SideBar.java, TimeBar.java
+    ├── PannelloRisorse.java, PannelloNotifiche.java, PannelloControlliTempo.java
+    └── MenuImpostazioni.java, GestoreEventiUI.java, TutorialPopup.java
 ```

@@ -1,41 +1,50 @@
 sequenceDiagram
     autonumber
-    participant Menu as MenuImpostazioni (UI)
-    participant PM as PersistenceManager
-    participant DTO as SaveGameData
-    participant Factory as UrbanEntityFactory
-    participant Engine as SimulationEngine
-    participant Grid as UrbanGrid
-
-    alt Flusso di Salvataggio
-        Menu->>PM: impacchettaDati(stato, griglia)
-        activate PM
-        PM->>DTO: new SaveGameData(...)
-        PM->>Grid: Itera entità per estrarre DTO
-        PM-->>Menu: SaveGameData
-        deactivate PM
-        
-        Menu->>PM: salvaPartita(SaveGameData, percorso)
-        PM->>PM: serializza in JSON su disco
-        PM-->>Menu: void (Successo)
-        
-    else Flusso di Caricamento
-        Menu->>PM: caricaPartita(percorso)
-        activate PM
-        PM->>PM: deserializza JSON
-        PM-->>Menu: SaveGameData
-        deactivate PM
-        
-        Menu->>PM: ripristinaDati(SaveGameData, stato, griglia)
-        activate PM
-        PM->>Grid: azzeraMappa()
-        loop Per ogni SavedEntityData nel DTO
-            PM->>Factory: createEntity(tipo)
-            Factory-->>PM: UrbanEntity (istanza base)
-            PM->>Grid: placeEntity(entita, x, y)
-        end
-        deactivate PM
-        
-        Menu->>Engine: forceNotifyObservers()
-        Engine->>Menu: onCityUpdate(...) (Aggiorna tutta la UI)
+    actor Utente
+    participant MenuImpostazioni
+    participant PersistenceManager
+    participant StatoCitta
+    participant UrbanGrid
+    participant SaveGameData
+    participant SavedEntityData
+    participant ObjectMapper
+    
+    %% 1. Innesco dall'Interfaccia Utente
+    Utente->>MenuImpostazioni: cliccaEsportaSalvataggio()
+    MenuImpostazioni->>MenuImpostazioni: eseguiEsportazione(popup)
+    MenuImpostazioni-->>Utente: apre Dialog Scelta File
+    Utente->>MenuImpostazioni: confermaNomeFile()
+    
+    %% 2. Avvio Impacchettamento Dati
+    MenuImpostazioni->>PersistenceManager: impacchettaDati(stato, griglia)
+    Note right of PersistenceManager: Creazione DTO Principale
+    PersistenceManager->>SaveGameData: new SaveGameData()
+    
+    %% 3. Travaso Dati Logici (StatoCitta)
+    PersistenceManager->>StatoCitta: getFinanze(), getPopolazione(), ecc.
+    StatoCitta-->>PersistenceManager: metriche globali attuali
+    PersistenceManager->>SaveGameData: setFinanze(), setPopolazione(), ecc.
+    
+    %% 4. Travaso Entità Spaziali (UrbanGrid)
+    PersistenceManager->>UrbanGrid: getActiveEntities()
+    UrbanGrid-->>PersistenceManager: List~UrbanEntity~
+    
+    loop Per ogni UrbanEntity attiva
+        PersistenceManager->>PersistenceManager: estrae coordinate (x,y), tipo e livello
+        Note right of PersistenceManager: Creazione Sotto-DTO
+        PersistenceManager->>SavedEntityData: new SavedEntityData(x, y, tipo, livello)
     end
+    
+    PersistenceManager->>SaveGameData: setEdifici(listaEdificiSalvata)
+    PersistenceManager-->>MenuImpostazioni: datiPartita (SaveGameData)
+    
+    %% 5. Serializzazione e I/O su Disco
+    MenuImpostazioni->>PersistenceManager: salvaPartita(datiPartita, nomeFile)
+    PersistenceManager->>ObjectMapper: writeValue(file, datiPartita)
+    Note right of ObjectMapper: Traduzione dell'oggetto in JSON
+    ObjectMapper-->>PersistenceManager: scrittura completata
+    PersistenceManager-->>MenuImpostazioni: 
+    
+    %% 6. Chiusura Operazione
+    MenuImpostazioni->>MenuImpostazioni: chiude finestra dialog
+    MenuImpostazioni-->>Utente: ritorno al gioco (nessun feedback visivo)

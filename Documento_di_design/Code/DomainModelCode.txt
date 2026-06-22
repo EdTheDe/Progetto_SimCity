@@ -1,63 +1,128 @@
 classDiagram
-class Cell {
-      coordinateSpaziali
-      verificaDisponibilita()
-      assegnaStruttura()
+  %% =====================
+  %% CONCETTI CHIAVE E CONTENITORI
+  %% =====================
+  class StatoCitta {
+      popolazione
+      finanze
+      felicita
+      ecologia
   }
   
   class UrbanGrid {
       dimensioni
   }
   
-  class StatoCitta {
-      metriche
-      aggiornaParametri()
-      interrogaStato()
+  class Cell {
+      coordinateSpaziali
   }
-  
+
+  %% =====================
+  %% GERARCHIA ENTITA' URBANE
+  %% =====================
   class UrbanEntity {
+      <<abstract>>
       costoFisso
       livelloSviluppo
-      coordinate
-      eseguiCicloVitale()
-      avanzaDiLivello()
   }
   
   class Building {
-      fabbisognoRisorse
-      calcolaConsumi()
+      <<abstract>>
+      fabbisognoAcqua
+      fabbisognoEnergia
   }
   
   class Infrastructure {
+      <<abstract>>
       spesaMantenimento
       capacitaErogazioneMassima
-      calcolaCostiEdErogazione()
   }
   
   class StateBuilding {
-      erogaServizioPubblico()
+      <<abstract>>
   }
-  
+
+  %% --- Edifici Privati ---
+  class Residential {
+      capacitaAbitativa
+  }
+  class Commercial {
+      redditoGenerato
+  }
+  class Industrial {
+      postiLavoro
+      inquinamentoProdotto
+  }
+
+  %% --- Infrastrutture di Base ---
+  class PowerPlant {
+      produzioneElettrica
+  }
+  class WaterPlant {
+      produzioneIdrica
+  }
+  class Road {
+      garantisceCollegamento
+  }
+  class GreenArea {
+      riduzioneInquinamento
+  }
+
+  %% --- Edifici Statali (Servizi) ---
+  class Hospital {
+      coperturaSanitaria
+  }
+  class PoliceStation {
+      coperturaSicurezza
+  }
+  class FireStation {
+      coperturaAntincendio
+  }
+  class School {
+      coperturaScolastica
+  }
+
+  %% =====================
+  %% EVENTI E POLITICHE
+  %% =====================
   class Politica {
-      aggiornaMetriche()
+      <<interface>>
+      modificatoriBilancio
   }
   
   class RandomEvent {
-      identificativoEvento
+      <<abstract>>
       durataResidua
-      applicaImpatto()
+      impattoSullaCitta
   }
+
+  %% ==========================================
+  %% RELAZIONI - Ereditarietà
+  %% ==========================================
+  UrbanEntity <|-- Building
+  UrbanEntity <|-- Infrastructure
+  Infrastructure <|-- StateBuilding
+
+  Building <|-- Residential
+  Building <|-- Commercial
+  Building <|-- Industrial
+
+  Infrastructure <|-- PowerPlant
+  Infrastructure <|-- WaterPlant
+  Infrastructure <|-- Road
+  Infrastructure <|-- GreenArea
+
+  StateBuilding <|-- Hospital
+  StateBuilding <|-- PoliceStation
+  StateBuilding <|-- FireStation
+  StateBuilding <|-- School
+
+  %% ==========================================
+  %% RELAZIONI - Struttura e Influenza
+  %% ==========================================
+  UrbanGrid "1" *-- "*" Cell : Contiene
+  Cell "1" o-- "0..1" UrbanEntity : Ospita
   
-  %% EREDITARIETA'
-  Building --|> UrbanEntity
-  Infrastructure --|> UrbanEntity
-  StateBuilding --|> Infrastructure
-  
-    %% ASSOCIAZIONI E CARDINALITA'
-  UrbanEntity "*" --> "1" StatoCitta : Influenza
-  UrbanGrid "1" --> "*" Cell : Contiene
-  Cell "1" --> "0..1" UrbanEntity : Ospita
-  
-  %% DIPENDENZE
-  Politica "1" --> "1" StatoCitta : Altera
-  RandomEvent "1" --> "*" StatoCitta : Altera
+  UrbanEntity "*" ..> "1" StatoCitta : Influenza
+  Politica "1" ..> "1" StatoCitta : Modifica Regole
+  RandomEvent "*" ..> "1" StatoCitta : Applica Malus Temporanei

@@ -304,6 +304,37 @@ classDiagram
     SaveGameData "1" *-- "many" SavedEntityData : contains
 
     %% ==========================================
+    %% PACKAGE: DOMAIN.VALIDATION
+    %% ==========================================
+    class RegolaCostruzione {
+        <<interface>>
+        +valida(e: UrbanEntity, c: Cell, s: StatoCitta, g: UrbanGrid) void
+    }
+
+    class RegolaFondi {
+        +valida(e: UrbanEntity, c: Cell, s: StatoCitta, g: UrbanGrid) void
+    }
+
+    class RegolaSpazio {
+        +valida(e: UrbanEntity, c: Cell, s: StatoCitta, g: UrbanGrid) void
+    }
+
+    class RegolaStrada {
+        +valida(e: UrbanEntity, c: Cell, s: StatoCitta, g: UrbanGrid) void
+    }
+
+    RegolaCostruzione <|.. RegolaFondi
+    RegolaCostruzione <|.. RegolaSpazio
+    RegolaCostruzione <|.. RegolaStrada
+
+    class BuilderValidator {
+        -regole : List~RegolaCostruzione~
+        +validaCostruzione(e: UrbanEntity, c: Cell, s: StatoCitta, g: UrbanGrid) void
+    }
+
+    BuilderValidator "1" o-- "many" RegolaCostruzione : esegue
+
+    %% ==========================================
     %% PACKAGE: UI
     %% ==========================================
     class CityApp {
@@ -398,4 +429,5 @@ classDiagram
     MenuImpostazioni "1" o-- "1" TimeBar : -timeBarRef
     MenuImpostazioni ..> TutorialPopup : mostraTutorial
     CityApp ..> TutorialPopup : mostraTutorial
+    MappaGriglia ..> BuilderValidator : validaCostruzione
 ```

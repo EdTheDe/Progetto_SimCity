@@ -1,31 +1,79 @@
 sequenceDiagram
     autonumber
-    participant UI as MappaGriglia (UI)
-    participant Engine as SimulationEngine
-    participant Validator as BuilderValidator
-    participant Stato as StatoCitta
-    participant Grid as UrbanGrid
+    actor Utente
+    participant SideBar
+    participant MappaGriglia
+    participant UrbanEntityFactory
+    participant UrbanGrid
+    participant Cell
+    participant BuilderValidator
+    participant RegolaCostruzione
+    participant StatoCitta
+    participant AssetManager
+    participant SimulationEngine
+    participant TopBar
 
-    UI->>Engine: richiediCostruzione(tipo, x, y)
-    activate Engine
+    %% 1. Selezione UI
+    Utente->>SideBar: cliccaBottoneEdificio(tipo)
+    SideBar->>MappaGriglia: setTipoEdificioSelezionato(tipo)
     
-    Engine->>Validator: validaCostruzione(entita, cella, stato)
-    activate Validator
+    %% 2. Posizionamento e Istanziazione
+    Utente->>MappaGriglia: cliccaCellaMappa(x, y)
+    MappaGriglia->>UrbanEntityFactory: createEntity(tipo)
+    UrbanEntityFactory-->>MappaGriglia: nuovaEntita
     
-    alt Se la regola fallisce (es. fondi o spazio)
-        Validator-->>Engine: throws CostruzioneException
-        Engine-->>UI: CostruzioneException
-        UI->>UI: mostraPopupErrore()
-    else Se tutte le regole passano
-        Validator-->>Engine: void (Successo)
-        deactivate Validator
+    %% 3. Inizio Validazione
+    MappaGriglia->>UrbanGrid: getCell(x, y)
+    UrbanGrid-->>MappaGriglia: cellaBersaglio
+    MappaGriglia->>BuilderValidator: validaCostruzione(nuovaEntita, cellaBersaglio, statoCitta)
+    
+    %% Loop interno regole di validazione
+    loop Per ogni Regola
+        BuilderValidator->>RegolaCostruzione: valida(nuovaEntita, cellaBersaglio, statoCitta)
         
-        Engine->>Stato: prelevaFondi(entita.getPlacementCost())
-        Engine->>Grid: placeEntity(entita, x, y)
-        Engine->>Engine: forceNotifyObservers()
+        %% Esempi di controlli polimorfici
+        opt Se RegolaSpazioLibero
+            RegolaCostruzione->>Cell: isOccupied()
+            Cell-->>RegolaCostruzione: boolean
+        end
+        opt Se RegolaFondiSufficienti
+            RegolaCostruzione->>nuovaEntita: getPlacementCost()
+            nuovaEntita-->>RegolaCostruzione: costo
+            RegolaCostruzione->>StatoCitta: getFinanze()
+            StatoCitta-->>RegolaCostruzione: fondiAttuali
+        end
+        opt Se RegolaCollegamentoServizi
+            RegolaCostruzione->>UrbanGrid: hasAdjacentRoad(x, y)
+            UrbanGrid-->>RegolaCostruzione: boolean
+        end
         
-        %% Update UI
-        Engine->>UI: onCityUpdate(stato, griglia)
-        UI->>UI: aggiornaTexture(cella, entita)
+        %% Interruzione se fallisce
+        alt Regola violata
+            RegolaCostruzione-->>BuilderValidator: lancia CostruzioneException
+            BuilderValidator-->>MappaGriglia: propaga CostruzioneException
+            MappaGriglia-->>Utente: interrompe piazzamento
+        end
+        RegolaCostruzione-->>BuilderValidator: validazione parziale ok
     end
-    deactivate Engine
+    BuilderValidator-->>MappaGriglia: validazione completata con successo
+    
+    %% 4. Modifica dello Stato Logico
+    MappaGriglia->>nuovaEntita: getPlacementCost()
+    nuovaEntita-->>MappaGriglia: costo
+    MappaGriglia->>StatoCitta: addFinanze(-costo)
+    
+    MappaGriglia->>UrbanGrid: placeEntity(nuovaEntita, x, y)
+    UrbanGrid->>Cell: setEntity(nuovaEntita)
+    Cell-->>UrbanGrid: 
+    UrbanGrid-->>MappaGriglia: 
+    
+    %% 5. Rendering Visivo e Aggiornamento Observers
+    MappaGriglia->>AssetManager: ottieniImmagine(nuovaEntita, x, y, grigliaLogica)
+    AssetManager-->>MappaGriglia: Image
+    MappaGriglia->>MappaGriglia: iniettaImmagineNelNodo()
+    
+    MappaGriglia->>SimulationEngine: forceNotifyObservers()
+    SimulationEngine->>TopBar: onSimulationUpdated(statoCitta)
+    TopBar->>StatoCitta: getFinanze()
+    StatoCitta-->>TopBar: finanzeAggiornate
+    TopBar->>TopBar: aggiornaLabelFinanze()

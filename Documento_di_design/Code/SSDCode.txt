@@ -70,3 +70,11 @@ sequenceDiagram
         Utente->>Sistema: selezionaFileJSON()
         Sistema-->>Utente: pulisceGrigliaCaricaDatiERigeneraMappa()
     end
+        %% --- CHIUSURA E RESET ---
+    Note over Utente,Sistema: Fase 4: Chiusura e Reset
+    
+    Utente->>Sistema: cliccaRicominciaPartita()
+    Sistema-->>Utente: azzeraStatoEPulisceGriglia()
+
+    Utente->>Sistema: cliccaChiudiApplicazione()
+    Sistema-->>Utente: terminaProcessoEChiudeFinestra()
